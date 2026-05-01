@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ünite 8 - Konu Anlatımı ve Test | İSG Akademi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4c1d95; 
+            --primary-light: #7c3aed; 
+            --secondary: #1e1b4b; 
+            --bg-color: #f3f4f6;
+            --text-dark: #1f2937;
+            --success: #10b981;
+            --danger: #ef4444;
+            --card-bg: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-dark); line-height: 1.6; }
+
+        /* Navbar */
+        nav { background: var(--card-bg); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
+        .logo { font-size: 1.2rem; font-weight: 700; color: var(--primary); }
+        .back-btn { text-decoration: none; color: var(--primary); font-weight: 500; font-size: 0.9rem; border: 1px solid var(--primary); padding: 5px 15px; border-radius: 5px; transition: all 0.3s;}
+        .back-btn:hover { background: var(--primary); color: white; }
+
+        .container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
+        
+        /* Konu Anlatımı Bölümü */
+        .content-section { background: var(--card-bg); padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); margin-bottom: 2rem; }
+        .content-section h1 { color: var(--secondary); margin-bottom: 1rem; font-size: 1.8rem; text-align: center; border-bottom: 2px solid var(--primary-light); padding-bottom: 10px;}
+        .content-section h2 { color: var(--primary); margin-top: 1.5rem; margin-bottom: 1rem; font-size: 1.3rem; display: flex; align-items: center; gap: 10px;}
+        .content-section h3 { color: var(--secondary); margin-top: 1.2rem; margin-bottom: 0.5rem; font-size: 1.1rem; }
+        .content-section p, .content-section li { font-size: 0.95rem; margin-bottom: 0.8rem; text-align: justify; }
+        .highlight-box { background: #fef3c7; border-left: 5px solid #f59e0b; padding: 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .mind-map { background: #eff6ff; border: 1px dashed #3b82f6; padding: 1.5rem; border-radius: 8px; margin: 1rem 0; }
+
+        /* Test Bölümü */
+        .quiz-section { background: var(--card-bg); padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); }
+        .quiz-title { text-align: center; color: var(--secondary); margin-bottom: 1rem; }
+        
+        .memory-badge { display: inline-block; background: #e0e7ff; color: #4338ca; padding: 5px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-bottom: 2rem; border: 1px solid #c7d2fe; }
+
+        .question-card { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e7eb; transition: opacity 0.3s; }
+        .question-text { font-weight: 600; font-size: 1.05rem; margin-bottom: 1rem; }
+        
+        .options-list { display: flex; flex-direction: column; gap: 8px; }
+        .option-btn { 
+            background: #f8fafc; border: 2px solid #e2e8f0; padding: 12px 15px; 
+            border-radius: 8px; text-align: left; font-size: 0.95rem; cursor: pointer; 
+            transition: all 0.2s; display: flex; align-items: center; width: 100%; position: relative;
+        }
+        .option-btn:hover:not(.disabled) { border-color: var(--primary-light); background: #f5f3ff; }
+        
+        /* Şık Durumları */
+        .option-btn.disabled { pointer-events: none; opacity: 0.8; }
+        .option-btn.correct { background: #ecfdf5 !important; border-color: var(--success) !important; color: #065f46; font-weight: 600; }
+        .option-btn.wrong { background: #fef2f2 !important; border-color: var(--danger) !important; color: #991b1b; text-decoration: line-through; }
+        
+        .btn-finish { background: var(--primary); color: white; border: none; padding: 15px 30px; font-size: 1.1rem; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 1rem; transition: background 0.3s;}
+        .btn-finish:hover { background: var(--secondary); }
+        .btn-reset { background: #6b7280; color: white; border: none; padding: 10px 20px; font-size: 0.9rem; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px; width: 100%; transition: background 0.3s;}
+        .btn-reset:hover { background: #4b5563; }
+
+        /* Sonuç ve Çözümler Bölümü */
+        #results-section { display: none; margin-top: 2rem; background: #f0fdf4; padding: 2rem; border-radius: 15px; border: 2px solid var(--success); }
+        .score-display { text-align: center; font-size: 2.5rem; font-weight: bold; color: var(--success); margin-bottom: 1rem; }
+        
+        .solution-box { background: white; padding: 15px; border-left: 4px solid var(--primary-light); margin-bottom: 15px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .solution-box h4 { margin-bottom: 5px; color: var(--secondary); font-size: 1rem;}
+
+        .btn-pdf { background: #dc2626; color: white; border: none; padding: 12px 25px; font-size: 1rem; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 20px; display: inline-flex; align-items: center; gap: 10px; }
+        .btn-pdf:hover { background: #991b1b; }
+
+        footer { text-align: center; padding: 2rem; color: var(--text-light); font-size: 0.9rem; }
+
+        @media print {
+            body { background: white; color: black; font-size: 10pt; line-height: 1.3; }
+            nav, .btn-finish, .btn-reset, .btn-pdf, .back-btn, .memory-badge { display: none !important; }
+            .container { max-width: 100%; margin: 0; padding: 0; }
+            .content-section, .quiz-section { box-shadow: none; border: none; padding: 0; margin-bottom: 10px; }
+            h1 { font-size: 14pt; } h2 { font-size: 12pt; } h3 { font-size: 11pt; }
+            .question-card { margin-bottom: 10px; padding-bottom: 10px; page-break-inside: avoid; border-bottom: 1px solid #ccc;}
+            .option-btn { padding: 4px 8px; border: 1px solid #ccc; margin-bottom: 2px; font-size: 9pt; }
+            .quiz-container-print { column-count: 2; column-gap: 20px; }
+            #results-section { display: block !important; border: none; padding: 0; }
+            .solution-box { border: 1px solid #ddd; padding: 8px; margin-bottom: 5px; page-break-inside: avoid; font-size: 9pt;}
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo"><i class="fa-solid fa-file-contract"></i> Ünite 8: Acil Durum Planlaması</div>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-light);">Hazırlayan: Sıraç Aksan</span>
+            <a href="../../index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Ana Sayfaya Dön</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section class="content-section">
+            <h1>İş Yerlerinde Acil Durum Planlaması ve Salgın Hastalıklar</h1>
+            
+            <h2><i class="fa-solid fa-file-signature"></i> 1. Acil Durum Planı Hazırlama Aşamaları</h2>
+            <p>Bir iş yerinde meydana gelebilecek yangın, patlama, kimyasal yayılım ve doğal afetlere karşı acil durum planı hazırlamak 6331 sayılı Kanun gereği <strong>işverenin yasal zorunluluğudur.</strong></p>
+            <ul>
+                <li><strong>Önleyici Tedbirler:</strong> Tehlikeleri kaynağında yok ederek riskleri ortadan kaldırmayı hedefler.</li>
+                <li><strong>Sınırlandırıcı Tedbirler:</strong> Mühendislik çözümleriyle acil durumun kontrol altına alınması ve etkilerinin en aza indirilmesidir.</li>
+                <li><strong>Yenilenme Süreleri:</strong> Tehlike sınıfına göre Çok Tehlikeli yerlerde en geç <strong>2</strong>, Tehlikeli yerlerde <strong>4</strong>, Az Tehlikeli yerlerde <strong>6</strong> yılda bir tamamen yenilenir.</li>
+                <li><strong>Destek Elemanı Sayısı:</strong> Çok tehlikeli sınıfta her 30 çalışana 1 kişi; Tehlikeli sınıfta her 40 çalışana 1 kişi; Az tehlikeli sınıfta her 50 çalışana 1 kişi düşecek şekilde destek (arama, kurtarma, tahliye, yangın) elemanı görevlendirilir.</li>
+            </ul>
+
+            <h2><i class="fa-solid fa-virus-covid"></i> 2. Salgın Hastalıklar (Pandemi) ve İş Hukuku</h2>
+            <p>Covid-19 gibi salgın hastalıklar, dünyayı etkileyen ve "Mücbir Sebep (Zorlayıcı Neden)" sayılan afetlerdir. Pandemi sürecinde çalışma hayatında önemli hukuki kavramlar devreye girmiştir:</p>
+            <ul>
+                <li><strong>Ücretsiz İzin:</strong> Tek taraflı yapılamaz. Mutlaka işçi ve işverenin <strong>karşılıklı rızası ve mutabakatı</strong> gerekir. İşveren tek taraflı izne çıkarırsa, işçi haklı nedenle iş akdini feshedebilir.</li>
+                <li><strong>Çalışmaktan Kaçınma Hakkı:</strong> 6331 sayılı Kanun Madde 13'e göre; ciddi ve yakın bir tehlike (salgın vb.) gören işçi durumu tutanakla bildirerek çalışmaktan kaçınabilir. İşveren tehlike geçene kadar işçiye maaşını ödemek zorundadır.</li>
+                <li><strong>İş Kazası Sayılma Durumu:</strong> Salgın hastalıklar, virüsün iş nedeniyle gidilen bir görevde veya iş yeri içindeki temasla (işveren otoritesi altındayken) bulaştığı tespit edilirse (Örn: Domuz Gribi Emsali) <strong>İş Kazası</strong> sayılır.</li>
+                <li><strong>Haklı Nedenle Fesih:</strong> İş yerinde bir kişinin bile hastalığa yakalanıp çalışmaya devam etmesi, diğer işçiler için <strong>"sağlık sebebiyle haklı fesih"</strong> hakkı doğurur. Ancak hasta kişi rapor alıp işe gelmiyorsa diğer işçiler sözleşmeyi feshedemez.</li>
+            </ul>
+
+            <div class="highlight-box">
+                <h3 style="color: #b45309; margin-bottom: 10px;"><i class="fa-solid fa-triangle-exclamation"></i> Sınavlarda Çıkma Mantığı ve Önemli Tuzaklar</h3>
+                <p><strong>Tuzak 1 (Telafi Çalışması):</strong> İş yerinde zorunlu nedenlerle (salgın, ham madde yokluğu vb.) işin durması hâlinde işveren işçilere 'Telafi Çalışması' yaptırabilir. Sınavda bu süreyi sorarlar: Telafi çalışması, durum bittikten sonraki <strong>2 ay içinde</strong> yaptırılabilir.</p>
+                <p><strong>Tuzak 2 (Uzaktan Çalışma ve Kaza):</strong> Sınavda "Evinde bilgisayar başında uzaktan çalışan işçi kaza geçirirse iş kazası sayılır mı?" diye sorulur. <strong>Evet, sayılır.</strong> İşçi, işveren talimatıyla evde çalışırken yaşanan kazalar da iş kazasıdır.</p>
+                <p><strong>Tuzak 3 (B-Tipi Acil Durumlar):</strong> Sınavlarda A, B, C tipi krizleri sorarlar. Afet ve kaza sonucu oluşan çevresel etkili (salgın hastalık, asit yağmuru vb.) olaylar B-Tipi (ikincil) durumlara örnektir.</p>
+            </div>
+
+            <div class="mind-map">
+                <h3 style="color: #1d4ed8; margin-bottom: 10px;"><i class="fa-solid fa-brain"></i> Zihin Haritası & Kodlamalar</h3>
+                <p><strong>Acil Durum Planı Yenileme Yılları: "Ç-T-A = 2-4-6"</strong><br>
+                Çok Tehlikeli: 2 Yıl | Tehlikeli: 4 Yıl | Az Tehlikeli: 6 Yıl</p>
+                <p style="margin-top: 10px;"><strong>Telefon Numaraları:</strong> Sınav klasik sorularında 110 (İtfaiye) gibi eski numaralar yer alır ancak günümüzde tüm acil çağrılar <strong>112</strong> altında birleşmiştir.</p>
+            </div>
+        </section>
+
+        <section class="quiz-section">
+            <h2 class="quiz-title"><i class="fa-solid fa-list-check"></i> Ünite 8 Final Provası (20 Soru)</h2>
+            <div style="text-align: center;">
+                <div class="memory-badge" id="memory-badge">
+                    <i class="fa-solid fa-floppy-disk"></i> Sistem Devrede: İşaretlenen sorular hafızaya kaydediliyor...
+                </div>
+            </div>
+            
+            <div id="quiz-container" class="quiz-container-print">
+                </div>
+
+            <button class="btn-finish" id="finish-btn" onclick="testiBitir()">
+                <i class="fa-solid fa-flag-checkered"></i> Testi Bitir ve Değerlendir
+            </button>
+            <button class="btn-reset" id="reset-btn" onclick="testiSifirla()">
+                <i class="fa-solid fa-rotate-right"></i> Çözümlerimi Sıfırla ve Baştan Başla
+            </button>
+
+            <div id="results-section">
+                <h2 style="text-align: center; color: var(--secondary);">Sınav Sonucunuz</h2>
+                <div class="score-display">Puan: <span id="score-text">0</span> / 100</div>
+                <p style="text-align: center; margin-bottom: 2rem; font-weight: 500;" id="score-message"></p>
+
+                <h3 style="margin-bottom: 15px; border-bottom: 2px solid #ccc; padding-bottom: 5px;">Detaylı Soru Analizi ve Çözümler</h3>
+                <div id="solutions-container">
+                    </div>
+
+                <div style="text-align: center;">
+                    <button class="btn-pdf" onclick="window.print()">
+                        <i class="fa-solid fa-file-pdf"></i> Konuyu ve Çözümleri Sıkışık PDF Olarak Kaydet
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>Anadolu Üniversitesi İş Sağlığı ve Güvenliği Hazırlık Sistemi &copy; 2026 | Tasarım: Sıraç Aksan</p>
+    </footer>
+
+    <script>
+        // Soru Veritabanı (20 Analitik Soru)
+        const questions = [
+            { q: "Binaların Yangından Korunması Hakkında Yönetmelik'te 'afet olarak değerlendirilen olaylar ile dikkatsizlik, tedbirsizlik, ihmal ve kasıt sebebiyle meydana getirilen olayların yol açtığı hâllere' ne ad verilir?", options: ["A) Acil durum", "B) Eylem", "C) Afet", "D) Teknolojik afet", "E) Katastrofik kriz"], answer: 0, solution: "İhmal, kasıt veya doğa olayları sonucunda aniden gelişen ve acil müdahale gerektiren tabloya mevzuatta 'Acil Durum' denir." },
+            { q: "Bir işletmenin kriz yönetimi stratejisinde; tehdit edici koşula (örneğin bir yangın veya sel) karşı müdahale edebilme yetersizliği teknik olarak nasıl adlandırılır?", options: ["A) Kriz", "B) Zayıflık", "C) Dirençsizlik", "D) Yanlış planlama", "E) Risk"], answer: 0, solution: "Tehdide karşı kapasitenin yetersiz kalması ve sistemin çökme noktasına gelmesi durumu yönetim biliminde 'Kriz' olarak tanımlanır." },
+            { q: "İşyerlerinde Acil Durumlar Hakkında Yönetmelik'e göre bir iş yerinde 'Acil Durum Planı' hazırlanırken dikkate alınması gereken hususlar arasında aşağıdakilerden hangisi doğrudan yer almaz?", options: ["A) İşletmenin 5 yıllık finansal stratejik planlaması", "B) Risk değerlendirmesi sonuçları", "C) Tehlikeli kimyasallardan kaynaklanan yayılım ve patlama ihtimali", "D) İlk yardım ve tahliye gerektirecek olaylar", "E) Sabotaj ihtimali"], answer: 0, solution: "Acil durum planları tamamen can ve mal güvenliği ile İSG risklerini (yangın, patlama, sabotaj vb.) baz alır. Finansal veya ticari 'Stratejik Planlama' bu belgenin konusu değildir." },
+            { q: "İş yerlerindeki tehlike sınıflarına göre destek elemanı (yangın, tahliye) görevlendirmesi yapılır. Buna göre 'Tehlikeli' sınıfta yer alan bir iş yerinde kaç çalışana kadar en az 1 destek elemanı görevlendirilmelidir?", options: ["A) 10", "B) 30", "C) 40", "D) 50", "E) 100"], answer: 2, solution: "Yönetmeliğe göre arama, kurtarma ve tahliye için destek elemanı oranı şöyledir: Çok Tehlikeli = 30, Tehlikeli = 40, Az Tehlikeli = 50 çalışana 1 kişidir." },
+            { q: "Periyodik yenileme süreleri göz önüne alındığında, 'Az Tehlikeli' sınıfta yer alan bir ofis veya banka şubesinde Acil Durum Planı olağan şartlarda en geç kaç yılda bir tamamen yenilenir?", options: ["A) 2", "B) 3", "C) 4", "D) 5", "E) 6"], answer: 4, solution: "Acil durum planı yenileme süreleri 2-4-6 kuralına tabidir. Az tehlikeli iş yerlerinde bu süre en geç 6 yıldır." },
+            { q: "Aşağıdaki olaylardan hangisinin yaşanması bir tesiste B-Tipi (ikincil/sonradan gelişen) acil durumlara örnek olarak gösterilir?", options: ["A) Küçük çaplı ofis yangınları", "B) Deprem", "C) Sel", "D) Savaş hâli", "E) Salgın hastalıklar"], answer: 4, solution: "Salgın hastalıklar, afetlerden veya çevre kirliliğinden sonra veya bağımsız olarak kitleleri etkileyen ikincil (B-Tipi) kriz/acil durumlardır." },
+            { q: "Bir sabotaj veya bombalı saldırı ihbarı alındığında, iş yeri acil durum senaryolarına göre eski numaralandırma sistemi baz alındığında hangi telefon aranmalıdır?", options: ["A) 155 (Polis İmdat)", "B) 110 (İtfaiye)", "C) 112 (Ambulans)", "D) 170 (ÇSGB İletişim)", "E) 114 (Zehir Danışma)"], answer: 0, solution: "Sabotaj, bomba ve terör eylemleri doğrudan asayiş (güvenlik) sorunudur. Bu nedenle eski kodlamada 155, yeni sistemde ise tek numara 112 üzerinden güvenlik güçlerine haber verilir." },
+            { q: "İş yerinde 'ücretsiz izin' uygulaması ile ilgili İş Kanunu çerçevesinde yapılan hukuki değerlendirmelerden hangisi Kesinlikle Doğrudur?", options: ["A) İşveren ekonomik kriz bahanesiyle işçiyi tek taraflı ücretsiz izne çıkarabilir.", "B) Ücretsiz izin uygulaması için işçi ve işverenin karşılıklı mutabık olması (rızası) şarttır.", "C) Ücretsiz izne çıkarılan işçi haklı nedenle sözleşmeyi feshedip kıdem tazminatını alamaz.", "D) Devlet memurlarında ücretsiz izin uygulaması yoktur.", "E) Ücretsiz izin süresince işçinin tam maaşı ödenmeye devam eder."], answer: 1, solution: "İş hukukunda ücretsiz izin 'tek taraflı' dayatılamaz. İşveren işçiyi zorla izne gönderirse, işçi sözleşmeyi haklı nedenle feshedip tazminatını alır." },
+            { q: "Salgın hastalık (Pandemi) döneminde iş yerinde ciddi bir virüs tehlikesiyle karşı karşıya kalan işçinin, 6331 sayılı İSG Kanunu Madde 13'e göre en temel hakkı nedir?", options: ["A) İş yerine kendi imkanlarıyla doktor getirmek", "B) İşe gelmeyip başka bir işte kaçak çalışmak", "C) Durumu tutanakla bildirerek 'Çalışmaktan Kaçınma Hakkı'nı kullanmak", "D) İşverenin ofis malzemelerine el koymak", "E) Herhangi bir bildirim yapmadan direkt mahkemeye gitmek"], answer: 2, solution: "Ciddi ve yakın tehlike gören işçi, kurula veya işverene tutanakla başvurarak tehlike giderilene kadar 'çalışmaktan kaçınma hakkını' kullanabilir. Bu sürede maaşı ödenmeye devam eder." },
+            { q: "Koronavirüs (Covid-19) gibi küresel salgın hastalıklar nedeniyle üretimin durduğu ve ham madde gelmediği durumlarda, işverenin 'Telafi Çalışması' yaptırabilme hakkı yasal olarak ne kadarlık bir süre içinde sınırlandırılmıştır?", options: ["A) Durum bittikten sonraki 2 ay içinde", "B) Sadece ilk 1 hafta içinde", "C) Durum bittikten sonraki 6 ay içinde", "D) 1 yıl içinde", "E) Telafi çalışması tamamen yasaklanmıştır"], answer: 0, solution: "İş Kanunu Madde 64'e göre; zorunlu nedenlerle duran işler için işveren, bu durum ortadan kalktıktan sonraki '2 ay içinde' yasal süreleri aşmamak şartıyla telafi çalışması yaptırabilir." },
+            { q: "İş yerinden aldığı görevle salgın hastalığın yaygın olduğu bir ülkeye giden veya ofiste çalışma arkadaşından hastalık kaparak hayatını kaybeden bir işçinin durumu, Yargıtay emsallerine (Domuz Gribi kararı vb.) göre nasıl değerlendirilir?", options: ["A) Tamamen doğal ölüm", "B) Kader / Kaçınılmazlık", "C) İş Kazası", "D) İşçinin kendi kusuru", "E) Meslek Hastalığı"], answer: 2, solution: "Hastalık işverenin verdiği bir görev (seyahat) veya doğrudan iş yeri ortamındaki temas sonucu bulaşmış ve illiyet bağı ispatlanmışsa Yargıtay kararlarına göre 'İş Kazası' sayılır." },
+            { q: "Bir işçinin evden (uzaktan) çalışması esnasında (örneğin şirkete ait bilgisayarda rapor yazarken veya toplantı yaparken) elektrik çarpması sonucu yaralanması durumu hukuken nasıl nitelendirilir?", options: ["A) Ev kazası sayılır, SGK karşılamaz", "B) Özel hayatın ihlali sayılır", "C) İş kazası kapsamında değerlendirilir", "D) İşçinin zimmet suçu işlemesi sayılır", "E) Taksirli adam yaralama sayılır"], answer: 2, solution: "Uzaktan çalışma (Tele-working) uygulamasında, işçi mesai saatlerinde ve işverenin verdiği işi yaparken kaza geçirirse, mekan ev dahi olsa bu hukuken tam bir 'İş Kazası'dır." },
+            { q: "İş Kanunu 24/1 maddesi uyarınca sağlık sebepleriyle haklı fesih hakkı kullanılabilmesi için aşağıdaki senaryolardan hangisi geçerli bir nedendir?", options: ["A) İşverenin ofiste maske takmayı zorunlu kılması", "B) İş yerindeki bir kişinin salgın hastalığa yakalanıp karantinaya girmeden çalışmaya devam etmesi ve yakın temasın sürmesi", "C) Hastalanan kişinin rapor alarak eve gönderilmesi ve işe gelmemesi", "D) Yan binadaki bir ofiste hastalık çıkması", "E) İşçinin sadece hastalık bulaşma korkusuyla evden çıkmak istememesi"], answer: 1, solution: "Hasta kişinin iş yerinde çalıştırılmaya devam edilmesi ve diğer işçilerin riske atılması işçiye 'haklı fesih' hakkı verir. Ancak hasta kişi raporluysa ve ortam izoleyse fesih hakkı doğmaz." },
+            { q: "Acil durum planlamasında tehlikeleri kaynağında yok ederek riskleri tamamen sıfırlamaya yönelik atılan adımlara (Örn: Toksik kimyasal yerine su bazlı boya kullanmak) teknik olarak ne ad verilir?", options: ["A) Sınırlandırıcı tedbirler", "B) Düzeltici önlemler", "C) Önleyici tedbirler", "D) Reaktif müdahaleler", "E) Kriz masası stratejisi"], answer: 2, solution: "Tehlikeyi daha doğmadan engellemek veya kaynağında kurutmak 'Önleyici (Proaktif) Tedbir' olarak tanımlanır." },
+            { q: "Bir iş yerinde 'yeni bir kimyasal makinenin' üretime dahil edilmesi, mevcut acil durum planı açısından nasıl bir hukuki sonuç doğurur?", options: ["A) Hiçbir şey yapılmaz, yenileme yılı (2-4-6) beklenir.", "B) Sadece SGK'ya dilekçe yazılır.", "C) Acil durum planı, yeni makinenin yaratacağı riskleri kapsayacak şekilde 'tamamen veya kısmen yenilenir'.", "D) Acil durum eylem planı iptal edilir.", "E) Tüm çalışanlara yeniden işe giriş muayenesi yapılır."], answer: 2, solution: "İş yerinde acil durumu etkileyecek yeni bir tehlike (yeni makine, yeni bina, yeni kimyasal vb.) ortaya çıkarsa periyodik süresi beklenmez, plan derhal güncellenir." },
+            { q: "KBRN (Kimyasal, Biyolojik, Radyolojik, Nükleer) ajanlarından etkilenen ve kontamine olan bir itfaiyeci veya ilk yardım personelinin olay yerinde derhal uygulaması gereken ilk işlem nedir?", options: ["A) Doğrudan eve gidip duş almak", "B) Risk değerlendirmesi raporunu yazmak", "C) Mobil dekontaminasyon (arındırma) aracında/alanında özel solüsyonlarla temizlenmek", "D) Normal devlet hastanesinin acil servisine direkt girmek", "E) Elbisesini çıkarıp çöpe atmak"], answer: 2, solution: "KBRN bulaşısında (kontaminasyon) kişi temizlenmeden asla bölgeden ayrılamaz veya hastaneye giremez. Olay yerindeki 'Dekontaminasyon (Arındırma)' çadırlarında temizlenmelidir." },
+            { q: "Latincede 'taç (crown)' anlamına gelen ve elektron mikroskobu altındaki çıkıntılı yapısı nedeniyle bu ismi alan hastalık yapıcı virüslere genel olarak ne ad verilir?", options: ["A) Koronavirüs", "B) SARS", "C) HIV", "D) Ebola", "E) MERS"], answer: 0, solution: "Korona (Corona), Latince ve İspanyolcada 'taç' demektir. Virüsün üzerindeki dikenli (spike) proteinler taç şeklini andırdığı için Koronavirüs ailesi olarak isimlendirilmiştir." },
+            { q: "Halk sağlığı ve ulusal güvenlik için en yüksek riski taşıyan, kolay bulaşan ve yüksek ölüm oranına sahip mikroorganizmalar (Örn: Çiçek, Şarbon, Ebola) Biyoterörizm risk sınıflamasına göre hangi kategoride yer alır?", options: ["A) Kategori A", "B) Kategori B", "C) Kategori C", "D) Kategori D", "E) Kategori E"], answer: 0, solution: "En ölümcül, en kolay yayılan ve halkta en büyük paniği yaratan biyolojik ajanlar her zaman 'Kategori A (En Tehlikeli)' sınıfında yer alır." },
+            { q: "Bir kaza gerçekleştikten sonra fabrikada bulunan Acil Durum Koordinatörü'nün yapması gereken ilk yönetimsel/operasyonel faaliyet aşağıdakilerden hangisidir?", options: ["A) Medyaya hemen açıklama yapmak", "B) Sigorta şirketini aramak", "C) Olay yerinin etrafını çevirerek kimsenin girmesine izin vermemek (Güvenlik şeridi oluşturmak)", "D) Fabrikayı kapatıp tatil ilan etmek", "E) Kazazedenin maaşını kesmek"], answer: 2, solution: "Bir kaza anında ilk yapılması gereken şey 'Olay Yeri Güvenliğini' sağlamaktır. İkinci bir tehlikeyi önlemek ve delilleri korumak için alan derhal kordon altına alınır." },
+            { q: "Doğal afetler (deprem, sel) veya küresel salgın hastalıklar (Pandemi) gibi tarafların kontrolü dışında gerçekleşen, öngörülemez ve önlenemez durumlar İş Hukukunda ticari sözleşmelerin veya üretim taahhütlerinin gecikmesinde hangi hukuki kavrama dayanak oluşturur?", options: ["A) İyi Niyet İhlali", "B) Kusursuz Sorumluluk", "C) Sebepsiz Zenginleşme", "D) Mücbir Sebep (Zorlayıcı Neden)", "E) Haksız Fesih"], answer: 3, solution: "Kişinin veya kurumun iradesi dışında gelişen devasa krizler (salgın, deprem) borçlar ve iş hukukunda 'Mücbir Sebep (Force Majeure)' sayılır ve gecikme cezalarından muafiyet sağlar." }
+        ];
+
+        // Sınav Durumu Yönetimi (Local Storage)
+        let quizState = {}; 
+        const STORAGE_KEY = "isg_u8_state"; 
+
+        function stateYukle() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if(saved) {
+                    quizState = JSON.parse(saved);
+                    document.getElementById("memory-badge").innerHTML = `<i class="fa-solid fa-cloud-arrow-down"></i> Önceki oturumunuz başarıyla geri yüklendi. Kaldığınız yerden devam edebilirsiniz.`;
+                    document.getElementById("memory-badge").style.backgroundColor = "#dcfce7";
+                    document.getElementById("memory-badge").style.color = "#166534";
+                    document.getElementById("memory-badge").style.borderColor = "#bbf7d0";
+                }
+            } catch(e) { console.log("State yüklenemedi."); }
+        }
+
+        function stateKaydet() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(quizState));
+        }
+
+        // Soruları Ekrana Çizdirme
+        function renderQuestions() {
+            const container = document.getElementById("quiz-container");
+            const solutionsContainer = document.getElementById("solutions-container");
+            container.innerHTML = "";
+            solutionsContainer.innerHTML = "";
+
+            questions.forEach((q, index) => {
+                const isAnswered = quizState.hasOwnProperty(index);
+                const savedData = isAnswered ? quizState[index] : null;
+
+                let questionHTML = `
+                    <div class="question-card" id="q-card-${index}">
+                        <div class="question-text">${index + 1}. ${q.q}</div>
+                        <div class="options-list">
+                `;
+
+                q.options.forEach((opt, optIndex) => {
+                    let classes = "option-btn";
+                    let icon = "";
+                    
+                    if(isAnswered) {
+                        classes += " disabled";
+                        if(optIndex === q.answer) {
+                            classes += " correct";
+                            icon = ' <i class="fa-solid fa-check" style="margin-left:auto;"></i>';
+                        }
+                        if(optIndex === savedData.selected && savedData.selected !== q.answer) {
+                            classes += " wrong";
+                            icon = ' <i class="fa-solid fa-xmark" style="margin-left:auto;"></i>';
+                        }
+                    }
+
+                    questionHTML += `
+                        <div class="${classes}" id="opt-${index}-${optIndex}" onclick="selectOption(${index}, ${optIndex}, ${q.answer})">
+                            ${opt} ${icon}
+                        </div>
+                    `;
+                });
+
+                questionHTML += `</div></div>`;
+                container.innerHTML += questionHTML;
+
+                // Çözüm Kartı
+                const solutionHTML = `
+                    <div class="solution-box">
+                        <h4>Soru ${index + 1} Çözümü:</h4>
+                        <p><strong>Doğru Cevap:</strong> ${q.options[q.answer]}</p>
+                        <p style="color: var(--text-light); font-size: 0.9rem; margin-top: 5px; text-align:justify;"><i class="fa-solid fa-lightbulb" style="color: var(--primary-light);"></i> <strong>Analiz:</strong> ${q.solution}</p>
+                    </div>
+                `;
+                solutionsContainer.innerHTML += solutionHTML;
+            });
+        }
+
+        // Şık Tıklama
+        function selectOption(qIndex, selectedOptIndex, correctOptIndex) {
+            if(quizState.hasOwnProperty(qIndex)) return;
+
+            for(let i=0; i<5; i++) {
+                const optElement = document.getElementById(`opt-${qIndex}-${i}`);
+                optElement.classList.add("disabled");
+                
+                if(i === correctOptIndex) {
+                    optElement.classList.add("correct");
+                    optElement.innerHTML += ' <i class="fa-solid fa-check" style="margin-left:auto;"></i>';
+                }
+            }
+
+            if(selectedOptIndex !== correctOptIndex) {
+                const selectedElement = document.getElementById(`opt-${qIndex}-${selectedOptIndex}`);
+                selectedElement.classList.add("wrong");
+                selectedElement.innerHTML += ' <i class="fa-solid fa-xmark" style="margin-left:auto;"></i>';
+            }
+
+            quizState[qIndex] = { selected: selectedOptIndex, correct: correctOptIndex };
+            stateKaydet();
+        }
+
+        // Testi Bitir ve Değerlendir
+        function testiBitir() {
+            const answeredCount = Object.keys(quizState).length;
+            
+            if(answeredCount < questions.length) {
+                if(!confirm(`Dikkat: Henüz ${questions.length - answeredCount} soruyu boş bıraktınız. Boşlar yanlış sayılacaktır. Yine de bitirmek istiyor musunuz?`)) return;
+            }
+
+            let score = 0;
+            for(let key in quizState) {
+                if(quizState[key].selected === quizState[key].correct) score += 5;
+            }
+
+            document.getElementById("finish-btn").style.display = "none";
+            document.getElementById("results-section").style.display = "block";
+            
+            document.getElementById("score-text").innerText = score;
+            let message = "";
+            if(score >= 90) message = "Tebrikler! Acil durum planlaması ve salgın dönemi İş Hukuku konularına tam hakimsiniz.";
+            else if(score >= 70) message = "Başarılı. Pandemi dönemi işçi/işveren hakları kısımlarını (telafi çalışması vb.) tekrar edebilirsiniz.";
+            else message = "Bu ünitede İş Kanunu detayları ağırlıklıdır. Lütfen soru çözümlerine odaklanarak not alınız.";
+            document.getElementById("score-message").innerText = message;
+
+            try {
+                let progress = JSON.parse(localStorage.getItem("isg_progress") || "[]");
+                if(!progress.includes("afet_unite_8")) {
+                    progress.push("afet_unite_8");
+                    localStorage.setItem("isg_progress", JSON.stringify(progress));
+                }
+            } catch(e) {}
+
+            document.getElementById("results-section").scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Sistemi Sıfırla
+        function testiSifirla() {
+            if(confirm("Tüm cevaplarınız kalıcı olarak silinecek ve teste baştan başlayacaksınız. Emin misiniz?")) {
+                localStorage.removeItem(STORAGE_KEY);
+                window.location.reload();
+            }
+        }
+
+        window.onload = () => {
+            stateYukle();
+            renderQuestions();
+        };
+    </script>
+</body>
+</html>

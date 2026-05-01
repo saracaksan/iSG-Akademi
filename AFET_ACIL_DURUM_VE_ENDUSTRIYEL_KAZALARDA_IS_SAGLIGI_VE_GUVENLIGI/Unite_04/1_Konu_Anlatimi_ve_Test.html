@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ünite 4 - Konu Anlatımı ve Test | İSG Akademi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4c1d95; 
+            --primary-light: #7c3aed; 
+            --secondary: #1e1b4b; 
+            --bg-color: #f3f4f6;
+            --text-dark: #1f2937;
+            --success: #10b981;
+            --danger: #ef4444;
+            --card-bg: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-dark); line-height: 1.6; }
+
+        /* Navbar */
+        nav { background: var(--card-bg); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
+        .logo { font-size: 1.2rem; font-weight: 700; color: var(--primary); }
+        .back-btn { text-decoration: none; color: var(--primary); font-weight: 500; font-size: 0.9rem; border: 1px solid var(--primary); padding: 5px 15px; border-radius: 5px; transition: all 0.3s;}
+        .back-btn:hover { background: var(--primary); color: white; }
+
+        .container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
+        
+        /* Konu Anlatımı Bölümü */
+        .content-section { background: var(--card-bg); padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); margin-bottom: 2rem; }
+        .content-section h1 { color: var(--secondary); margin-bottom: 1rem; font-size: 1.8rem; text-align: center; border-bottom: 2px solid var(--primary-light); padding-bottom: 10px;}
+        .content-section h2 { color: var(--primary); margin-top: 1.5rem; margin-bottom: 1rem; font-size: 1.3rem; display: flex; align-items: center; gap: 10px;}
+        .content-section h3 { color: var(--secondary); margin-top: 1.2rem; margin-bottom: 0.5rem; font-size: 1.1rem; }
+        .content-section p, .content-section li { font-size: 0.95rem; margin-bottom: 0.8rem; text-align: justify; }
+        .highlight-box { background: #fef3c7; border-left: 5px solid #f59e0b; padding: 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .mind-map { background: #eff6ff; border: 1px dashed #3b82f6; padding: 1.5rem; border-radius: 8px; margin: 1rem 0; }
+
+        /* Test Bölümü */
+        .quiz-section { background: var(--card-bg); padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); }
+        .quiz-title { text-align: center; color: var(--secondary); margin-bottom: 1rem; }
+        
+        .memory-badge { display: inline-block; background: #e0e7ff; color: #4338ca; padding: 5px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-bottom: 2rem; border: 1px solid #c7d2fe; }
+
+        .question-card { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e7eb; transition: opacity 0.3s; }
+        .question-text { font-weight: 600; font-size: 1.05rem; margin-bottom: 1rem; }
+        
+        .options-list { display: flex; flex-direction: column; gap: 8px; }
+        .option-btn { 
+            background: #f8fafc; border: 2px solid #e2e8f0; padding: 12px 15px; 
+            border-radius: 8px; text-align: left; font-size: 0.95rem; cursor: pointer; 
+            transition: all 0.2s; display: flex; align-items: center; width: 100%; position: relative;
+        }
+        .option-btn:hover:not(.disabled) { border-color: var(--primary-light); background: #f5f3ff; }
+        
+        /* Şık Durumları */
+        .option-btn.disabled { pointer-events: none; opacity: 0.8; }
+        .option-btn.correct { background: #ecfdf5 !important; border-color: var(--success) !important; color: #065f46; font-weight: 600; }
+        .option-btn.wrong { background: #fef2f2 !important; border-color: var(--danger) !important; color: #991b1b; text-decoration: line-through; }
+        
+        .btn-finish { background: var(--primary); color: white; border: none; padding: 15px 30px; font-size: 1.1rem; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 1rem; transition: background 0.3s;}
+        .btn-finish:hover { background: var(--secondary); }
+        .btn-reset { background: #6b7280; color: white; border: none; padding: 10px 20px; font-size: 0.9rem; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px; width: 100%; transition: background 0.3s;}
+        .btn-reset:hover { background: #4b5563; }
+
+        /* Sonuç ve Çözümler Bölümü */
+        #results-section { display: none; margin-top: 2rem; background: #f0fdf4; padding: 2rem; border-radius: 15px; border: 2px solid var(--success); }
+        .score-display { text-align: center; font-size: 2.5rem; font-weight: bold; color: var(--success); margin-bottom: 1rem; }
+        
+        .solution-box { background: white; padding: 15px; border-left: 4px solid var(--primary-light); margin-bottom: 15px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .solution-box h4 { margin-bottom: 5px; color: var(--secondary); font-size: 1rem;}
+
+        .btn-pdf { background: #dc2626; color: white; border: none; padding: 12px 25px; font-size: 1rem; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 20px; display: inline-flex; align-items: center; gap: 10px; }
+        .btn-pdf:hover { background: #991b1b; }
+
+        footer { text-align: center; padding: 2rem; color: var(--text-light); font-size: 0.9rem; }
+
+        @media print {
+            body { background: white; color: black; font-size: 10pt; line-height: 1.3; }
+            nav, .btn-finish, .btn-reset, .btn-pdf, .back-btn, .memory-badge { display: none !important; }
+            .container { max-width: 100%; margin: 0; padding: 0; }
+            .content-section, .quiz-section { box-shadow: none; border: none; padding: 0; margin-bottom: 10px; }
+            h1 { font-size: 14pt; } h2 { font-size: 12pt; } h3 { font-size: 11pt; }
+            .question-card { margin-bottom: 10px; padding-bottom: 10px; page-break-inside: avoid; border-bottom: 1px solid #ccc;}
+            .option-btn { padding: 4px 8px; border: 1px solid #ccc; margin-bottom: 2px; font-size: 9pt; }
+            .quiz-container-print { column-count: 2; column-gap: 20px; }
+            #results-section { display: block !important; border: none; padding: 0; }
+            .solution-box { border: 1px solid #ddd; padding: 8px; margin-bottom: 5px; page-break-inside: avoid; font-size: 9pt;}
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo"><i class="fa-solid fa-book-open"></i> Ünite 4: Risk ve KKD</div>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-light);">Hazırlayan: Sıraç Aksan</span>
+            <a href="../../index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Ana Sayfaya Dön</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section class="content-section">
+            <h1>Risk Değerlendirmesi Yönetimi ve Kişisel Koruyucu Donanımlar (KKD)</h1>
+            
+            <h2><i class="fa-solid fa-chart-pie"></i> 1. Risk ve Risk Değerlendirmesi Yönetimi</h2>
+            <p>Risk yönetimi, ISO 31000, OHSAS 18001 ve ISO 14001 gibi yönetim sistemlerinin temelidir. Temel amaç sadece evrak hazırlamak değil; çalışan sağlığını korumak, olası zararları en aza indirmek ve işin verimli (rekabet edebilir) olmasını sağlamaktır. Sağlık ve güvenlik mevzuatında işverenlere düzenli risk değerlendirmesi yapma yükümlülüğü getirilmiştir.</p>
+            <ul>
+                <li><strong>Olasılık:</strong> 0 ile 1 arasında bir rakamla ifade edilir. 0 imkânsızı, 1 ise kesin gerçekleşme durumunu gösterir.</li>
+                <li><strong>Risk = Olasılık x Şiddet:</strong> Tehlikeli olayın meydana gelme ihtimali ile yol açabileceği zararın (ciddiyet derecesinin) bileşimidir.</li>
+            </ul>
+
+            <h2><i class="fa-solid fa-helmet-safety"></i> 2. Kişisel Koruyucu Donanım (KKD) ve Kategorizasyon</h2>
+            <p>Belirli bir faaliyetin yapılması için birey tarafından giyilen, takılan veya tutulan koruyucu aygıtlara KKD denir. <strong>Spor ekipmanları, nefsi müdafaa araçları veya taşınabilir risk ikaz cihazları (gaz ölçer vb.) KKD sayılmaz.</strong> KKD'ler TS/EN direktiflerine göre kategorize edilir:</p>
+            <ul>
+                <li><strong>Kategori 0:</strong> KKD Yönetmeliği kapsamına girmeyen donanımlardır.</li>
+                <li><strong>Kategori 1 (Minör Riskler):</strong> Çalışanın zamanında fark edebileceği düşük risklere karşı korur (Örn: Bahçıvan eldiveni).</li>
+                <li><strong>Kategori 2 (Orta Riskler):</strong> Kategori 1 ve 3 dışındakilerdir, sertifikasyon gerektirir.</li>
+                <li><strong>Kategori 3 (Ölümcül/Kalıcı Riskler):</strong> Ani gelişen, <strong>geriye dönüşü olmayan (toksik, ölümcül)</strong> zararlar veren karmaşık risklere karşı korur. Mutlaka onaylanmış kuruluş kimlik numarası ile sertifikalandırılmalıdır.</li>
+            </ul>
+
+            <h2><i class="fa-solid fa-fire-extinguisher"></i> 3. Maske Kullanımı ve İtfaiyeci Donanımları</h2>
+            <p>Maske seçiminde ilk bakılacak şey <strong>ortamdaki oksijenin yeterli olup olmadığıdır</strong>. Toz maskesinin sızdırmazlığını kontrol etmek için maske takıldıktan sonra derin nefes çekilir; maske içe doğru çöküyorsa sızdırmazlık sağlanmıştır. Koruyucu gözlük buğulanıyorsa, maske kenarlarından nefes kaçırıyor demektir.</p>
+            <p><strong>İtfaiyeci Donanımları:</strong> Çok zorlu şartlar altındadır. Bağımsız solunum cihazları (BSC) temiz hava sağlar. Kısa süreli (kaçış) solunum cihazları yaklaşık 10 dk, normal operasyon cihazları daha uzun süre dayanır. İtfaiyeci hareketsiz kaldığında öttüğü için hayat kurtaran cihaza <strong>Kişisel Hareketsizlik Cihazı (PASS)</strong> denir.</p>
+            
+            <div class="highlight-box">
+                <h3 style="color: #b45309; margin-bottom: 10px;"><i class="fa-solid fa-triangle-exclamation"></i> Sınavlarda Çıkma Mantığı ve Önemli Tuzaklar</h3>
+                <p><strong>Tuzak 1 (KKD Tehlikeyi Yok Eder Mi?):</strong> Hayır! KKD tehlikeyi ortadan kaldırmaz, sadece riskten etkilenmeyi ve maruziyeti en aza indirir. KKD kullanılmasına rağmen kaza oluyorsa sebep; yanlış ekipman seçimi, koruma kapasitesinin aşılması veya hatalı kullanımdır.</p>
+                <p><strong>Tuzak 2 (Kategori 1 vs Kategori 3):</strong> Sınavda "Zamanında fark edilebilir, düşük düzey" derse Kategori 1; "Geriye dönüşü olmayan, hayati risk" derse Kategori 3'ü işaretleyin.</p>
+                <p><strong>Tuzak 3 (Maske Seçimi Önceliği):</strong> Gaz veya toz maskesi seçilirken önce gazın cinsine bakılmaz! Önce <strong>Ortamdaki Oksijen Seviyesi (%19.5 altı tehlikelidir)</strong> kontrol edilir. Oksijen yoksa normal filtreli maske takılamaz, tüplü bağımsız sistem gerekir.</p>
+            </div>
+
+            <div class="mind-map">
+                <h3 style="color: #1d4ed8; margin-bottom: 10px;"><i class="fa-solid fa-brain"></i> Zihin Haritası & Kodlamalar</h3>
+                <p><strong>İtfaiyeci Elbisesi Katmanları Kodu: "D-N-I-İ"</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li><strong>D</strong>ış astar (Ateşe ve yırtılmaya dayanıklı)</li>
+                    <li><strong>N</strong>em bariyeri (Su ve kimyasalları iter)</li>
+                    <li><strong>I</strong>sı bariyeri (Sıcaklığı yalıtır)</li>
+                    <li><strong>İ</strong>ç astar (Konfor ve ter emilimi)</li>
+                </ul>
+                <p style="margin-top: 10px;"><strong>Not:</strong> "Çelik malzeme" elbise katmanı değildir, botların ucunda bulunur.</p>
+            </div>
+        </section>
+
+        <section class="quiz-section">
+            <h2 class="quiz-title"><i class="fa-solid fa-list-check"></i> Ünite 4 Final Provası (20 Soru)</h2>
+            <div style="text-align: center;">
+                <div class="memory-badge" id="memory-badge">
+                    <i class="fa-solid fa-floppy-disk"></i> Sistem Devrede: İşaretlenen sorular hafızaya kaydediliyor...
+                </div>
+            </div>
+            
+            <div id="quiz-container" class="quiz-container-print">
+                </div>
+
+            <button class="btn-finish" id="finish-btn" onclick="testiBitir()">
+                <i class="fa-solid fa-flag-checkered"></i> Testi Bitir ve Değerlendir
+            </button>
+            <button class="btn-reset" id="reset-btn" onclick="testiSifirla()">
+                <i class="fa-solid fa-rotate-right"></i> Çözümlerimi Sıfırla ve Baştan Başla
+            </button>
+
+            <div id="results-section">
+                <h2 style="text-align: center; color: var(--secondary);">Sınav Sonucunuz</h2>
+                <div class="score-display">Puan: <span id="score-text">0</span> / 100</div>
+                <p style="text-align: center; margin-bottom: 2rem; font-weight: 500;" id="score-message"></p>
+
+                <h3 style="margin-bottom: 15px; border-bottom: 2px solid #ccc; padding-bottom: 5px;">Detaylı Soru Analizi ve Çözümler</h3>
+                <div id="solutions-container">
+                    </div>
+
+                <div style="text-align: center;">
+                    <button class="btn-pdf" onclick="window.print()">
+                        <i class="fa-solid fa-file-pdf"></i> Konuyu ve Çözümleri Sıkışık PDF Olarak Kaydet
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>Anadolu Üniversitesi İş Sağlığı ve Güvenliği Hazırlık Sistemi &copy; 2026 | Tasarım: Sıraç Aksan</p>
+    </footer>
+
+    <script>
+        // Soru Veritabanı (20 Analitik Soru)
+        const questions = [
+            { q: "Aşağıdakilerden hangisi ISO 31000 risk değerlendirmesi süreci unsurlarından biridir?", options: ["A) İçerik oluşturulması", "B) Tehlike kaynağını anlama", "C) Riski iyileştirme", "D) Risk analizi ve değerlendirme", "E) İzleme ve gözden geçirme"], answer: 3, solution: "ISO 31000 standardının ana kalbini 'Risk Değerlendirmesi' oluşturur. Bu adım kendi içinde tehlike tanımlama, risk analizi ve risk değerlendirme alt basamaklarını kapsar." },
+            { q: "Tehlikeli bir olayın veya maruz kalma durumunun meydana gelme olasılığı ile yol açabileceği yaralanma/sağlık bozulmasının ciddiyet derecesinin (şiddet) bileşimine ne ad verilir?", options: ["A) Risk değerlendirmesi", "B) Risk", "C) Tehlike", "D) Risk analizi", "E) Olay"], answer: 1, solution: "Olasılık ve Şiddetin matematiksel bileşimi (çarpımı) doğrudan 'Risk' kavramını tanımlar." },
+            { q: "0 ile 1 arasında bir rakamla ifade edilen, gerçekleşme şansının ölçümüdür. 0 imkânsızı, 1 ise kesin gerçekleşme durumunu gösterir. Bu tanım aşağıdakilerden hangisine aittir?", options: ["A) Olasılık", "B) Risk toleransı", "C) Risk iştahı", "D) Risk", "E) Tehlike"], answer: 0, solution: "İstatistiksel olarak bir olayın meydana gelme şansının 0 ile 1 arasındaki matematiksel ifadesine 'Olasılık' (İhtimal) denir." },
+            { q: "Belirli bir faaliyetin yapılması için birey tarafından giyilen veya tutulan, kişiyi bir veya birden fazla riske karşı koruyan aygıta ne ad verilir?", options: ["A) Kendini korumak", "B) Kişisel koruyucu teknolojisi", "C) Ferdi kurtarıcı", "D) KKD (Kişisel Koruyucu Donanım)", "E) Spor ekipmanı"], answer: 3, solution: "Kişinin tehlikelerden korunmak amacıyla giydiği, taktığı veya tuttuğu donanımların yasal ve teknik genel adı KKD'dir." },
+            { q: "Aşağıdakilerden hangisi 2013 yılında yayımlanan Kişisel Koruyucu Donanımların İşyerlerinde Kullanılması Hakkında Yönetmelik'e göre KKD kapsamında yer alır?", options: ["A) Kara taşımacılığında kullanılan kişisel koruyucular (Emniyet kemeri vb.)", "B) Spor ekipmanları", "C) Nefsi müdafaayı hedefleyen silah ve ekipmanlar", "D) Riskleri saptayan ve ikaz eden taşınabilir cihazlar (Gaz ölçerler)", "E) Baret"], answer: 4, solution: "Spor aletleri, ölçüm cihazları ve nefsi müdafaa araçları mevzuatta açıkça KKD kapsamı DIŞINDA tutulmuştur. Baret ise baş koruyucu temel bir KKD'dir." },
+            { q: "Aşağıdakilerden hangisi solunum sistemi koruyucularından biridir?", options: ["A) Kulak tıkaçları", "B) Tam akustik baretler", "C) Endüstriyel baretlere uyan kulaklıklar", "D) Kapalı devre haberleşme alıcısı olan kulak koruyucuları", "E) Gaz, toz ve radyoaktif toz filtreli maskeler"], answer: 4, solution: "Diğer şıklar işitme ve baş koruyucularıdır. Filtreli maskeler doğrudan solunum yollarını korumak için tasarlanmıştır." },
+            { q: "Aşağıdakilerden hangisi ortam atmosferinden bağımsız görev yapan solunum cihazlarından biri değildir?", options: ["A) Bağımsız solunum cihazı (Tüplü SCBA)", "B) Rejenerasyon cihazları", "C) Ayrılmaz filtreli yüz maskeleri", "D) Temiz hava hortumu üniteleri", "E) Basınçlı hava hortumu üniteleri"], answer: 2, solution: "Filtreli yüz maskeleri ortamdaki havayı süzer. Ortamda oksijen biterse işe yaramazlar. Yani ortama 'bağımlı'dırlar. Tüplü cihazlar ise ortamdan bağımsızdır." },
+            { q: "Acil bir kaçış durumunda kullanılan bir 'bağımsız kısa süreli solunum cihazının' tek seferde kullanım süresi genellikle kaç dakikadır?", options: ["A) 10", "B) 30", "C) 45", "D) 60", "E) 90"], answer: 0, solution: "Kısa süreli (kaçış maskeleri/setleri) solunum cihazları sadece tehlikeli alandan çıkacak kadar (yaklaşık 10-15 dakika) hava sağlar. Operasyonel tüpler ise 30-45 dakikadır." },
+            { q: "Aşağıdakilerden hangisi bir itfaiyecinin yangına yaklaşım elbisesini oluşturan hayati katmanlardan biri değildir?", options: ["A) Nem bariyeri", "B) Isı bariyeri", "C) İç astar", "D) Çelik malzeme", "E) Dış astar"], answer: 3, solution: "İtfaiyeci elbisesi 4 katmandır (Dış astar, Nem bariyeri, Isı bariyeri, İç astar). Çelik malzeme elbisede değil, darbelere karşı çizmelerin/botların burun kısmında bulunur." },
+            { q: "Yangın esnasında yoğun duman ve diğer nedenlerle hareket yeteneğini yitirmiş, baygın hâldeki itfaiyecinin yerini belli etmek için belli bir süre hareketsiz kalındığında otomatik olarak yüksek sesli ve ışıklı ikaz veren cihaza ne ad verilir?", options: ["A) Sensör", "B) Siren", "C) Kişisel Hareketsizlik Cihazı (PASS)", "D) Düdük", "E) Alarm"], answer: 2, solution: "PASS (Personal Alert Safety System) cihazı, itfaiyeci düştüğünde veya 30 saniye hareketsiz kaldığında yüksek desibelde alarm vererek ekibin onu bulmasını sağlar." },
+            { q: "Bir çalışan KKD kullandığı hâlde ağır bir şekilde yaralanmıştır. Bu kazanın analizi yapıldığında, KKD kullanımına rağmen yaralanmanın yaşanmasının temel sebebi aşağıdakilerden hangisi Olamaz?", options: ["A) Yanlış ekipman seçimi yapılmış olması", "B) KKD'nin koruma kapasitesinin aşılması", "C) KKD'nin tehlike kaynağını fiziksel olarak tamamen ortadan kaldırmaması", "D) Çalışanın ekipmanı hatalı giymesi", "E) KKD'nin periyodik bakımının yapılmamış olması"], answer: 2, solution: "KKD'lerin varoluş amacı tehlike kaynağını yok etmek değildir (Tehlikeyi yok etmek kaynağında müdahaledir). KKD sadece kişinin etkilenmesini azaltır. Bu nedenle 'tehlikeyi yok etmediği için yaralandı' demek teknik bir hata olur." },
+            { q: "Kişisel Koruyucu Donanımlar, korudukları riskin ciddiyetine göre kategorize edilirler. Geriye dönüşü olmayan (kalıcı hasar, kanser, toksik etkiler) ve hayati tehlike oluşturan risklere karşı koruma sağlayan KKD'ler hangi kategoriye girer?", options: ["A) Kategori 0", "B) Kategori 1", "C) Kategori 2", "D) Kategori 3", "E) Kategori 4"], answer: 3, solution: "Ölümcül ve geriye dönüşü imkansız hasarlar veren riskler karşısında kullanılan karmaşık yapıdaki KKD'ler her zaman 'Kategori 3' tür ve sıkı denetime tabidir." },
+            { q: "Bir kimya fabrikasında risk değerlendirmesi yapan İSG Uzmanı, ortamda hangi durum oluştuğunda filtreli gaz maskelerinin kullanımını derhal yasaklayıp 'Bağımsız Solunum Cihazı (Tüplü)' kullanımını zorunlu kılmalıdır?", options: ["A) Ortam sıcaklığı 25 dereceyi aştığında", "B) Ortamdaki oksijen oranı %19.5'in altına düştüğünde", "C) Nem oranı %60'ı geçtiğinde", "D) Çalışanlar fazla terlediğinde", "E) Gürültü seviyesi 85 desibeli aştığında"], answer: 1, solution: "Filtreli maskeler havadaki zehri süzer ama size oksijen veremez. Oksijen %19.5 altına düşmüşse (boğucu ortam), filtreli maske hiçbir işe yaramaz; dışarıdan temiz hava basan tüplü sistem (SCBA) şarttır." },
+            { q: "Bir iş sağlığı güvenliği risk değerlendirmesinin ana hedefi öncelikle nedir?", options: ["A) İş yerinde oluşabilecek cezai yaptırımlardan kurtulmak", "B) Çalışanların sağlığını korumak, güvenliklerini sağlamak ve olası zararları en aza indirmek", "C) Sadece uluslararası sertifikaları alıp şirketin prestijini artırmak", "D) İşverenin maliyetlerini sıfıra indirmek", "E) KKD satış firmalarına ekonomik katkı sağlamak"], answer: 1, solution: "Risk değerlendirmesinin felsefesi evrak veya prosedür değil, doğrudan insan hayatını korumak ve güvenli bir çalışma ortamı tesis etmektir." },
+            { q: "Bir toz maskesinin çalışanın yüzüne tam oturup oturmadığını (sızdırmazlık testi) anlamak için personelin uygulaması gereken en pratik yöntem nedir?", options: ["A) Maskeyi suya daldırıp kabarcık çıkıp çıkmadığına bakmak", "B) Maskenin üzerine parfümlü gaz sıkarak kokuyu alıp almadığını test etmek", "C) İki elle maskeyi kapatarak derin bir nefes çekmek; maske içe doğru çekiliyorsa (vakumlanıyorsa) uygundur", "D) Maskeyi güneşe tutup ışık geçirgenliğini kontrol etmek", "E) Yanındaki arkadaşına maskeyi çektirerek esnekliğini denemek"], answer: 2, solution: "Negatif basınç sızdırmazlık testi: Maske elle kapatılır ve nefes alınır. Hava kaçağı yoksa maske yüze yapışıp içe doğru çökecektir." },
+            { q: "Avrupa Birliği ve Türk mevzuatına göre piyasaya arz edilen bir Kişisel Koruyucu Donanımın (KKD) ambalajında ve üzerinde aşağıdaki işaret veya belgelerden hangisinin bulunması zorunlu Değildir?", options: ["A) Ürünün CE işareti taşıması", "B) Kategori 3 ise Onaylanmış Kuruluşun Kimlik Numarası", "C) Türkçe kullanım kılavuzu", "D) Üreticinin isim veya logosu", "E) Ürünün son 10 yılki ihracat istatistik raporu"], answer: 4, solution: "Ticari bir istatistik raporunun ürün güvenliğiyle alakası yoktur. Ancak CE işareti ve anadilinde (Türkçe) kullanım kılavuzu yasal zorunluluktur." },
+            { q: "Maske ile birlikte koruyucu iş gözlüğü kullanan bir çalışanın gözlüğünde sürekli 'buğulanma' meydana geliyorsa, bunun en teknik sebebi nedir?", options: ["A) Ortamdaki nem oranının çok düşük olması", "B) Gözlüğün cam kalitesinin yetersiz olması", "C) Maskenin yüz şekline tam oturmaması ve ağızdan çıkan sıcak nefesin yukarı (gözlüğe) kaçması", "D) Çalışanın vücut ısısının çok yüksek olması", "E) Ortamda kimyasal buhar reaksiyonu yaşanması"], answer: 2, solution: "Burnun üst kısmındaki mandalın sıkılmaması veya yanlış ebat nedeniyle maskenin yüze tam oturmaması, verilen nefesin yukarı çıkarak gözlüğü buğulandırmasına sebep olur." },
+            { q: "Zamanında fark edilebilir derecede, sadece yüzeysel yaralanmalara neden olabilecek (örneğin bulaşık yıkarken kullanılan eldivenler veya güneş gözlükleri) düşük risklere karşı üretilmiş KKD'ler hangi gruba dâhildir?", options: ["A) Kategori 0", "B) Kategori 1", "C) Kategori 2", "D) Kategori 3", "E) Kapsam Dışı Ekipmanlar"], answer: 1, solution: "Minör riskler (basit darbeler, seyrelik deterjanlar, güneş ışını vb.) kullanıcının tehlikeyi kolayca fark edebileceği gruptur ve Kategori 1 olarak sınıflandırılır." },
+            { q: "Çalışma ortamında risklerle mücadele edilirken, KKD kullanmak 'Risk Kontrol Hiyerarşisi'nde hangi sırada yer almalıdır?", options: ["A) Karşılaşılan ilk anda başvurulacak en temel ve ilk yöntem olmalıdır", "B) Riski kaynağında yok etme yöntemleriyle eşdeğer tutulmalıdır", "C) Sadece iş yeri hekiminin tavsiyesi üzerine uygulanmalıdır", "D) Riski kaynağında yok etme veya izole etme gibi toplu koruma önlemlerinin uygulanamadığı durumlarda en son çare olarak kullanılmalıdır", "E) Sadece idari denetimler sırasında kullanılmalıdır"], answer: 3, solution: "İSG felsefesinde 'Toplu koruma, kişisel korumadan önce gelir'. KKD her zaman en son başvurulacak (veya diğerlerini destekleyecek) bariyerdir." },
+            { q: "Bir maden işletmesinde kullanılan metan gazı ölçüm cihazı (dedektör), işçiyi uyararak ortamı terk etmesini sağlamaktadır. Bu cihaz KKD yönetmeliğine göre neden Kişisel Koruyucu Donanım sayılmaz?", options: ["A) Elektrikle çalıştığı için", "B) Kişiyi fiziksel, kimyasal veya biyolojik bir etkenden doğrudan korumadığı, sadece tehlikeyi saptayıp ikaz ettiği için", "C) Yurt dışından ithal edildiği için", "D) Çalışanın üzerine giyilemediği için", "E) Sadece mühendisler kullanabildiği için"], answer: 1, solution: "Taşınabilir gaz detektörleri, dozimetreler vb. cihazlar tehlikeyi bildirir ama tehlike ile insan arasına bir kalkan (filtre, zırh, yalıtım) koymaz. Bu yüzden KKD sayılmazlar." }
+        ];
+
+        // Sınav Durumu Yönetimi
+        let quizState = {}; // Format: { 0: {selected: 1, correct: 1}, 1: {selected: 3, correct: 1} ... }
+        const STORAGE_KEY = "isg_u4_state"; // Bu üniteye özel anahtar
+
+        function stateYukle() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if(saved) {
+                    quizState = JSON.parse(saved);
+                    document.getElementById("memory-badge").innerHTML = `<i class="fa-solid fa-cloud-arrow-down"></i> Önceki oturumunuz başarıyla geri yüklendi. Kaldığınız yerden devam edebilirsiniz.`;
+                    document.getElementById("memory-badge").style.backgroundColor = "#dcfce7";
+                    document.getElementById("memory-badge").style.color = "#166534";
+                    document.getElementById("memory-badge").style.borderColor = "#bbf7d0";
+                }
+            } catch(e) { console.log("State yüklenemedi."); }
+        }
+
+        function stateKaydet() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(quizState));
+        }
+
+        // Soruları Ekrana Çizdirme
+        function renderQuestions() {
+            const container = document.getElementById("quiz-container");
+            const solutionsContainer = document.getElementById("solutions-container");
+            container.innerHTML = "";
+            solutionsContainer.innerHTML = "";
+
+            questions.forEach((q, index) => {
+                // Önceden çözülmüş mü?
+                const isAnswered = quizState.hasOwnProperty(index);
+                const savedData = isAnswered ? quizState[index] : null;
+
+                // Soru Kartı
+                let questionHTML = `
+                    <div class="question-card" id="q-card-${index}">
+                        <div class="question-text">${index + 1}. ${q.q}</div>
+                        <div class="options-list">
+                `;
+
+                q.options.forEach((opt, optIndex) => {
+                    let classes = "option-btn";
+                    let icon = "";
+                    
+                    if(isAnswered) {
+                        classes += " disabled"; // Kilitli
+                        if(optIndex === q.answer) {
+                            classes += " correct";
+                            icon = ' <i class="fa-solid fa-check" style="margin-left:auto;"></i>';
+                        }
+                        if(optIndex === savedData.selected && savedData.selected !== q.answer) {
+                            classes += " wrong";
+                            icon = ' <i class="fa-solid fa-xmark" style="margin-left:auto;"></i>';
+                        }
+                    }
+
+                    questionHTML += `
+                        <div class="${classes}" id="opt-${index}-${optIndex}" onclick="selectOption(${index}, ${optIndex}, ${q.answer})">
+                            ${opt} ${icon}
+                        </div>
+                    `;
+                });
+
+                questionHTML += `</div></div>`;
+                container.innerHTML += questionHTML;
+
+                // Çözüm Kartı (Gizli durur, sonuçlarda görünür)
+                const solutionHTML = `
+                    <div class="solution-box">
+                        <h4>Soru ${index + 1} Çözümü:</h4>
+                        <p><strong>Doğru Cevap:</strong> ${q.options[q.answer]}</p>
+                        <p style="color: var(--text-light); font-size: 0.9rem; margin-top: 5px; text-align:justify;"><i class="fa-solid fa-lightbulb" style="color: var(--primary-light);"></i> <strong>Analiz:</strong> ${q.solution}</p>
+                    </div>
+                `;
+                solutionsContainer.innerHTML += solutionHTML;
+            });
+        }
+
+        // Şık Tıklama
+        function selectOption(qIndex, selectedOptIndex, correctOptIndex) {
+            // Eğer daha önce cevaplanmışsa işlem yapma
+            if(quizState.hasOwnProperty(qIndex)) return;
+
+            // Şıkları kilitle ve renklendir
+            for(let i=0; i<5; i++) {
+                const optElement = document.getElementById(`opt-${qIndex}-${i}`);
+                optElement.classList.add("disabled");
+                
+                if(i === correctOptIndex) {
+                    optElement.classList.add("correct");
+                    optElement.innerHTML += ' <i class="fa-solid fa-check" style="margin-left:auto;"></i>';
+                }
+            }
+
+            if(selectedOptIndex !== correctOptIndex) {
+                const selectedElement = document.getElementById(`opt-${qIndex}-${selectedOptIndex}`);
+                selectedElement.classList.add("wrong");
+                selectedElement.innerHTML += ' <i class="fa-solid fa-xmark" style="margin-left:auto;"></i>';
+            }
+
+            // Hafızaya Kaydet
+            quizState[qIndex] = {
+                selected: selectedOptIndex,
+                correct: correctOptIndex
+            };
+            stateKaydet();
+        }
+
+        // Testi Bitir ve Değerlendir
+        function testiBitir() {
+            const answeredCount = Object.keys(quizState).length;
+            
+            if(answeredCount < questions.length) {
+                if(!confirm(`Dikkat: Henüz ${questions.length - answeredCount} soruyu boş bıraktınız. Boşlar yanlış sayılacaktır. Yine de bitirmek istiyor musunuz?`)) {
+                    return;
+                }
+            }
+
+            // Puan Hesapla (Doğru Sayısı * 5)
+            let score = 0;
+            for(let key in quizState) {
+                if(quizState[key].selected === quizState[key].correct) {
+                    score += 5;
+                }
+            }
+
+            // Görünümleri Ayarla
+            document.getElementById("finish-btn").style.display = "none";
+            document.getElementById("results-section").style.display = "block";
+            
+            // Sonuç Metni
+            document.getElementById("score-text").innerText = score;
+            let message = "";
+            if(score >= 90) message = "Harika! KKD mevzuatını ve risk değerlendirmesini çok iyi kavramışsınız.";
+            else if(score >= 70) message = "Tebrikler. KKD kategorileri ve solunum ekipmanları kısmını tekrar okumanızda fayda var.";
+            else message = "Mevzuat ve ekipman bilgisi ezber gerektirir. Soru çözümlerine odaklanarak tekrar yapınız.";
+            document.getElementById("score-message").innerText = message;
+
+            // Ana sayfa genel ilerleme tikini aktifleştirme (Opsiyonel Entegrasyon)
+            try {
+                let progress = JSON.parse(localStorage.getItem("isg_progress") || "[]");
+                if(!progress.includes("afet_unite_4")) {
+                    progress.push("afet_unite_4");
+                    localStorage.setItem("isg_progress", JSON.stringify(progress));
+                }
+            } catch(e) {}
+
+            document.getElementById("results-section").scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Sistemi Sıfırla
+        function testiSifirla() {
+            if(confirm("Tüm cevaplarınız kalıcı olarak silinecek ve teste baştan başlayacaksınız. Emin misiniz?")) {
+                localStorage.removeItem(STORAGE_KEY);
+                window.location.reload();
+            }
+        }
+
+        // Sayfa Başlangıcı
+        window.onload = () => {
+            stateYukle();
+            renderQuestions();
+        };
+
+    </script>
+</body>
+</html>

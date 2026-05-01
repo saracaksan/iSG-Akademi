@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ünite 7 - Konu Anlatımı ve Test | İSG Akademi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4c1d95; 
+            --primary-light: #7c3aed; 
+            --secondary: #1e1b4b; 
+            --bg-color: #f3f4f6;
+            --text-dark: #1f2937;
+            --success: #10b981;
+            --danger: #ef4444;
+            --card-bg: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-dark); line-height: 1.6; }
+
+        /* Navbar */
+        nav { background: var(--card-bg); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
+        .logo { font-size: 1.2rem; font-weight: 700; color: var(--primary); }
+        .back-btn { text-decoration: none; color: var(--primary); font-weight: 500; font-size: 0.9rem; border: 1px solid var(--primary); padding: 5px 15px; border-radius: 5px; transition: all 0.3s;}
+        .back-btn:hover { background: var(--primary); color: white; }
+
+        .container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
+        
+        /* Konu Anlatımı Bölümü */
+        .content-section { background: var(--card-bg); padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); margin-bottom: 2rem; }
+        .content-section h1 { color: var(--secondary); margin-bottom: 1rem; font-size: 1.8rem; text-align: center; border-bottom: 2px solid var(--primary-light); padding-bottom: 10px;}
+        .content-section h2 { color: var(--primary); margin-top: 1.5rem; margin-bottom: 1rem; font-size: 1.3rem; display: flex; align-items: center; gap: 10px;}
+        .content-section h3 { color: var(--secondary); margin-top: 1.2rem; margin-bottom: 0.5rem; font-size: 1.1rem; }
+        .content-section p, .content-section li { font-size: 0.95rem; margin-bottom: 0.8rem; text-align: justify; }
+        .highlight-box { background: #fef3c7; border-left: 5px solid #f59e0b; padding: 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .mind-map { background: #eff6ff; border: 1px dashed #3b82f6; padding: 1.5rem; border-radius: 8px; margin: 1rem 0; }
+
+        /* Test Bölümü */
+        .quiz-section { background: var(--card-bg); padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); }
+        .quiz-title { text-align: center; color: var(--secondary); margin-bottom: 1rem; }
+        
+        .memory-badge { display: inline-block; background: #e0e7ff; color: #4338ca; padding: 5px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-bottom: 2rem; border: 1px solid #c7d2fe; }
+
+        .question-card { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e7eb; transition: opacity 0.3s; }
+        .question-text { font-weight: 600; font-size: 1.05rem; margin-bottom: 1rem; }
+        
+        .options-list { display: flex; flex-direction: column; gap: 8px; }
+        .option-btn { 
+            background: #f8fafc; border: 2px solid #e2e8f0; padding: 12px 15px; 
+            border-radius: 8px; text-align: left; font-size: 0.95rem; cursor: pointer; 
+            transition: all 0.2s; display: flex; align-items: center; width: 100%; position: relative;
+        }
+        .option-btn:hover:not(.disabled) { border-color: var(--primary-light); background: #f5f3ff; }
+        
+        /* Şık Durumları */
+        .option-btn.disabled { pointer-events: none; opacity: 0.8; }
+        .option-btn.correct { background: #ecfdf5 !important; border-color: var(--success) !important; color: #065f46; font-weight: 600; }
+        .option-btn.wrong { background: #fef2f2 !important; border-color: var(--danger) !important; color: #991b1b; text-decoration: line-through; }
+        
+        .btn-finish { background: var(--primary); color: white; border: none; padding: 15px 30px; font-size: 1.1rem; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 1rem; transition: background 0.3s;}
+        .btn-finish:hover { background: var(--secondary); }
+        .btn-reset { background: #6b7280; color: white; border: none; padding: 10px 20px; font-size: 0.9rem; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px; width: 100%; transition: background 0.3s;}
+        .btn-reset:hover { background: #4b5563; }
+
+        /* Sonuç ve Çözümler Bölümü */
+        #results-section { display: none; margin-top: 2rem; background: #f0fdf4; padding: 2rem; border-radius: 15px; border: 2px solid var(--success); }
+        .score-display { text-align: center; font-size: 2.5rem; font-weight: bold; color: var(--success); margin-bottom: 1rem; }
+        
+        .solution-box { background: white; padding: 15px; border-left: 4px solid var(--primary-light); margin-bottom: 15px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .solution-box h4 { margin-bottom: 5px; color: var(--secondary); font-size: 1rem;}
+
+        .btn-pdf { background: #dc2626; color: white; border: none; padding: 12px 25px; font-size: 1rem; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 20px; display: inline-flex; align-items: center; gap: 10px; }
+        .btn-pdf:hover { background: #991b1b; }
+
+        footer { text-align: center; padding: 2rem; color: var(--text-light); font-size: 0.9rem; }
+
+        @media print {
+            body { background: white; color: black; font-size: 10pt; line-height: 1.3; }
+            nav, .btn-finish, .btn-reset, .btn-pdf, .back-btn, .memory-badge { display: none !important; }
+            .container { max-width: 100%; margin: 0; padding: 0; }
+            .content-section, .quiz-section { box-shadow: none; border: none; padding: 0; margin-bottom: 10px; }
+            h1 { font-size: 14pt; } h2 { font-size: 12pt; } h3 { font-size: 11pt; }
+            .question-card { margin-bottom: 10px; padding-bottom: 10px; page-break-inside: avoid; border-bottom: 1px solid #ccc;}
+            .option-btn { padding: 4px 8px; border: 1px solid #ccc; margin-bottom: 2px; font-size: 9pt; }
+            .quiz-container-print { column-count: 2; column-gap: 20px; }
+            #results-section { display: block !important; border: none; padding: 0; }
+            .solution-box { border: 1px solid #ddd; padding: 8px; margin-bottom: 5px; page-break-inside: avoid; font-size: 9pt;}
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo"><i class="fa-solid fa-industry"></i> Ünite 7: Endüstriyel Kazalar</div>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-light);">Hazırlayan: Sıraç Aksan</span>
+            <a href="../../index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Ana Sayfaya Dön</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section class="content-section">
+            <h1>Endüstriyel Kazalarda İş Sağlığı ve Güvenliği</h1>
+            
+            <h2><i class="fa-solid fa-microscope"></i> 1. Afetler, Kazalar ve Kök Sebep Analizi</h2>
+            <p>5510 sayılı Kanun'a göre iş kazası; çalışanın iş süresince, kullanılan makine/araç nedeni ile uğradığı ve iş gücünün tamamını ya da bir bölümünü kaybettiği olaydır. Bu kazaların bazıları, işletmenin müdahale kapasitesini aşarak <strong>büyük endüstriyel afetlere (örneğin patlamalar, sızıntılar)</strong> dönüşebilir.</p>
+            <ul>
+                <li><strong>Kök Sebep Analizi:</strong> Kazanın tüm detaylarıyla baştan sona araştırılmasıdır. Temel amacı suçlu bulmak değil, <strong>kazanın tekrarını önleyecek</strong> tedbirleri işletme kültürünün bir parçası yapmaktır.</li>
+                <li><strong>Analiz Yöntemleri:</strong> Beş Neden (5 Whys), Bariyer Analizi, Değişiklik Analizi, Pareto Analizi gibi teknikler kullanılır.</li>
+                <li><strong>Davranışsal Güvenlik:</strong> Çalışanların davranışlarının altındaki psikolojik etmenleri sistematik biçimde inceleyen ve kazaları önlemeyi hedefleyen modern bir yaklaşımdır.</li>
+            </ul>
+
+            <h2><i class="fa-solid fa-industry"></i> 2. Büyük Endüstriyel Kazalar ve BEKRA (SEVESO)</h2>
+            <p><strong>Büyük Endüstriyel Kaza:</strong> Bir kuruluşun işletilmesi sırasında, kontrolsüz gelişmelerden kaynaklanan; tehlikeli maddelerin sebep olduğu, çevre ve insan sağlığı için anında veya daha sonra ciddi tehlike yaratan büyük bir <strong>emisyon, yangın veya patlama</strong> olayıdır. TMMOB verilerine göre Türkiye'de 2018 yılında en az <strong>436</strong> endüstriyel yangın ve patlama yaşanmıştır.</p>
+            <ul>
+                <li><strong>Seveso Direktifi (BEKRA):</strong> Avrupa Topluluğu tarafından hazırlanmıştır. Ülkemizdeki karşılığı <strong>"Büyük Endüstriyel Kazaların Önlenmesi ve Etkilerinin Azaltılması Hakkında Yönetmelik" (BEKRA)</strong> dir. </li>
+                <li><strong>İşletmeci:</strong> 6331 sayılı kanundaki işveren tanımı kapsamında, kuruluşun/tesisin işletilmesinden sorumlu, karar verme yetkisine sahip gerçek veya tüzel kişidir.</li>
+            </ul>
+
+            <h2><i class="fa-solid fa-flask"></i> 3. SEA Yönetmeliği (Kimyasalların Etiketlenmesi)</h2>
+            <p>Maddelerin ve Karışımların Sınıflandırılması, Etiketlenmesi ve Ambalajlanması (SEA) Yönetmeliği, 2013'te yayımlanmış ve 2016'da tamamen yürürlüğe girmiştir.</p>
+            <p>Bu yönetmelik, kimyasalların etiketlerinde <strong>Birleşmiş Milletler Küresel Uyumlaştırılmış Sisteminden (BM GHS)</strong> alınan <em>piktogramlar (zararlılık işaretleri), uyarı kelimeleri ve zararlılık ifadelerini</em> standart hâle getirmiştir.</p>
+
+            <div class="highlight-box">
+                <h3 style="color: #b45309; margin-bottom: 10px;"><i class="fa-solid fa-triangle-exclamation"></i> Sınavlarda Çıkma Mantığı ve Önemli Tuzaklar</h3>
+                <p><strong>Tuzak 1 (İş Kazasının 2 Temel Etkeni):</strong> İş kazalarının oluşmasına neden olan iki altın sebep vardır: <strong>1. Güvensiz durumlar</strong> (Fiziksel ortam, bozuk makine) ve <strong>2. Güvensiz davranışlar</strong> (İşçinin hatası, kurallara uymama). Sınavda şıkları karıştırırlar.</p>
+                <p><strong>Tuzak 2 (Epidemiyoloji Kuramı):</strong> "Çevre faktörleri ile hastalık" arasındaki ilişkinin aynısının, "Çevre faktörleri ile kaza" arasında da olduğunu savunan teori <strong>Epidemiyoloji Kuramı</strong>'dır.</p>
+                <p><strong>Tuzak 3 (BEKRA ve SEVESO Eşleşmesi):</strong> BEKRA'nın uluslararası standartlardaki diğer adı SEVESO direktifidir. (Seveso, İtalya'da 1976'da büyük bir kimyasal felaketin yaşandığı kasabanın adıdır).</p>
+            </div>
+
+            <div class="mind-map">
+                <h3 style="color: #1d4ed8; margin-bottom: 10px;"><i class="fa-solid fa-brain"></i> Zihin Haritası & Kodlamalar</h3>
+                <p><strong>Büyük Kaza Kriterleri Kodu: "E-Y-P"</strong> (Büyük kaza olması için bunlardan biri şarttır)</p>
+                <ul style="margin-left: 20px;">
+                    <li><strong>E</strong>misyon (Zehirli gaz sızıntısı)</li>
+                    <li><strong>Y</strong>angın</li>
+                    <li><strong>P</strong>atlama</li>
+                </ul>
+                <p style="margin-top: 10px;"><strong>SEA Etiket Unsurları:</strong> Piktogram (Şekil), Uyarı Kelimesi (Tehlike/Dikkat), Önlem İfadesi.</p>
+            </div>
+        </section>
+
+        <section class="quiz-section">
+            <h2 class="quiz-title"><i class="fa-solid fa-list-check"></i> Ünite 7 Final Provası (20 Soru)</h2>
+            <div style="text-align: center;">
+                <div class="memory-badge" id="memory-badge">
+                    <i class="fa-solid fa-floppy-disk"></i> Sistem Devrede: İşaretlenen sorular hafızaya kaydediliyor...
+                </div>
+            </div>
+            
+            <div id="quiz-container" class="quiz-container-print">
+                </div>
+
+            <button class="btn-finish" id="finish-btn" onclick="testiBitir()">
+                <i class="fa-solid fa-flag-checkered"></i> Testi Bitir ve Değerlendir
+            </button>
+            <button class="btn-reset" id="reset-btn" onclick="testiSifirla()">
+                <i class="fa-solid fa-rotate-right"></i> Çözümlerimi Sıfırla ve Baştan Başla
+            </button>
+
+            <div id="results-section">
+                <h2 style="text-align: center; color: var(--secondary);">Sınav Sonucunuz</h2>
+                <div class="score-display">Puan: <span id="score-text">0</span> / 100</div>
+                <p style="text-align: center; margin-bottom: 2rem; font-weight: 500;" id="score-message"></p>
+
+                <h3 style="margin-bottom: 15px; border-bottom: 2px solid #ccc; padding-bottom: 5px;">Detaylı Soru Analizi ve Çözümler</h3>
+                <div id="solutions-container">
+                    </div>
+
+                <div style="text-align: center;">
+                    <button class="btn-pdf" onclick="window.print()">
+                        <i class="fa-solid fa-file-pdf"></i> Konuyu ve Çözümleri Sıkışık PDF Olarak Kaydet
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>Anadolu Üniversitesi İş Sağlığı ve Güvenliği Hazırlık Sistemi &copy; 2026 | Tasarım: Sıraç Aksan</p>
+    </footer>
+
+    <script>
+        // Soru Veritabanı (20 Analitik Soru)
+        const questions = [
+            { q: "Deprem, yanardağ patlamaları, tsunami, toprak kayması (heyelan) gibi doğrudan doğruya kaynağını yer kabuğu ya da yerin derinliklerinden alan afetlere ne ad verilir?", options: ["A) Jeolojik afet", "B) Meteorolojik afet", "C) Beşeri afet", "D) Teknolojik afet", "E) Katastrofik afet"], answer: 0, solution: "Yer kabuğu, fay hatları ve yeraltı hareketleri kaynaklı tüm doğa olayları 'Jeoloji (Yer Bilimi)' bilimi kapsamındadır, dolayısıyla bunlara Jeolojik afet denir." },
+            { q: "Büyük bir depremin ardından fay hattı yakınındaki bir petrol rafinerisinde yıkım gerçekleşmiş ve devasa bir yangın başlamıştır. Afet literatürüne göre depremin tetiklediği bu tür teknolojik kazalara veya çevresel etkilere ne ad verilir?", options: ["A) Meteorolojik afet", "B) Biyolojik silah saldırısı", "C) Doğal afetlerin tetiklediği teknolojik kazalar (Çevresel etkiler / Natech)", "D) Asimetrik savaş", "E) Saf endüstriyel kaza"], answer: 2, solution: "Doğa olaylarının (Natural) tetiklediği teknolojik (Technological) facialara literatürde Natech kazaları veya çevresel etkili teknolojik kazalar denir." },
+            { q: "Tıp biliminde 'çevre faktörleri ile hastalık' arasındaki ilişkiyi inceleyen kuramın, iş sağlığı ve güvenliği alanında 'çevre faktörleri ile kaza' arasındaki ilişkiye de uyarlanabileceğini savunan kaza teorisi hangisidir?", options: ["A) Epidemiyoloji kuramı", "B) Çoklu Etken Kuramı", "C) Domino Teorisi", "D) İnsan Faktörü Kuramı", "E) Davranışsal Kuram"], answer: 0, solution: "Epidemiyoloji normalde salgın hastalıkların çevreyle ilişkisini inceler. Bu teorinin kazalar (hastalık yerine kaza) için uyarlanmasına Epidemiyoloji Kuramı denir." },
+            { q: "Bir kimya fabrikasında yaşanan kazanın ardından kurulan komisyon, kazanın kök sebeplerini analiz edecektir. Aşağıdakilerden hangisi literatürde kabul gören geçerli bir 'kök sebep analizi yöntemi' Değildir?", options: ["A) Kaza / Olay genel analizi (Düz kayıt tutma)", "B) Beş Neden (5 Whys) Analizi", "C) Bariyer Analizi", "D) Değişiklik Analizi", "E) Pareto Analizi"], answer: 0, solution: "5 Neden, Bariyer, Değişiklik ve Pareto analizi uluslararası standartlarda birer 'kök sebep' bulma tekniğidir. Genel kayıt tutma (Kaza/olay analizi) tek başına teknik bir 'kök sebep arama' metodu değildir." },
+            { q: "İş kazalarının oluşmasına neden olan iki temel etken; iş yerlerindeki fiziksel '………………………' ile çalışanların yaptığı '…………………' davranışlardır. Cümleyi doğru tamamlayan şık hangisidir?", options: ["A) Güvenli durumlar / Dikkatsiz", "B) Güvensiz durumlar / Güvensiz", "C) Tehlikeli davranışlar / Güvensiz", "D) Dirençsiz durumlar / Kırılgan", "E) Dayanıksız durumlar / Kötü"], answer: 1, solution: "İş kazalarının teorik olarak %88'i 'Güvensiz Davranışlar' (İnsan hatası), %10'u ise 'Güvensiz Durumlar' (Makine, ortam hatası) kaynaklıdır." },
+            { q: "Bir fabrikada iş kazası meydana geldikten sonra, kazanın tarafları arasındaki kusur oranları, tazminat davaları ve cezai sorumluluklar hangi hukuk dalının kuralları çerçevesinde ele alınır?", options: ["A) İş Hukuku", "B) Deniz Hukuku", "C) Medeni Hukuk", "D) Sendikalar Kanunu", "E) Çevre Hukuku"], answer: 0, solution: "İşçi ve işveren arasındaki sözleşme, kaza, tazminat, sorumluluk ve fesih gibi tüm süreçler doğrudan 'İş Hukuku' mahkemelerinde görülür." },
+            { q: "TMMOB (Türk Mühendis ve Mimar Odaları Birliği) 2019 yılı raporu verilerine göre; Türkiye'de bir önceki yıl (2018) içerisinde en az kaç endüstriyel yangın ve patlama olayı kayda geçmiştir?", options: ["A) 436", "B) 5", "C) 10", "D) 20", "E) 50"], answer: 0, solution: "Raporlanan istatistiklere göre 2018'de Türkiye'de 436 adet büyük veya küçük çaplı endüstriyel yangın/patlama meydana gelmiştir." },
+            { q: "Bir tesiste 'Büyük Kaza Senaryo Dokümanı' hazırlanırken, senaryo edilen her bir büyük endüstriyel kazanın (örneğin tank patlaması) bir yıl içinde meydana gelme ihtimalinin (sıklığının) matematiksel değerine ne ad verilir?", options: ["A) Büyük endüstriyel kaza frekansı", "B) Büyük endüstriyel kaza şiddeti", "C) Risk iştahı", "D) Olasılık dağılımı", "E) Kaza varyansı"], answer: 0, solution: "Bir olayın belirli bir zaman diliminde (genelde 1 yıl) tekrarlanma/meydana gelme sıklığına 'Frekans' (Kaza Frekansı) denir." },
+            { q: "6331 sayılı Kanun'da belirtilen işveren tanımı kapsamında, bir tehlikeli tesisin fiilen işletilmesinden sorumlu olan ve buradaki teknik süreçler hakkında nihai 'karar verme yetkisine sahip' gerçek veya tüzel kişiye ne ad verilir?", options: ["A) Tesis müdürü", "B) Kurum vekil harcı", "C) Kuruluş yöneticisi", "D) İşletmeci", "E) Alt İşveren (Taşeron)"], answer: 3, solution: "BEKRA ve Çevre mevzuatında, o tesisi kiralayan, satın alan veya yetkiyi elinde tutarak yöneten baş aktöre hukuki olarak 'İşletmeci' adı verilir." },
+            { q: "Avrupa Birliği standartlarına uyum çerçevesinde ülkemizde çıkarılan 'Büyük Endüstriyel Kazaların Önlenmesi ve Etkilerinin Azaltılması Hakkında Yönetmelik'in endüstri dilinde bilinen kısa adı (kısaltması veya Avrupa'daki karşılığı) nedir?", options: ["A) SEVESO (BEKRA)", "B) OHSAS 18001", "C) ISO 14001", "D) REACH", "E) RoHS"], answer: 0, solution: "Türkiye'deki adı BEKRA, Avrupa'daki ve küresel endüstrideki karşılığı ise SEVESO direktifidir (İtalya'nın Seveso kasabasındaki faciadan adını alır)." },
+            { q: "Bir işletmede kazaların kök nedenlerini araştırırken sadece makineleri veya fiziksel çevreyi değil; çalışanların eylemlerini ve bu eylemlerin altındaki 'psikolojik etmenleri' sistematik biçimde inceleyen yeni nesil güvenlik yaklaşımına ne ad verilir?", options: ["A) Makine Emniyeti Yönetimi", "B) Reaktif Güvenlik", "C) Davranışsal Güvenlik", "D) Geleneksel Denetim", "E) Klasik İş Güvenliği"], answer: 2, solution: "Davranışsal Güvenlik (Behavior-Based Safety), kazaları önlemek için doğrudan insan davranışlarına, alışkanlıklarına ve psikolojisine odaklanan proaktif bir yaklaşımdır." },
+            { q: "Maddelerin ve Karışımların Sınıflandırılması, Etiketlenmesi ve Ambalajlanması (SEA) Yönetmeliği ile birlikte, kimyasal ambalajların üzerinde yer alması zorunlu hâle gelen ve BM (GHS) sistemiyle uyumlu 'Zararlılık İşaretlerine (Sembollere)' ne ad verilir?", options: ["A) Barkod", "B) Piktogram", "C) Karekod (QR)", "D) Hologram", "E) Flama"], answer: 1, solution: "Kırmızı elmas çerçeve içinde yer alan, alev, kurukafa, ünlem gibi görsel tehlike uyarı sembollerinin uluslararası teknik adı 'Piktogram'dır." },
+            { q: "Bir kimya tesisinde yapılan risk analizi sonucunda, bir kaza yaşanması durumunda olayın 'Büyük Endüstriyel Kaza' sınıfına girebilmesi için aşağıdakilerden hangisinin gerçekleşmesi beklenen kriterler (E-Y-P) arasında yer almaz?", options: ["A) Büyük bir toksik/kimyasal emisyon (sızıntı)", "B) Tesis genelini etkileyen devasa bir yangın", "C) Şiddetli bir patlama olayı", "D) Ofis binasında yaşanan küçük bir elektrik kontağı", "E) Çevre ve insan sağlığı için anında veya daha sonra ciddi tehlike oluşması"], answer: 3, solution: "Büyük Endüstriyel Kaza (BEK) demek için ortada büyük bir 'Emisyon', 'Yangın' veya 'Patlama' olmalıdır. Basit ofis arızaları bu kapsama girmez." },
+            { q: "Kaza Kök Sebep Analizi (RCA) çalışmalarının temel ve en hayati felsefesi nedir?", options: ["A) Kazada kusuru bulunan işçiyi tespit edip derhal işten çıkarmak", "B) Hukuki tazminatlardan kaçmak için sahte delil üretmek", "C) Kazanın sistemik arka planını çözerek 'aynı kazanın veya benzerlerinin tekrar yaşanmasını kalıcı olarak önlemek'", "D) Devlet denetimlerinde ceza puanını düşürmek", "E) Sadece hasar gören makinenin maliyetini sigortadan tahsil etmek"], answer: 2, solution: "Kök sebep analizinde amaç 'bağcıyı dövmek değil, üzüm yemektir'. Sistemdeki açığı bulup kapatarak gelecekteki olası ölümleri/kazaları engellemektir." },
+            { q: "Endüstriyel kazaların araştırılmasında sıklıkla kullanılan ve sorunun temeline inmek için art arda 'Neden?' sorusunun sorulmasına dayanan analitik yöntemin adı nedir?", options: ["A) Ishikawa Balık Kılçığı", "B) Beş Neden (5 Whys) Analizi", "C) Hata Ağacı Analizi", "D) Risk Matrisi", "E) Papyon (Bow-tie) Analizi"], answer: 1, solution: "Problem tespit edildikten sonra en derindeki (kök) sebebe inene kadar ortalama 5 defa 'Neden bu oldu?' sorusunun sorulduğu tekniğe '5 Neden Analizi' denir." },
+            { q: "Bir rafineri işletmecisinin, tesisini BEKRA (Seveso) yönetmeliği kapsamında 'Alt Seviyeli' veya 'Üst Seviyeli' kuruluş olarak Çevre Bakanlığına bildirmesindeki ana belirleyici kıstas nedir?", options: ["A) Tesisteki toplam işçi sayısı", "B) Tesisin kapladığı arsa yüzölçümü", "C) Tesiste depolanan / bulundurulan tehlikeli kimyasalların cinsi ve toplam miktarı (tonajı)", "D) Tesisin yıllık mali cirosu", "E) Tesisin şehir merkezine olan uzaklığı"], answer: 2, solution: "Seveso direktifinde bir tesisin tehlike seviyesini, içeride tanklarda veya depolarda bulundurduğu tehlikeli maddelerin kapasitesi (tonaj limitleri) belirler." },
+            { q: "Aşağıdakilerden hangisi SEA (Sınıflandırma, Etiketleme, Ambalajlama) Yönetmeliği'nin getirdiği yenilikler çerçevesinde bir kimyasalın etiketinde bulunması gereken unsurlardan biri Değildir?", options: ["A) Ürünün fiyat etiketi ve KDV oranı", "B) Piktogramlar (Zararlılık işaretleri)", "C) Uyarı kelimesi (Tehlike veya Dikkat)", "D) Önlem ifadeleri (Örn: Gözle temasından kaçının)", "E) Tedarikçinin adı, adresi ve telefon numarası"], answer: 0, solution: "SEA yönetmeliği tamamen İSG ve çevre koruma odaklıdır. Ürünün ticari fiyatı, KDV'si veya barkodu bu yönetmeliğin güvenlik etiketi standartları arasında yer almaz." },
+            { q: "5510 sayılı Kanuna göre iş kazasının tanımında yer alan 'iş gücünün tamamını ya da bir bölümünü kaybettiği olay' ifadesindeki iş gücü kaybı, tıbbi olarak neyi ifade eder?", options: ["A) Sadece işçinin o günkü mesaisini tamamlayamaması", "B) Kişinin geçici veya kalıcı olarak bedenen/ruhen özre uğraması ve çalışma kapasitesini yitirmesi", "C) İşçinin yıllık izne ayrılması", "D) Sadece ölümle sonuçlanan olaylar", "E) İşçinin emeklilik hakkını kaybetmesi"], answer: 1, solution: "İş gücü kaybı, kazazedenin yaralanarak (kırık, kopma, travma, psikolojik şok) normal çalışma faaliyetini geçici raporlu veya kalıcı malul olarak yapamamasıdır." },
+            { q: "Kimyasalların Küresel Uyumlaştırılmış Sistemi (BM GHS) standartlarının oluşturulmasındaki en büyük uluslararası hedef nedir?", options: ["A) Gümrük vergilerini sıfırlamak", "B) Dünyanın neresinde olursa olsun kimyasalın üzerindeki tehlike sembolünün ve dilinin herkes tarafından aynı şekilde anlaşılmasını sağlamak", "C) Kimyasal üretimini tamamen durdurmak", "D) Sadece Avrupa kıtası içinde ticaret yapmak", "E) Kimyasalları sadece sıvı hâlde taşımak"], answer: 1, solution: "Global Uyumlaştırılmış Sistem (GHS), tehlikeli maddelerin dil bariyeri olmaksızın tüm dünyada aynı piktogramlarla tanınmasını ve güvenli taşınmasını sağlar." },
+            { q: "Büyük bir endüstriyel tesiste, bir tankta başlayan yangının yaydığı aşırı ısı radyasyonunun, hemen yanındaki diğer kimyasal tankları da ısıtarak patlatması olayına teknik olarak ne ad verilir?", options: ["A) İzole patlama", "B) Kapalı alan reaksiyonu", "C) Domino Etkisi (Sinerjik kaza büyümesi)", "D) Sönümlenme", "E) Soğuk genleşme"], answer: 2, solution: "Bir kazanın (yangın, patlama) yarattığı etkinin yakındaki tesisleri/tankları tetikleyerek zincirleme bir reaksiyona ve çok daha büyük bir faciaya yol açmasına BEKRA mevzuatında 'Domino Etkisi' denir." }
+        ];
+
+        // Sınav Durumu Yönetimi (Local Storage)
+        let quizState = {}; 
+        const STORAGE_KEY = "isg_u7_state"; 
+
+        function stateYukle() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if(saved) {
+                    quizState = JSON.parse(saved);
+                    document.getElementById("memory-badge").innerHTML = `<i class="fa-solid fa-cloud-arrow-down"></i> Önceki oturumunuz başarıyla geri yüklendi. Kaldığınız yerden devam edebilirsiniz.`;
+                    document.getElementById("memory-badge").style.backgroundColor = "#dcfce7";
+                    document.getElementById("memory-badge").style.color = "#166534";
+                    document.getElementById("memory-badge").style.borderColor = "#bbf7d0";
+                }
+            } catch(e) { console.log("State yüklenemedi."); }
+        }
+
+        function stateKaydet() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(quizState));
+        }
+
+        // Soruları Ekrana Çizdirme
+        function renderQuestions() {
+            const container = document.getElementById("quiz-container");
+            const solutionsContainer = document.getElementById("solutions-container");
+            container.innerHTML = "";
+            solutionsContainer.innerHTML = "";
+
+            questions.forEach((q, index) => {
+                const isAnswered = quizState.hasOwnProperty(index);
+                const savedData = isAnswered ? quizState[index] : null;
+
+                let questionHTML = `
+                    <div class="question-card" id="q-card-${index}">
+                        <div class="question-text">${index + 1}. ${q.q}</div>
+                        <div class="options-list">
+                `;
+
+                q.options.forEach((opt, optIndex) => {
+                    let classes = "option-btn";
+                    let icon = "";
+                    
+                    if(isAnswered) {
+                        classes += " disabled";
+                        if(optIndex === q.answer) {
+                            classes += " correct";
+                            icon = ' <i class="fa-solid fa-check" style="margin-left:auto;"></i>';
+                        }
+                        if(optIndex === savedData.selected && savedData.selected !== q.answer) {
+                            classes += " wrong";
+                            icon = ' <i class="fa-solid fa-xmark" style="margin-left:auto;"></i>';
+                        }
+                    }
+
+                    questionHTML += `
+                        <div class="${classes}" id="opt-${index}-${optIndex}" onclick="selectOption(${index}, ${optIndex}, ${q.answer})">
+                            ${opt} ${icon}
+                        </div>
+                    `;
+                });
+
+                questionHTML += `</div></div>`;
+                container.innerHTML += questionHTML;
+
+                // Çözüm Kartı
+                const solutionHTML = `
+                    <div class="solution-box">
+                        <h4>Soru ${index + 1} Çözümü:</h4>
+                        <p><strong>Doğru Cevap:</strong> ${q.options[q.answer]}</p>
+                        <p style="color: var(--text-light); font-size: 0.9rem; margin-top: 5px; text-align:justify;"><i class="fa-solid fa-lightbulb" style="color: var(--primary-light);"></i> <strong>Analiz:</strong> ${q.solution}</p>
+                    </div>
+                `;
+                solutionsContainer.innerHTML += solutionHTML;
+            });
+        }
+
+        // Şık Tıklama
+        function selectOption(qIndex, selectedOptIndex, correctOptIndex) {
+            if(quizState.hasOwnProperty(qIndex)) return;
+
+            for(let i=0; i<5; i++) {
+                const optElement = document.getElementById(`opt-${qIndex}-${i}`);
+                optElement.classList.add("disabled");
+                
+                if(i === correctOptIndex) {
+                    optElement.classList.add("correct");
+                    optElement.innerHTML += ' <i class="fa-solid fa-check" style="margin-left:auto;"></i>';
+                }
+            }
+
+            if(selectedOptIndex !== correctOptIndex) {
+                const selectedElement = document.getElementById(`opt-${qIndex}-${selectedOptIndex}`);
+                selectedElement.classList.add("wrong");
+                selectedElement.innerHTML += ' <i class="fa-solid fa-xmark" style="margin-left:auto;"></i>';
+            }
+
+            quizState[qIndex] = { selected: selectedOptIndex, correct: correctOptIndex };
+            stateKaydet();
+        }
+
+        // Testi Bitir ve Değerlendir
+        function testiBitir() {
+            const answeredCount = Object.keys(quizState).length;
+            
+            if(answeredCount < questions.length) {
+                if(!confirm(`Dikkat: Henüz ${questions.length - answeredCount} soruyu boş bıraktınız. Boşlar yanlış sayılacaktır. Yine de bitirmek istiyor musunuz?`)) return;
+            }
+
+            let score = 0;
+            for(let key in quizState) {
+                if(quizState[key].selected === quizState[key].correct) score += 5;
+            }
+
+            document.getElementById("finish-btn").style.display = "none";
+            document.getElementById("results-section").style.display = "block";
+            
+            document.getElementById("score-text").innerText = score;
+            let message = "";
+            if(score >= 90) message = "Tebrikler! BEKRA, Seveso ve kök sebep analizini çok iyi anlamışsınız.";
+            else if(score >= 70) message = "Başarılı. Davranışsal güvenlik ve SEA yönetmeliği detaylarını tekrar gözden geçirin.";
+            else message = "Mevzuat konuları biraz ezber gerektirir. Soru çözümlerine odaklanarak tekrar yapınız.";
+            document.getElementById("score-message").innerText = message;
+
+            try {
+                let progress = JSON.parse(localStorage.getItem("isg_progress") || "[]");
+                if(!progress.includes("afet_unite_7")) {
+                    progress.push("afet_unite_7");
+                    localStorage.setItem("isg_progress", JSON.stringify(progress));
+                }
+            } catch(e) {}
+
+            document.getElementById("results-section").scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Sistemi Sıfırla
+        function testiSifirla() {
+            if(confirm("Tüm cevaplarınız kalıcı olarak silinecek ve teste baştan başlayacaksınız. Emin misiniz?")) {
+                localStorage.removeItem(STORAGE_KEY);
+                window.location.reload();
+            }
+        }
+
+        window.onload = () => {
+            stateYukle();
+            renderQuestions();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ünite 5 - Konu Anlatımı ve Test | İSG Akademi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4c1d95; 
+            --primary-light: #7c3aed; 
+            --secondary: #1e1b4b; 
+            --bg-color: #f3f4f6;
+            --text-dark: #1f2937;
+            --success: #10b981;
+            --danger: #ef4444;
+            --card-bg: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-dark); line-height: 1.6; }
+
+        /* Navbar */
+        nav { background: var(--card-bg); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
+        .logo { font-size: 1.2rem; font-weight: 700; color: var(--primary); }
+        .back-btn { text-decoration: none; color: var(--primary); font-weight: 500; font-size: 0.9rem; border: 1px solid var(--primary); padding: 5px 15px; border-radius: 5px; transition: all 0.3s;}
+        .back-btn:hover { background: var(--primary); color: white; }
+
+        .container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
+        
+        /* Konu Anlatımı Bölümü */
+        .content-section { background: var(--card-bg); padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); margin-bottom: 2rem; }
+        .content-section h1 { color: var(--secondary); margin-bottom: 1rem; font-size: 1.8rem; text-align: center; border-bottom: 2px solid var(--primary-light); padding-bottom: 10px;}
+        .content-section h2 { color: var(--primary); margin-top: 1.5rem; margin-bottom: 1rem; font-size: 1.3rem; display: flex; align-items: center; gap: 10px;}
+        .content-section h3 { color: var(--secondary); margin-top: 1.2rem; margin-bottom: 0.5rem; font-size: 1.1rem; }
+        .content-section p, .content-section li { font-size: 0.95rem; margin-bottom: 0.8rem; text-align: justify; }
+        .highlight-box { background: #fef3c7; border-left: 5px solid #f59e0b; padding: 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .mind-map { background: #eff6ff; border: 1px dashed #3b82f6; padding: 1.5rem; border-radius: 8px; margin: 1rem 0; }
+
+        /* Test Bölümü */
+        .quiz-section { background: var(--card-bg); padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); }
+        .quiz-title { text-align: center; color: var(--secondary); margin-bottom: 1rem; }
+        
+        .memory-badge { display: inline-block; background: #e0e7ff; color: #4338ca; padding: 5px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-bottom: 2rem; border: 1px solid #c7d2fe; }
+
+        .question-card { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e7eb; transition: opacity 0.3s; }
+        .question-text { font-weight: 600; font-size: 1.05rem; margin-bottom: 1rem; }
+        
+        .options-list { display: flex; flex-direction: column; gap: 8px; }
+        .option-btn { 
+            background: #f8fafc; border: 2px solid #e2e8f0; padding: 12px 15px; 
+            border-radius: 8px; text-align: left; font-size: 0.95rem; cursor: pointer; 
+            transition: all 0.2s; display: flex; align-items: center; width: 100%; position: relative;
+        }
+        .option-btn:hover:not(.disabled) { border-color: var(--primary-light); background: #f5f3ff; }
+        
+        /* Şık Durumları */
+        .option-btn.disabled { pointer-events: none; opacity: 0.8; }
+        .option-btn.correct { background: #ecfdf5 !important; border-color: var(--success) !important; color: #065f46; font-weight: 600; }
+        .option-btn.wrong { background: #fef2f2 !important; border-color: var(--danger) !important; color: #991b1b; text-decoration: line-through; }
+        
+        .btn-finish { background: var(--primary); color: white; border: none; padding: 15px 30px; font-size: 1.1rem; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 1rem; transition: background 0.3s;}
+        .btn-finish:hover { background: var(--secondary); }
+        .btn-reset { background: #6b7280; color: white; border: none; padding: 10px 20px; font-size: 0.9rem; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px; width: 100%; transition: background 0.3s;}
+        .btn-reset:hover { background: #4b5563; }
+
+        /* Sonuç ve Çözümler Bölümü */
+        #results-section { display: none; margin-top: 2rem; background: #f0fdf4; padding: 2rem; border-radius: 15px; border: 2px solid var(--success); }
+        .score-display { text-align: center; font-size: 2.5rem; font-weight: bold; color: var(--success); margin-bottom: 1rem; }
+        
+        .solution-box { background: white; padding: 15px; border-left: 4px solid var(--primary-light); margin-bottom: 15px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .solution-box h4 { margin-bottom: 5px; color: var(--secondary); font-size: 1rem;}
+
+        .btn-pdf { background: #dc2626; color: white; border: none; padding: 12px 25px; font-size: 1rem; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 20px; display: inline-flex; align-items: center; gap: 10px; }
+        .btn-pdf:hover { background: #991b1b; }
+
+        footer { text-align: center; padding: 2rem; color: var(--text-light); font-size: 0.9rem; }
+
+        @media print {
+            body { background: white; color: black; font-size: 10pt; line-height: 1.3; }
+            nav, .btn-finish, .btn-reset, .btn-pdf, .back-btn, .memory-badge { display: none !important; }
+            .container { max-width: 100%; margin: 0; padding: 0; }
+            .content-section, .quiz-section { box-shadow: none; border: none; padding: 0; margin-bottom: 10px; }
+            h1 { font-size: 14pt; } h2 { font-size: 12pt; } h3 { font-size: 11pt; }
+            .question-card { margin-bottom: 10px; padding-bottom: 10px; page-break-inside: avoid; border-bottom: 1px solid #ccc;}
+            .option-btn { padding: 4px 8px; border: 1px solid #ccc; margin-bottom: 2px; font-size: 9pt; }
+            .quiz-container-print { column-count: 2; column-gap: 20px; }
+            #results-section { display: block !important; border: none; padding: 0; }
+            .solution-box { border: 1px solid #ddd; padding: 8px; margin-bottom: 5px; page-break-inside: avoid; font-size: 9pt;}
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo"><i class="fa-solid fa-fire-extinguisher"></i> Ünite 5: İtfaiyeci İSG'si</div>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-light);">Hazırlayan: Sıraç Aksan</span>
+            <a href="../../index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Ana Sayfaya Dön</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section class="content-section">
+            <h1>İtfaiye Çalışanlarının İş Sağlığı ve Güvenliği</h1>
+            
+            <h2><i class="fa-solid fa-gavel"></i> 1. Mevzuat: Görevler, İş Kazası ve Meslek Hastalığı</h2>
+            <p>İtfaiyecilik, NACE Kodlarına göre <strong>Çok Tehlikeli</strong> sınıfta yer alır. Çalışma koşulları iki temel kanunla düzenlenir:</p>
+            <ul>
+                <li><strong>6331 Sayılı İSG Kanunu:</strong> Tüm kamu ve özel sektöre uygulanır. Ancak <strong>"Afet ve acil durum birimlerinin müdahale faaliyetleri"</strong> istisnadır. Yani yangına müdahale anındaki operasyonel faaliyetlere bu kanun hükümleri uygulanamaz (çünkü tehlikeyi sıfırlamak imkansızdır).</li>
+                <li><strong>5510 Sayılı Kanun (Madde 13 - İş Kazası):</strong> Sigortalının işyerinde bulunması, işveren tarafından görevli gönderilmesi, emziren kadının süt izni veya işverence sağlanan taşıtla gidiş-gelişi sırasında olan ve kişiyi bedenen/ruhen özre uğratan olaylardır.</li>
+                <li><strong>5510 Sayılı Kanun (Madde 14 - Meslek Hastalığı):</strong> İşin niteliğinden dolayı <strong>tekrarlanan bir sebeple</strong> veya işin yürütüm şartları yüzünden uğranılan hastalıklardır. Öğrenildiği andan itibaren <strong>3 iş günü</strong> içinde SGK'ya bildirilmelidir.</li>
+            </ul>
+
+            <h2><i class="fa-solid fa-fire"></i> 2. Yangın Yerindeki Tehlikeler ve Riskler</h2>
+            <p>Yangın yeri tehlikeleri; yüksek sıcaklık, gazlar, patlama, çökme/göçük ve kimyasallar olarak ayrılır. En riskli olanlar tehlikeli maddelerdir. İç hacimde uygulanan sprey akımının buharlaşması bağıl nemi artırır, bu da personelde <strong>"hissedilen sıcaklık artışı ve haşlanma hissine"</strong> yol açar.</p>
+
+            <h2><i class="fa-solid fa-heart-pulse"></i> 3. Mesleki Hastalıklar ve Uzun Vadeli Riskler</h2>
+            <p>İtfaiyecilerin çoğunluğu meslek hastalıklarından dolayı emeklilikten kısa süre sonra vefat etmektedir. Bu hastalıklar:</p>
+            <ul>
+                <li><strong>Kalp Hastalıkları:</strong> Yoğun stres, adrenalin, uykusuzluk ve efor nedeniyle ölümlerde <strong>birinci sırada</strong> yer alır.</li>
+                <li><strong>Solunum ve Kanser:</strong> Yoğun zehirli gaz, kurum ve toksin (Poliaromatik hidrokarbonlar vb.) solunması, akciğer ve lenf kanserlerine yol açar.</li>
+                <li><strong>Fiziksel Riskler:</strong> Ağır ekipman taşıma sonucu oluşan <strong>bel fıtığı</strong> ve yüksek ses (sirenler) kaynaklı <strong>işitme kaybı</strong>.</li>
+            </ul>
+            
+            <div class="highlight-box">
+                <h3 style="color: #b45309; margin-bottom: 10px;"><i class="fa-solid fa-triangle-exclamation"></i> Sınavlarda Çıkma Mantığı ve Önemli Tuzaklar</h3>
+                <p><strong>Tuzak 1 (6331 Kapsam İstisnası):</strong> İtfaiyecilerin istasyon içindeki eğitimleri veya nöbetleri 6331'e tabidir. Kanunun uygulanmadığı kısım "olaya müdahale edilen andır". Sınavda şıklara dikkat edin.</p>
+                <p><strong>Tuzak 2 (Su ile Reaksiyona Girenler):</strong> Yangın ortamında her yanan şeye su sıkılmaz! <strong>Sodyum, Potasyum, Kalsiyum ve Karpit</strong> su ile reaksiyona girerek patlayıcı gaz üretir. Sınavlarda şıklara "Çelik" ekleyerek çeldirici yaparlar.</p>
+                <p><strong>Tuzak 3 (İlliyet Bağı):</strong> 5510 sayılı kanuna göre bir olayın iş kazası sayılması için "kaza" ile "ortaya çıkan zarar" arasında mantıksal ve hukuki bir neden-sonuç ilişkisi olması şarttır. Hukukta buna <strong>İlliyet Bağı</strong> denir.</p>
+            </div>
+
+            <div class="mind-map">
+                <h3 style="color: #1d4ed8; margin-bottom: 10px;"><i class="fa-solid fa-brain"></i> Zihin Haritası & Kodlamalar</h3>
+                <p><strong>ABD / New York İtfaiyesi Eğitim İstatistiği:</strong> Dünyanın en iyi itfaiyelerinden biri olan ABD'de, personel ölümlerinin <strong>%10'u</strong> eğitimlerde yaşanır. Sebep: Eğitimlerin "Gerçek yangın ve patlama senaryoları" ile yapılmasıdır.</p>
+                <p><strong>Meslek Hastalığı Süresi: "3 İş Günü"</strong> (Kazayı veya hastalığı öğrenen işveren 3 iş günü içinde SGK'ya bildirir).</p>
+            </div>
+        </section>
+
+        <section class="quiz-section">
+            <h2 class="quiz-title"><i class="fa-solid fa-list-check"></i> Ünite 5 Final Provası (20 Soru)</h2>
+            <div style="text-align: center;">
+                <div class="memory-badge" id="memory-badge">
+                    <i class="fa-solid fa-floppy-disk"></i> Sistem Devrede: İşaretlenen sorular hafızaya kaydediliyor...
+                </div>
+            </div>
+            
+            <div id="quiz-container" class="quiz-container-print">
+                </div>
+
+            <button class="btn-finish" id="finish-btn" onclick="testiBitir()">
+                <i class="fa-solid fa-flag-checkered"></i> Testi Bitir ve Değerlendir
+            </button>
+            <button class="btn-reset" id="reset-btn" onclick="testiSifirla()">
+                <i class="fa-solid fa-rotate-right"></i> Çözümlerimi Sıfırla ve Baştan Başla
+            </button>
+
+            <div id="results-section">
+                <h2 style="text-align: center; color: var(--secondary);">Sınav Sonucunuz</h2>
+                <div class="score-display">Puan: <span id="score-text">0</span> / 100</div>
+                <p style="text-align: center; margin-bottom: 2rem; font-weight: 500;" id="score-message"></p>
+
+                <h3 style="margin-bottom: 15px; border-bottom: 2px solid #ccc; padding-bottom: 5px;">Detaylı Soru Analizi ve Çözümler</h3>
+                <div id="solutions-container">
+                    </div>
+
+                <div style="text-align: center;">
+                    <button class="btn-pdf" onclick="window.print()">
+                        <i class="fa-solid fa-file-pdf"></i> Konuyu ve Çözümleri Sıkışık PDF Olarak Kaydet
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>Anadolu Üniversitesi İş Sağlığı ve Güvenliği Hazırlık Sistemi &copy; 2026 | Tasarım: Sıraç Aksan</p>
+    </footer>
+
+    <script>
+        // Soru Veritabanı (20 Analitik Soru)
+        const questions = [
+            { q: "Belediye İtfaiye Yönetmeliği'ne göre aşağıdakilerden hangisi itfaiye teşkilatının yasal görevleri arasında yer almaz?", options: ["A) Su baskınlarına müdahale etmek", "B) Doğal afetler ve olağanüstü durumlarda kurtarma çalışmalarına katılmak", "C) Şehrin imar planlarını yapmak ve onaylamak", "D) Belediye sınırları dışındaki olaylara valilik talimatıyla müdahale etmek", "E) Belediye başkanının verdiği ilgili diğer görevleri yapmak"], answer: 2, solution: "İmar planlarını yapmak itfaiyenin değil, belediyenin İmar ve Şehircilik Dairesi'nin görevidir. İtfaiye sadece yangın güvenliği açısından onay/rapor verir." },
+            { q: "6331 sayılı İş Sağlığı ve Güvenliği Kanunu, kural olarak kamu ve özel sektördeki tüm işyerlerine uygulanır. Aşağıdaki durumlardan hangisi bu kanunun kapsamı dışında tutulan istisnai faaliyetlerden biridir?", options: ["A) İtfaiye erlerinin istasyondaki rutin nöbetleri", "B) Afet ve acil durum birimlerinin olaya müdahale faaliyetleri", "C) Belediye otoparkındaki araç bakım işlemleri", "D) Hastanelerdeki acil servis hizmetleri", "E) İtfaiyecilerin teorik eğitim seminerleri"], answer: 1, solution: "Kanun, askeriye, kolluk kuvvetleri ve 'Afet ve acil durum birimlerinin olay anındaki MÜDAHALE faaliyetlerine' uygulanmaz. Çünkü müdahale anında riskler tamamen öngörülemez." },
+            { q: "Kapalı bir ortamda çıkan yangına su sıkarak (sprey akım) müdahale eden itfaiyecilerde, suların aniden buharlaşması sonucu kapalı alandaki bağıl nem hızla artar. Bu durum personelde öncelikle hangi fiziksel riski yaratır?", options: ["A) Gaz zehirlenmesi", "B) Fiziksel boğulma", "C) Radyasyon yanığı", "D) Hissedilen sıcaklık artışı ve haşlanma hissi", "E) Kan basıncında ani düşüş"], answer: 3, solution: "Buharlaşan su ortamdaki nemi artırır. Nem artışı insan vücudunun terleyerek soğumasını engellediği için 'hissedilen sıcaklık' korkunç boyutlara ulaşır ve cildin haşlanıyormuş gibi hissetmesine neden olur." },
+            { q: "Yangın ortamında bazı maddeler su ile söndürülmez çünkü suyla kimyasal reaksiyona girerek yanıcı/patlayıcı gaz (hidrojen vb.) üretirler. Aşağıdakilerden hangisi bu tehlikeli maddelerden biri değildir?", options: ["A) Sodyum", "B) Kalsiyum", "C) Potasyum", "D) Karpit", "E) Çelik"], answer: 4, solution: "Sodyum, kalsiyum, potasyum ve karpit su ile şiddetli reaksiyona girer. Çelik (Demir-Karbon alaşımı) ise su ile yanıcı/patlayıcı gaz üreten bir reaksiyona girmez." },
+            { q: "İtfaiyecilik mesleğinde aşırı fiziksel efor, ağır yük, ani adrenalin deşarjı ve stres nedeniyle en sık karşılaşılan ve genellikle mesleki ölümlerde birinci sırada yer alan hastalık grubu hangisidir?", options: ["A) Kalp ve damar hastalıkları", "B) Kas-iskelet sistemi hastalıkları (Fıtık vb.)", "C) İşitme kayıpları", "D) Deri (Cilt) hastalıkları", "E) Psikiyatrik bozukluklar"], answer: 0, solution: "Stres, adrenalin patlamaları, ağır efor ve dumanın etkisi birleştiğinde itfaiyecilerde ani kalp krizleri ve kalp hastalıkları ölümlerde açık ara 1. sıradadır." },
+            { q: "5510 sayılı Kanuna göre bir çalışanın başına gelen olayın 'İş Kazası' sayılabilmesi için temel şartlardan biri aşağıdakilerden hangisidir?", options: ["A) Kazanın sadece iş saatleri içinde (08:00-17:00 arası) olması", "B) Kazanın kendi aracıyla özel işine giderken meydana gelmesi", "C) Kazayı geçiren kişinin 'sigortalı' olması ve olayın onu bedenen/ruhen özre uğratması", "D) Kazanın mesai dışında ve işverenle ilgisi olmayan bir alanda yaşanması", "E) Kazada mutlaka kalıcı bir fiziksel sakatlık oluşması"], answer: 2, solution: "Kanuna göre olayın iş kazası sayılmasının en temel şartı, kişinin SGK'lı olması, olayın işverenin otoritesi altında (veya iş nedeniyle) meydana gelmesi ve kişide bedensel/ruhsal bir zarar oluşturmasıdır." },
+            { q: "Bir itfaiyeci amirinin talimatıyla resmi olarak başka bir istasyona evrak götürmek üzere yola çıkmış ve yolda trafik kazası geçirmiştir. 5510 sayılı Kanun kapsamında bu durum nasıl değerlendirilir?", options: ["A) Trafik kazasıdır, iş kazası sayılamaz", "B) İstasyon dışında olduğu için şahsi kaza sayılır", "C) İşverenin (amir) talimatıyla göreve gittiği için kesinlikle İş Kazasıdır", "D) Sadece mesai saatine göre karar verilir", "E) Meslek hastalığı olarak kaydedilir"], answer: 2, solution: "5510 Madde 13/c: 'Bir işverene bağlı olarak çalışan sigortalının, görevli olarak işyeri dışında başka bir yere gönderilmesi nedeniyle' geçen zamanda yaşanan kazalar iş kazasıdır." },
+            { q: "İtfaiyecilerin sürekli olarak yangın dumanına, kuruma, yanmış sentetik malzemelerin (plastik vb.) gazlarına maruz kalması sonucunda akciğerleri ve lenfatik sistemi etkileyerek ölümcül sonuçlar doğuran hastalık grubu hangisidir?", options: ["A) Ortopedik travmalar", "B) İşitme kaybı", "C) Kanser türleri", "D) Sıtma ve enfeksiyon hastalıkları", "E) Bel fıtığı"], answer: 2, solution: "Yangın sahasındaki toksinler (poliaromatik hidrokarbonlar vb.) çok güçlü kanserojenlerdir. Bu nedenle duman solunması itfaiyecilerde akciğer ve lenf kanserini yüksek oranda tetikler." },
+            { q: "Amerika Birleşik Devletleri (ABD) istatistiklerine göre itfaiyeci can kayıplarının %10'luk büyük bir kısmı ilginç bir şekilde 'eğitimler' sırasında yaşanmaktadır. Bu durumun temel sebebi nedir?", options: ["A) Eğitimlerde hiç kişisel koruyucu donanım kullanılmaması", "B) ABD itfaiyecilerinin yaş ortalamasının çok yüksek olması", "C) Eğitimlerin gerçeği aratmayan canlı yangın ve patlama senaryolarıyla çok tehlikeli şartlarda yapılması", "D) Eğitimlerdeki bütçe yetersizliği", "E) İtfaiyecilerin sağlık raporu olmadan eğitime alınması"], answer: 2, solution: "Dünyanın en iyi teşkilatlarından biri olan FDNY gibi yerlerde eğitimler o kadar gerçeğe yakın ve zorludur ki (live-fire training), maalesef can kayıpları bile yaşanabilmektedir." },
+            { q: "5510 sayılı Kanun Madde 14'e göre; 'sigortalının yaptığı işin niteliğinden dolayı TEKRARLANAN bir sebeple veya işin yürütüm şartları yüzünden uğradığı hastalık' tanımı aşağıdakilerden hangisini ifade eder?", options: ["A) İş Kazası", "B) Mücbir Sebep", "C) Geçici İş Göremezlik", "D) Meslek Hastalığı", "E) Biyolojik Risk"], answer: 3, solution: "İş kazası ani (tek seferlik) olur. Meslek hastalığı ise tekrarlanan bir maruziyetin (zamanla gelişen) sonucudur. Kanun bunu 'tekrarlanan sebeple' diyerek ayırır." },
+            { q: "Bir işveren, personelinin meslek hastalığına yakalandığını öğrendiği günden başlayarak bu durumu en geç ne kadar süre içinde SGK'ya bildirmek zorundadır?", options: ["A) Aynı gün içinde", "B) 3 iş günü içinde", "C) 1 hafta içinde", "D) 1 ay içinde", "E) 1 yıl içinde"], answer: 1, solution: "5510 Sayılı Kanuna göre; iş kazaları ve meslek hastalıkları, durumun öğrenilmesinden/olayın meydana gelmesinden itibaren '3 iş günü' içinde yetkili makamlara bildirilmelidir." },
+            { q: "İş Sağlığı ve Güvenliğine İlişkin İşyeri Tehlike Sınıfları Tebliği (NACE Kodları) uyarınca 'İtfaiye Hizmetleri' hangi tehlike sınıfında değerlendirilir?", options: ["A) Az Tehlikeli", "B) Tehlikeli", "C) Çok Tehlikeli", "D) Olağanüstü Tehlikeli", "E) Spesifik Tehlikeli"], answer: 2, solution: "Mevzuatta işyerleri 3'e ayrılır: Az tehlikeli, Tehlikeli, Çok Tehlikeli. İtfaiyecilik, madencilik, inşaat gibi işler 'Çok Tehlikeli' sınıftadır." },
+            { q: "Yangın esnasında karbonmonoksit (CO) gazı soluyan bir itfaiyecide öncelikle kanda hangi tablo ortaya çıkar?", options: ["A) Kanın pıhtılaşma süresi hızlanır", "B) Alyuvarlar parçalanır", "C) Oksijen taşıma kapasitesi düşerek 'kimyasal boğulma / zehirlenme' yaşanır", "D) Kan basıncı artarak beyin kanaması oluşur", "E) Akciğerlerde su toplanması görülür"], answer: 2, solution: "Karbonmonoksit kana oksijenden 200 kat daha hızlı bağlanır. Hücrelere oksijen gitmesini engelleyerek kimyasal zehirlenmeye (hücresel boğulmaya) neden olur." },
+            { q: "Hukuk sistemimize ve Yargıtay içtihatlarına göre, bir olayın 'İş Kazası' kabul edilebilmesi için olay (kaza) ile ortaya çıkan zarar arasında mantıksal bir neden-sonuç bağının bulunması gerekir. Bu kavrama ne ad verilir?", options: ["A) Kusursuz Sorumluluk", "B) İlliyet (Nedensellik) Bağı", "C) Rucü Hakkı", "D) Kasıt ve İhmal", "E) Mücbir Sebep"], answer: 1, solution: "Kazanın işin yürütümü ile alakası olması, sonucun da kazadan kaynaklanması gerekir. Bu sebep-sonuç zincirine hukukta 'İlliyet Bağı' denir." },
+            { q: "Aşağıdaki konulardan hangisi, itfaiyecilerin sahada can güvenliğini sağlamak için alması gereken zorunlu ve öncelikli 'İSG İhtisas Eğitimlerinden' biri değildir?", options: ["A) Kişisel Koruyucu Donanımlar (KKD) ve Kullanımı", "B) Tehlikeli Madde (KBRN) Olaylarına Müdahale", "C) İtfaiye İstasyonunda Güvenlik", "D) Devlet Memurları Kanunu Genel Hükümleri", "E) Olay Yerinde Özel Tehlikeler ve Güvenlik"], answer: 3, solution: "Personel kanunu (DMK 657 vb.) memuriyetin hukuki temelidir ancak sahada can kurtaran işe özgü (spesifik) İSG eğitimlerinden biri değildir." },
+            { q: "Bir itfaiye personeli emekli olduktan birkaç yıl sonra, uzun yıllar itfaiyecilik yapmasına bağlı olarak ciğerlerinde kalıcı bir rahatsızlık ortaya çıkmıştır. Bu kişinin meslek hastalığı haklarından faydalanabilmesi için yasal olarak hangi kuralın ihlal edilmemiş olması gerekir?", options: ["A) Emekli olduktan sonra başka hiçbir işte çalışmamış olması", "B) Hastalığın kuluçka veya 'yükümlülük süresinin' aşılmamış olması", "C) Sadece devlet hastanesinde tedavi görmesi", "D) Sendika üyesi olması", "E) Maaşının asgari ücretin üzerinde olması"], answer: 1, solution: "Meslek hastalığı işten ayrıldıktan sonra çıkmışsa, hastalığın ortaya çıkması ile işten ayrılma tarihi arasında geçen sürenin, yönetmelikte o hastalık için belirlenen 'Yükümlülük Süresini' aşmamış olması gerekir." },
+            { q: "Yangın mahallinde çöken bir çatının altında kalma tehlikesi atlatan bir itfaiyeci, iş sağlığı ve güvenliği risk literatürüne göre hangi tür riske maruz kalmıştır?", options: ["A) Kimyasal Risk", "B) Biyolojik Risk", "C) Ergonomik Risk", "D) Fiziksel / Travmatik Risk", "E) Psikososyal Risk"], answer: 3, solution: "Çarpma, ezilme, göçük, düşme gibi mekanik kökenli yaralanma tehlikelerinin tamamı İSG'de 'Fiziksel / Travmatik Riskler' kategorisine girer." },
+            { q: "Tıpkı deprem ve sel gibi önlenemez afetlerde olduğu gibi, COVID-19 vb. yepyeni küresel salgın hastalıklar, iş hukukunda sözleşmelerin yerine getirilememesi veya işin durması açısından genellikle hangi kapsamda değerlendirilir?", options: ["A) Basit İhmal", "B) Kasıt", "C) Mücbir Sebep (Zorlayıcı Neden)", "D) İşverenin kusuru", "E) Görevi Kötüye Kullanma"], answer: 2, solution: "Tarafların kontrolü dışında gelişen, önlenemez ve öngörülemez doğal afetler ve salgın hastalıklar hukukta 'Mücbir Sebep (Force Majeure)' olarak kabul edilir." },
+            { q: "İtfaiyecilerin yangın sahasındaki gürültüye (siren, pompa, basınçlı su, patlama) korumasız olarak yıllarca maruz kalması sonucunda ortaya çıkan en yaygın duyusal kayıp hangisidir?", options: ["A) Görme kaybı", "B) Tat alma kaybı", "C) Dokunma hassasiyeti kaybı", "D) İşitme kaybı", "E) Koku kaybı"], answer: 3, solution: "Kronik gürültüye (85 desibelin üzerinde) uzun süre maruz kalmak, kulaktaki işitme hücrelerini geri dönüşümsüz olarak tahrip ederek mesleki işitme kaybına yol açar." },
+            { q: "Bir sigortalının iş kazası geçirdiği durumlarda; 5510 sayılı Sosyal Sigortalar ve Genel Sağlık Sigortası Kanunu'na göre, kazanın iş kazası olup olmadığına dair nihai karar ve tespit süreci hangi kurum tarafından yürütülür?", options: ["A) Çalışma ve Sosyal Güvenlik Eğitim ve Araştırma Merkezi (ÇASGEM)", "B) Mesleki Yeterlilik Kurumu (MYK)", "C) Sosyal Güvenlik Kurumu (SGK)", "D) Sağlık Bakanlığı", "E) Türkiye İş Kurumu (İŞKUR)"], answer: 2, solution: "İş kazası ve meslek hastalığına dair bildirimlerin yapıldığı, sağlık raporlarının incelendiği ve nihai kararın (aylık bağlanması vb.) verildiği yetkili yasal kurum Sosyal Güvenlik Kurumu'dur (SGK)." }
+        ];
+
+        // Sınav Durumu Yönetimi (Local Storage)
+        let quizState = {}; // Format: { 0: {selected: 1, correct: 1}, 1: {selected: 3, correct: 1} ... }
+        const STORAGE_KEY = "isg_u5_state"; // Ünite 5'e özel anahtar
+
+        function stateYukle() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if(saved) {
+                    quizState = JSON.parse(saved);
+                    document.getElementById("memory-badge").innerHTML = `<i class="fa-solid fa-cloud-arrow-down"></i> Önceki oturumunuz başarıyla geri yüklendi. Kaldığınız yerden devam edebilirsiniz.`;
+                    document.getElementById("memory-badge").style.backgroundColor = "#dcfce7";
+                    document.getElementById("memory-badge").style.color = "#166534";
+                    document.getElementById("memory-badge").style.borderColor = "#bbf7d0";
+                }
+            } catch(e) { console.log("State yüklenemedi."); }
+        }
+
+        function stateKaydet() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(quizState));
+        }
+
+        // Soruları Ekrana Çizdirme
+        function renderQuestions() {
+            const container = document.getElementById("quiz-container");
+            const solutionsContainer = document.getElementById("solutions-container");
+            container.innerHTML = "";
+            solutionsContainer.innerHTML = "";
+
+            questions.forEach((q, index) => {
+                // Önceden çözülmüş mü?
+                const isAnswered = quizState.hasOwnProperty(index);
+                const savedData = isAnswered ? quizState[index] : null;
+
+                // Soru Kartı
+                let questionHTML = `
+                    <div class="question-card" id="q-card-${index}">
+                        <div class="question-text">${index + 1}. ${q.q}</div>
+                        <div class="options-list">
+                `;
+
+                q.options.forEach((opt, optIndex) => {
+                    let classes = "option-btn";
+                    let icon = "";
+                    
+                    if(isAnswered) {
+                        classes += " disabled"; // Kilitli
+                        if(optIndex === q.answer) {
+                            classes += " correct";
+                            icon = ' <i class="fa-solid fa-check" style="margin-left:auto;"></i>';
+                        }
+                        if(optIndex === savedData.selected && savedData.selected !== q.answer) {
+                            classes += " wrong";
+                            icon = ' <i class="fa-solid fa-xmark" style="margin-left:auto;"></i>';
+                        }
+                    }
+
+                    questionHTML += `
+                        <div class="${classes}" id="opt-${index}-${optIndex}" onclick="selectOption(${index}, ${optIndex}, ${q.answer})">
+                            ${opt} ${icon}
+                        </div>
+                    `;
+                });
+
+                questionHTML += `</div></div>`;
+                container.innerHTML += questionHTML;
+
+                // Çözüm Kartı (Gizli durur, sonuçlarda görünür)
+                const solutionHTML = `
+                    <div class="solution-box">
+                        <h4>Soru ${index + 1} Çözümü:</h4>
+                        <p><strong>Doğru Cevap:</strong> ${q.options[q.answer]}</p>
+                        <p style="color: var(--text-light); font-size: 0.9rem; margin-top: 5px; text-align:justify;"><i class="fa-solid fa-lightbulb" style="color: var(--primary-light);"></i> <strong>Analiz:</strong> ${q.solution}</p>
+                    </div>
+                `;
+                solutionsContainer.innerHTML += solutionHTML;
+            });
+        }
+
+        // Şık Tıklama
+        function selectOption(qIndex, selectedOptIndex, correctOptIndex) {
+            if(quizState.hasOwnProperty(qIndex)) return;
+
+            // Şıkları kilitle ve renklendir
+            for(let i=0; i<5; i++) {
+                const optElement = document.getElementById(`opt-${qIndex}-${i}`);
+                optElement.classList.add("disabled");
+                
+                if(i === correctOptIndex) {
+                    optElement.classList.add("correct");
+                    optElement.innerHTML += ' <i class="fa-solid fa-check" style="margin-left:auto;"></i>';
+                }
+            }
+
+            if(selectedOptIndex !== correctOptIndex) {
+                const selectedElement = document.getElementById(`opt-${qIndex}-${selectedOptIndex}`);
+                selectedElement.classList.add("wrong");
+                selectedElement.innerHTML += ' <i class="fa-solid fa-xmark" style="margin-left:auto;"></i>';
+            }
+
+            // Hafızaya Kaydet
+            quizState[qIndex] = {
+                selected: selectedOptIndex,
+                correct: correctOptIndex
+            };
+            stateKaydet();
+        }
+
+        // Testi Bitir ve Değerlendir
+        function testiBitir() {
+            const answeredCount = Object.keys(quizState).length;
+            
+            if(answeredCount < questions.length) {
+                if(!confirm(`Dikkat: Henüz ${questions.length - answeredCount} soruyu boş bıraktınız. Boşlar yanlış sayılacaktır. Yine de bitirmek istiyor musunuz?`)) {
+                    return;
+                }
+            }
+
+            // Puan Hesapla (Doğru Sayısı * 5)
+            let score = 0;
+            for(let key in quizState) {
+                if(quizState[key].selected === quizState[key].correct) {
+                    score += 5;
+                }
+            }
+
+            // Görünümleri Ayarla
+            document.getElementById("finish-btn").style.display = "none";
+            document.getElementById("results-section").style.display = "block";
+            
+            // Sonuç Metni
+            document.getElementById("score-text").innerText = score;
+            let message = "";
+            if(score >= 90) message = "Olağanüstü! Hukuki mevzuata ve itfaiye risklerine tamamen hakimsiniz.";
+            else if(score >= 70) message = "İyi bir sonuç. Ancak İş Kazası ve Meslek Hastalığı ayrımlarını (5510 Sayılı Kanun) tekrar inceleyin.";
+            else message = "Mevzuat soruları teknik ve yanıltıcı olabilir. Lütfen çözümleri not alarak tekrar ediniz.";
+            document.getElementById("score-message").innerText = message;
+
+            // Ana sayfa genel ilerleme tikini aktifleştirme (Opsiyonel Entegrasyon)
+            try {
+                let progress = JSON.parse(localStorage.getItem("isg_progress") || "[]");
+                if(!progress.includes("afet_unite_5")) {
+                    progress.push("afet_unite_5");
+                    localStorage.setItem("isg_progress", JSON.stringify(progress));
+                }
+            } catch(e) {}
+
+            document.getElementById("results-section").scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Sistemi Sıfırla
+        function testiSifirla() {
+            if(confirm("Tüm cevaplarınız kalıcı olarak silinecek ve teste baştan başlayacaksınız. Emin misiniz?")) {
+                localStorage.removeItem(STORAGE_KEY);
+                window.location.reload();
+            }
+        }
+
+        // Sayfa Başlangıcı
+        window.onload = () => {
+            stateYukle();
+            renderQuestions();
+        };
+
+    </script>
+</body>
+</html>

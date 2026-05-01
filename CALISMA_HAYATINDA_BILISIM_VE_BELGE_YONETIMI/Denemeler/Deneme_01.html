@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>İSG & Bilişim | 5×20 Özgün Final Denemeleri</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f1f5f9;
+            font-family: 'Inter', sans-serif;
+            color: #0f172a;
+            line-height: 1.5;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background: #0c4a6e;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .home-link {
+            background: rgba(255,255,255,0.15);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: white;
+            transition: 0.2s;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .home-link:hover {
+            background: white;
+            color: #0c4a6e;
+        }
+
+        /* LAYOUT */
+        .container {
+            max-width: 1300px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            flex: 1;
+            min-width: 260px;
+            background: white;
+            border-radius: 28px;
+            padding: 1.8rem;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .sidebar h3 {
+            font-size: 1.2rem;
+            border-left: 4px solid #f97316;
+            padding-left: 1rem;
+            margin-bottom: 1.5rem;
+            color: #1e293b;
+        }
+
+        .exam-btn {
+            width: 100%;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #334155;
+        }
+
+        .exam-btn i {
+            opacity: 0.6;
+        }
+
+        .exam-btn.active {
+            background: #0c4a6e;
+            border-color: #0c4a6e;
+            color: white;
+            box-shadow: 0 6px 12px -6px rgba(12,74,110,0.4);
+        }
+
+        .exam-btn.active i {
+            color: white;
+            opacity: 1;
+        }
+
+        .exam-btn:hover:not(.active) {
+            background: #e6f0fa;
+            border-color: #38bdf8;
+        }
+
+        .tools {
+            margin-top: 2rem;
+            border-top: 2px dashed #cbd5e1;
+            padding-top: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .tool-btn {
+            border: none;
+            padding: 12px;
+            border-radius: 40px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .btn-reset {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-reset:hover {
+            background: #b91c1c;
+            transform: scale(0.98);
+        }
+
+        .btn-print {
+            background: #1e293b;
+            color: white;
+        }
+
+        .btn-print:hover {
+            background: #0f172a;
+        }
+
+        /* MAIN */
+        .main-content {
+            flex: 3;
+            min-width: 280px;
+        }
+
+        .exam-header {
+            background: white;
+            border-radius: 28px;
+            padding: 1.8rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.02);
+            border-top: 6px solid #f97316;
+            text-align: center;
+        }
+
+        .exam-header h2 {
+            font-size: 1.9rem;
+            color: #0c4a6e;
+        }
+
+        .rules {
+            background: #fffbeb;
+            border-left: 5px solid #f59e0b;
+            padding: 1rem 1.5rem;
+            border-radius: 16px;
+            font-size: 0.85rem;
+            color: #78350f;
+            margin-top: 1rem;
+            text-align: left;
+        }
+
+        /* RESULTS CARD */
+        .results-card {
+            background: #ecfdf5;
+            border-radius: 28px;
+            padding: 1.8rem;
+            margin-bottom: 2rem;
+            border: 1px solid #10b981;
+            display: none;
+        }
+
+        .score-circle {
+            font-size: 3.6rem;
+            font-weight: 800;
+            color: #10b981;
+        }
+
+        .stats-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.2rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-badge {
+            background: white;
+            border-radius: 40px;
+            padding: 0.5rem 1.4rem;
+            font-weight: 700;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        /* SORU KARTLARI */
+        .question-card {
+            background: white;
+            border-radius: 28px;
+            margin-bottom: 1.8rem;
+            padding: 1.5rem;
+            box-shadow: 0 6px 12px -6px rgba(0,0,0,0.05);
+            transition: 0.1s;
+            border: 1px solid #eef2ff;
+        }
+
+        .q-text {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.4rem;
+            font-weight: 600;
+            font-size: 1rem;
+            align-items: flex-start;
+        }
+
+        .q-num {
+            background: #0c4a6e;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-left: 48px;
+        }
+
+        .opt-item {
+            background: #f9fafb;
+            border: 1.5px solid #e2e8f0;
+            padding: 12px 18px;
+            border-radius: 60px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .opt-item:hover:not(.locked-opt) {
+            background: #eef2ff;
+            border-color: #3b82f6;
+            transform: translateX(6px);
+        }
+
+        .opt-item.selected-opt {
+            background: #dbeafe;
+            border-color: #2563eb;
+            color: #1e3a8a;
+            font-weight: 700;
+        }
+
+        .opt-item.correct-opt {
+            background: #dcfce7 !important;
+            border-color: #22c55e !important;
+            color: #14532d;
+        }
+
+        .opt-item.wrong-opt {
+            background: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #7f1d1d;
+            text-decoration: line-through;
+        }
+
+        .locked-opt {
+            pointer-events: none;
+            opacity: 0.9;
+        }
+
+        .solution-area {
+            background: #f1f5f9;
+            margin-top: 20px;
+            margin-left: 48px;
+            padding: 1rem 1.4rem;
+            border-radius: 18px;
+            border-left: 5px solid #3b82f6;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        .solution-area.show-sol {
+            display: block;
+        }
+
+        .finish-wrapper {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .btn-finish {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 1rem 3rem;
+            font-size: 1.2rem;
+            font-weight: 800;
+            border-radius: 60px;
+            cursor: pointer;
+            box-shadow: 0 6px 14px rgba(16,185,129,0.3);
+            transition: 0.2s;
+        }
+
+        .btn-finish:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .navbar, .sidebar, .finish-wrapper, .results-card, .rules {
+                display: none !important;
+            }
+            .main-content {
+                margin: 0;
+                padding: 0;
+            }
+            .question-card {
+                border: 1px solid #ccc;
+                box-shadow: none;
+                page-break-inside: avoid;
+            }
+            .solution-area {
+                display: block !important;
+            }
+            .opt-item {
+                border: 1px solid #aaa;
+                background: none !important;
+            }
+        }
+
+        @media (max-width: 800px) {
+            .container {
+                flex-direction: column;
+            }
+            .sidebar {
+                position: static;
+            }
+            .options {
+                margin-left: 0;
+            }
+            .solution-area {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo"><i class="fa-solid fa-shield-haltered"></i> İSG Akademi | Bilişim & Belge Yönetimi</div>
+     <a href="../../index.html" class="back-btn"><i class="fa-solid fa-house"></i> Ana Sayfa</a>
+
+</nav>
+
+<div class="container">
+    <div class="sidebar">
+        <h3><i class="fa-regular fa-compass"></i> Deneme Seç</h3>
+        <button class="exam-btn" data-exam="1"><span>📘 Deneme Sınavı 1</span> <i class="fa-solid fa-arrow-right"></i></button>
+        <button class="exam-btn" data-exam="2"><span>📙 Deneme Sınavı 2</span> <i class="fa-solid fa-arrow-right"></i></button>
+        <button class="exam-btn" data-exam="3"><span>📕 Deneme Sınavı 3</span> <i class="fa-solid fa-arrow-right"></i></button>
+        <button class="exam-btn" data-exam="4"><span>📗 Deneme Sınavı 4</span> <i class="fa-solid fa-arrow-right"></i></button>
+        <button class="exam-btn" data-exam="5"><span>📔 Deneme Sınavı 5</span> <i class="fa-solid fa-arrow-right"></i></button>
+        <div class="tools">
+            <button class="tool-btn btn-reset" id="resetExamBtn"><i class="fa-solid fa-arrows-rotate"></i> Bu Denemeyi Sıfırla</button>
+            <button class="tool-btn btn-print" id="printPdfBtn"><i class="fa-solid fa-print"></i> PDF / Yazdır (Çözümlü)</button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="exam-header">
+            <h2 id="examTitle">Deneme Sınavı 1</h2>
+            <p>🔍 İleri düzey analitik final provası | 20 soru | 4 yanlış 1 doğru götürür</p>
+            <div class="rules">
+                <i class="fa-regular fa-clock"></i> <strong>Sınav Kuralları:</strong> Her deneme 20 özgün sorudan oluşur. Şıklara tıklayarak işaretleyin. "Sınavı Bitir" ile net puanınızı görün, tüm çözümler açılır. Başarılar!
+            </div>
+        </div>
+
+        <div id="resultsPanel" class="results-card">
+            <div style="text-align: center;">
+                <h3>🎯 Değerlendirme Sonucu</h3>
+                <div class="score-circle"><span id="finalScore">0</span> / 100</div>
+                <p id="resultMessage" style="margin-top: 0.5rem; font-weight: 500;"></p>
+                <div class="stats-row">
+                    <div class="stat-badge">✅ Doğru: <span id="statCorrect">0</span></div>
+                    <div class="stat-badge">❌ Yanlış: <span id="statWrong">0</span></div>
+                    <div class="stat-badge">⚪ Boş: <span id="statEmpty">0</span></div>
+                    <div class="stat-badge">📊 Net: <span id="statNet">0.00</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="questionsContainer"></div>
+
+        <div class="finish-wrapper" id="finishBtnWrapper">
+            <button class="btn-finish" id="finishExamBtn"><i class="fa-solid fa-flag-checkered"></i> Sınavı Bitir & Net Hesapla</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ------------------------------------------------------------
+    // 5 DENEME - TOPLAM 100 SORU (her biri 20)
+    // ------------------------------------------------------------
+    const EXAM_DATA = {
+        1: [ /* DENEME 1 - 20 SORU (özgün) */
+            {q:"Bir işletmenin karar alma süreçlerinde verilerin işlenerek anlamlı raporlara dönüştürülmesi aşamasında, veritabanı yönetim sistemlerinin sunduğu en temel yapısal avantaj aşağıdakilerden hangisidir?", o:["Verilerin işletme dışındaki sunuculara kalıcı olarak kopyalanmasını sağlaması","Faaliyetler arası veri tekrarını ortadan kaldırarak tutarsızlıkları tamamen önlemesi","Alt düzey yöneticilerin sadece stratejik bilgilere odaklanmasına zemin hazırlaması","Kişisel bilgisayarların donanım kapasitelerini artırarak ağ trafiğini hızlandırması","Veri işleme süreçlerini manuel onay sistemine bağlayarak güvenliği artırması"], a:1, s:"Bütünleşik veritabanları (ERP) veri tekrarını önler, tutarlılık sağlar."},
+            {q:"Bilgi güvenliği mimarisinde 'Bütünlük (Integrity)' kavramının sağlandığını gösteren en net teknik durum nedir?", o:["Sistemin 7/24 kesintisiz hizmet vermesi","Kurum dışı saldırıların güvenlik duvarı tarafından izole edilmesi","Bilginin oluşturulduğu ilk andan itibaren yetkisiz kişilerce hiçbir şekilde değiştirilememesi","Verilerin sadece en üst düzey yöneticiler tarafından görüntülenebilmesi","Verilerin düzenli yedeklenmesi"], a:2, s:"Bütünlük demek, verinin orijinal halinin korunmasıdır, yetkisiz değişiklik yapılamamalıdır."},
+            {q:"Siber güvenlikte, insan müdahalesine ihtiyaç duymadan ağ protokol açıklarıyla kendi kendine çoğalan zararlı yazılım türü?", o:["Polimorfik Virüs","Keylogger","Truva Atı","Ağ Solucanı (Worm)","Fidye Yazılımı"], a:3, s:"Solucanlar kendi başlarına üreyip bant genişliğini tüketir."},
+            {q:"Bulut bilişimde 'Vendor Lock-in' riskini en iyi açıklayan senaryo?", o:["İnternet kopunca dosyalara erişememe","Personelin yeni arayüze uyum sorunu","Sağlayıcı fiyatı artırınca verileri başka firmaya taşımanın yüksek maliyetli olması","Depolama alanının dolması","Sunucu bakım maliyetlerinin artması"], a:2, s:"Sağlayıcı değiştirme maliyeti/teknik zorluk = Vendor Lock-in."},
+            {q:"Pareto (80/20) ilkesine göre yönetici stratejisi?", o:["Çalışma süresinin %80'ini denetleme","En yüksek faydayı getiren kritik %20'lik işe odaklanma","Toplantıda %80 dinleme","Yetkilerin %80'ini devretme","Gelirlerin %80'ini giderlere aktarma"], a:1, s:"Sonuçların %80'i işlerin %20'sinden gelir, kritik azınlığa odaklan."},
+            {q:"Aşırı mükemmeliyetçiliğin yönetim üzerindeki en olumsuz etkisi?", o:["Kararları hızlandırması","Detaylarda boğulup zaman israfı yaratması","Yetki alımını kolaylaştırması","Bütçenin eksik kullanılması","İletişimi güçlendirmesi"], a:1, s:"Mükemmeliyetçilik gereksiz ayrıntılarla akışı yavaşlatır."},
+            {q:"Eşitlikçi, hiyerarşisiz tartışma için en uygun oturma düzeni?", o:["Sınıf düzeni","L tipi","Daire (yuvarlak masa)","V tipi","Karşılıklı sıra"], a:2, s:"Daire düzeninde başköşe yoktur, eşit katılım sağlanır."},
+            {q:"Toplantı öncesi gündem metni gönderilmesi hangi amaca hizmet eder?", o:["Kararların denetlenmesi","Statü belirleme","Hazırlıklı gelinmesini sağlayıp zaman israfını önleme","Raportör seçme","Üst yönetimi bilgilendirme"], a:2, s:"Gündemsiz toplantı pusulasız gemi gibidir, hazırlık şarttır."},
+            {q:"Ses perdesi ve ezgisel dalgalanmalara ne ad verilir?", o:["Artikülasyon","Fonetik kayma","Tonlama (Ezgi)","Sentaks","Morfolojik vurgu"], a:2, s:"Tonlama, cümlenin duygusuna göre sesin dalgalanmasıdır."},
+            {q:"Hangi cümlede özne-yüklem uyumsuzluğu vardır? (Hayvan-çoğul)", o:["Sandalyeler dışarı çıkarıldı.","Köpekler sabaha kadar havladılar.","Müdürler çözüm bulmalı.","Çocuklar oynadı.","Yapraklar döküldü."], a:1, s:"Hayvan/bitki çoğul özne olduğunda yüklem tekil olmalı: 'havladı' doğru."},
+            {q:"İkileme arasına virgül konması hangi yapıda kesin hatadır?", o:["Birden fazla yüklem arası","Eş görevli sıfatlar arası","Özneden sonra","İkileme tam ortası","Hitap sonrası"], a:3, s:"İkilemeler ayrılmaz bütündür, aralarına virgül gelmez."},
+            {q:"Adres Mektup Birleştirme (Mail Merge) mantığı?", o:["PDF birleştirme","Şablon metni Excel listesiyle eşleştirip toplu belge oluşturma","E-posta tarama","Sunum geçişi","Bulut arşivleme"], a:1, s:"Word+Excel = toplu mektup/etiket oluşturma."},
+            {q:"Belgede arkaya saydam yazı (GİZLİ) konmasına ne denir?", o:["Filigran","Altbilgi","Holografik mühür","Dijital imza","Yer imi"], a:0, s:"Filigran (Watermark) saydam arka plan yazısıdır."},
+            {q:"Excel'de C2:C10 aralığındaki iki nokta anlamı?", o:["C2'yi C10'a böl","Sadece iki hücreyi seç","Başlangıç ve bitiş arasındaki tüm hücreleri kapsa","Eşitlik kontrolü","Hata gizleme"], a:2, s:"İki nokta (:) aralık operatörüdür."},
+            {q:"#YOK hatasının sebebi nedir?", o:["Sıfıra bölme","Hücre formatı","DÜŞEYARA gibi aramada değer bulunamaması","Sütun genişliği","Dairesel başvuru"], a:2, s:"#YOK = Not Available, aranan veri yok."},
+            {q:"Prezi'nin PowerPoint'ten farkı?", o:["Katmanlı sayfalar","Zoom mantığı ve dev tuval","Slayt yok","Sadece metin","Çevrimdışı"], a:1, s:"Prezi zoom/pan yaparak tek tuvalde sunum sunar."},
+            {q:"Sunum kapanışında kesinlikle kaçınılması gereken davranış?", o:["Özet yapmak","Soru almak","Girişle bağ kurmak","Yepyeni tartışmalı konu açmak","Teşekkür etmek"], a:3, s:"Kapanışta yeni konu açmak ana mesajı unutturur."},
+            {q:"Faaliyet sistemi ile bilgi sistemi arasındaki ilişki?", o:["Faaliyet veri üretir, bilgi sistemi anlamlı bilgiye dönüştürür","Bilgi sistemi üretir, faaliyet raporlar","Bağımsız çalışırlar","Aynıdır","Sadece dış çevreyle ilgili"], a:0, s:"Faaliyet sistemi ham veriyi oluşturur, bilgi sistemi onu işler."},
+            {q:"Klavye vuruşlarını kaydeden zararlı yazılım?", o:["Makro virüsü","Keylogger","Solucan","Trojan","Ransomware"], a:1, s:"Keylogger şifreleri ve yazılanları çalar."},
+            {q:"Özet Tablo (Pivot) en kritik avantajı?", o:["Renkleri değiştirmek","Verileri formülsüz kategorize edip özet sunmak","Dikey arama","Yazım hatasını silmek","3B grafik"], a:1, s:"Pivot Table sürükle-bırak ile saniyelerde gruplar."}
+        ],
+        2: [ /* DENEME 2 - 20 SORU (özet) */
+            {q:"SaaS bulut modeli nedir?", o:["Sunucu altyapısı","Kodu değiştirme hakkı","Donanım sorumluluğu","Tarayıcı üzerinden hazır yazılım","Kapalı ağ"], a:3, s:"SaaS olarak Google Drive, web posta yazılımları."},
+            {q:"Veritabanları hangi değişime yol açtı?", o:["Bilgisayarların kalkması","Kağıdın yasaklanması","Departman verilerini merkezileştirip bütünleştirme","Çalışan sayısını düşürme","İnternetsiz çalışamama"], a:2, s:"Veritabanları entegrasyonu sağladı."},
+            {q:"MAC adresi filtreleme nedir?", o:["E-posta tarama","Cihazların fiziksel adresine göre ağa izin verme","Retina tarama","IP gizleme","Şifreleme"], a:1, s:"Her ağ kartının eşsiz MAC kimliğini listeleyip izin verir."},
+            {q:"Hiyerarşik baskıyı kaldıran düzen?", o:["U-Düzeni","Sınıf","Daire (Oval)","V","Karşılıklı"], a:2, s:"Yuvarlak masa eşitlikçidir."},
+            {q:"Sihirli Araç Yaklaşımı nedir?", o:["Akışına bırakmak","Sadece irade","Dijital ajanda/takvim araçlarını aktif kullanmak","Aciliyete odaklanma","ABC sıralaması"], a:2, s:"Teknoloji araçlarını sihirli değnek gibi kullanmak."},
+            {q:"Erteleme (Prokrastinasyon) genellikle neyle ilişkilidir?", o:["Çok boş zaman","İş çok kolay","İşin zor, sıkıcı veya başarısızlık korkusu","Dışa dönüklük","Sessiz ortam"], a:2, s:"Zor veya tehdit algısı ertelemeyi tetikler."},
+            {q:"Giriş bölümü yazarken en temel strateji?", o:["Tüm detayları vermek","Konuyu ana hatlarıyla tanıtmak ve kısa tutmak","Son sözü söylemek","Sadece şekil koymak","Bağlaçlarla başlamak"], a:1, s:"Giriş fragman gibidir, kısa ve öz."},
+            {q:"Hangi kelime yanlış yazılmıştır?", o:["Gardırop","Herkes","Tasfiye","Entelektüel","Şevkat"], a:4, s:"Doğrusu 'Şefkat'tir."},
+            {q:"'Ben, Ali ve o, çalıştı' cümlesindeki bozukluk?", o:["Gereksiz sözcük","Mantık","Özne-yüklem (biz çalıştı olmalı)","Tümleç eksik","Tamlama"], a:2, s:"Çoğul özne (biz) olduğu halde yüklem tekil kalmış."},
+            {q:"Word'de tıklanınca başka yere giden bağlantı?", o:["Dipnot","Yer imi","Köprü","Metin kutusu","Dizin"], a:2, s:"Köprü (hyperlink) farklı dosya/web adresine yönlendirir."},
+            {q:"Kenar boşlukları ve sayfa yönü hangi menü?", o:["Sözcük düzeni","Paragraf","Sayfa düzeni","Stil","Gelişmiş"], a:2, s:"Sayfa Düzeni → Boyut, Yön, Boşluk."},
+            {q:"Sunumda ölümcül görsel hata?", o:["Görsel kullanmak","SADECE BÜYÜK HARF","Kontrast oluşturmak","Tırnaksız font","Az metin"], a:1, s:"Büyük harfler bağırmak anlamına gelir ve okunmaz."},
+            {q:"Slayttan slayta geçiş efektine ne denir?", o:["Animasyon","Geçiş (Transition)","SmartArt","Tema","Slayt ustası"], a:1, s:"Sayfa değişimine geçiş, nesnelerin hareketine animasyon denir."},
+            {q:"Filtreleme ile sıralama arasındaki temel fark?", o:["Filtre verileri kalıcı sıralar","Filtrelemek kriter dışını gizler, sadece isteneni gösterir","Filtre sadece metin","Filtre makro gerektirir","Filtre veriyi siler"], a:1, s:"Filtrelemek şarta uymayanları ekrandan saklar."},
+            {q:"EĞER fonksiyonunda doğru-yanlış sırası?", o:["Yanlışsa, doğruysa","Doğruysa birinci, yanlışsa ikinci","İkisi toplanır","İlki hata","Rastgele"], a:1, s:"=EĞER(şart; doğruysa; yanlışsa)"},
+            {q:"Word ve Excel entegrasyon en iyi örnek?", o:["Word'de hesaplama","Excel grafiğini Word raporuna eklemek","Excel kapak yapmak","Virüs tarama","Daktilo gibi kullanma"], a:1, s:"Maliyet analizi Excel'de hazırlanıp Word raporuna aktarılır."},
+            {q:"Şarta göre hücre rengi değiştirme?", o:["Açıklama","Koşullu Biçimlendirme","Hücre stilleri","Düşeyara","Hızlı doldur"], a:1, s:"Conditional Formatting, değerlere göre renklendirir."},
+            {q:"Sistem yaklaşımında geribildirim (feedback) nedir?", o:["Girdi","Süreçleme","Çıktıları kontrol edip düzeltme için başa bilgi gönderme","Sistem sınırı","Kapalı döngü"], a:2, s:"Feedback, sistemi dengeleyen düzeltici bilgidir."},
+            {q:"Göz temasından kaçınmak hangi sonucu doğurur?", o:["Toplantı kısalır","Koordinasyon kaybolur, dikkat dağılır","Analitik karar artar","Not tutma artar","Saygı artar"], a:1, s:"Göz teması iletişimin temelidir."},
+            {q:"Sesin net şekilde çıkması için artikülasyon nedir?", o:["Ezgi","Tonlama","Kavşak","Boğumlanma","Ulama"], a:3, s:"Boğumlanma, dil-dudak-yardımıyla sesi şekillendirme."}
+        ],
+        3: [ /* DENEME 3 eklenen özgün 20 soru (parça) */
+            {q:"Yedekleme planlaması hangi yönetim düzeyi faaliyetidir?", o:["Operasyonel","Taktiksel","Stratejik","İşlem işleme","Uzman"], a:2, s:"Uzun vadeli stratejik insan kaynakları planlaması."},
+            {q:"Karmaşık verilerin gruplara ayrılması işlemi?", o:["Toplama","Sınıflandırma (Tasnif)","Özetleme","Geri bildirim","Şifreleme"], a:1, s:"Verileri özelliklerine göre gruplandırmak sınıflandırmadır."},
+            {q:"Keylogger hangi güvenlik unsurunu doğrudan ihlal eder?", o:["Bütünlük","Kullanılabilirlik","Gizlilik","Sistem hiyerarşisi","Açık sistem"], a:2, s:"Şifreleri çalarak gizliliği ihlal eder."},
+            {q:"IaaS bulut modeli nedir?", o:["SaaS","PaaS","Altyapı Hizmeti (sanal sunucu)","DaaS","NaaS"], a:2, s:"Infrastructure as a Service: sunucu/depolama kiralama."},
+            {q:"Ses perdesi dalgalanmasına ne denir?", o:["Ulama","Kavşak","Artikülasyon","Vurgu","Ezgi (Tonlama)"], a:4, s:"Ezgi, duyguya göre sesin inip çıkmasıdır."},
+            {q:"'Köpekler havladılar' cümlesindeki hata?", o:["Gereksiz sözcük","Tamlama","Özne-yüklem (hayvan çoğul tekil yüklem gerekir)","Nesne eksik","Ses uyumu"], a:2, s:"Kural: Hayvan/bitki çoğul özneye tekil yüklem."},
+            {q:"'Zenginler ve varlıklı insanlar' anlatım bozukluğu?", o:["Çelişki","Kişi uyumsuzluğu","Eş anlamlı kelimeler gereksiz","Tümleç eksik","Yardımcı eylem"], a:2, s:"Zengin = varlıklı, gereksiz tekrar."},
+            {q:"Word'de kenar boşlukları hangi düzenleme?", o:["Karakter","Sözcük","Paragraf","Sayfa","Belge"], a:3, s:"Sayfa düzeni menüsü."},
+            {q:"Dipnot nedir?", o:["Üstbilgi","Sonnot","Sayfa altına açıklama","Yer imi","Filigran"], a:2, s:"Dipnot, sayfanın altında açıklamadır."},
+            {q:"Sunum öncesi mekan incelemesi neden yapılır?", o:["Kira bedeli","Fiziki koşulların materyali bozmasını engellemek","Yaş tespiti","Fikri değiştirmek","Güvenlik kamerası"], a:1, s:"Teknik aksaklıkları önceden görüp önlem almak."},
+            {q:"Prezi'de rota belirleyen menü?", o:["Insert","Frame","Path (Yol)","Colors","Theme"], a:2, s:"Path menüsü, kameranın izleyeceği rotayı düzenler."},
+            {q:"#YOK hatası ile #SAYI/0! farkı?", o:["#YOK boş hücre","#YOK arama değeri bulunamaması","#YOK sıfıra bölme","#YOK metin hatası","#YOK sütun genişliği"], a:1, s:"#YOK aranan veri eşleşmez."},
+            {q:"Filtreleme ile sadece Marmara ve >10000 satırları gösterme?", o:["Koşullu biçimlendirme","Filtreleme","Pivot","Sıralama","Düşeyara"], a:1, s:"Filtre kriteri iki koşullu olabilir."},
+            {q:"=EĞER(50>100; A1; B1) sonucu?", o:["A1","B1","Hata","Toplam","Boş"], a:1, s:"50>100 yanlış olduğundan B1 getirilir."},
+            {q:"Pareto ilkesi yöneticiye ne söyler?", o:["%20 çalış","Başarının %80'i işlerin %20'sinden gelir","Personel %80","Gelirler %80 maaş","Toplantı %80 başkan"], a:1, s:"Önemli azınlığa odaklan."},
+            {q:"Erteleme psikolojik nedeni?", o:["Kolay iş","Fazla zaman","Zor/sıkıcı iş veya başarısızlık korkusu","Konfor","Hızlı bilişim"], a:2, s:"Kaçış mekanizması."},
+            {q:"Başarılı emrin özelliği?", o:["Esnek","Yoruma kapalı, net ve açık","Çok zor","Jargon","İnisiyatif"], a:1, s:"Açık, net emir etkilidir."},
+            {q:"Toplantıda hazırlıksızlığın temel sebebi?", o:["Uzun süre","Üst düzey katılım","Gündem gönderilmemesi","Sınıf düzeni","Projeksiyon"], a:2, s:"Gündemsiz toplantı pusulasız gemi."},
+            {q:"Kick-off Meeting nedir?", o:["Kriz","Koordinasyon","Başlangıç toplantısı","Disiplin","Rutin"], a:2, s:"Proje başlangıç motivasyon toplantısı."},
+            {q:"Verimlilik (Efficiency) nedir?", o:["Amaca ulaşma","Kaynakları minimum israfla kullanma","Koordinasyon","Otonomi","Sinerji"], a:1, s:"Verimlilik, girdi/çıktı optimizasyonudur."}
+        ],
+        4: [ /* DENEME 4 - 20 soru (kısa şablon) */
+            {q:"ERP sisteminin en büyük yapısal avantajı?", o:["Ücretsiz","Veri tekrarını ve tutarsızlığı engeller","Enerji tasarrufu","İnternetsiz çalışma","Çalışan azaltır"], a:1, s:"Entegre sistem, veri bir kez girilir."},
+            {q:"Puantaj verileri hangi sisteme aktarılır?", o:["Pazarlama","Üretim","Muhasebe Bilgi Sistemi","Varlık","Müşteri"], a:2, s:"Maaş/SGK muhasebe sisteminde işlenir."},
+            {q:"Trojan (Truva Atı) nedir?", o:["Solucan","Casus","Faydalı görünüp arka kapı açar","Keylogger","Fidye"], a:2, s:"Masum program gibi görünür."},
+            {q:"MAC adresi filtreleme nasıl çalışır?", o:["Spam filtre","Fiziksel donanım kimliğine izin","Parmak izi","Şifreleme","Trojan"], a:1, s:"Ağ kartı MAC adresi listesi."},
+            {q:"Yazılı anlatımda konuyu işleme planına ne denir?", o:["Ana fikir","Plan (tasarlama)","Giriş","Sonuç","Gelişme"], a:1, s:"Plan, yazının iskeletidir."},
+            {q:"'Alkış almak' ifadesindeki bozukluk?", o:["Yabancı etkiyle gereksiz yardımcı eylem","Özne- yüklem","Çelişki","Ek eksik","Bağlaç"], a:0, s:"Doğrusu 'alkışlanmak'tır."},
+            {q:"'Eminim ki ... katlayabilir' cümlesindeki bozukluk?", o:["Eş anlam","Çelişki (kesinlik+olasılık)","Uyumsuzluk","Tümleç","İşaret"], a:1, s:"Eminim+katlayabilir çelişir."},
+            {q:"Belge arkaplanına silik yazı ekleme?", o:["Holograf","Filigran","Üst bilgi","Yer imi","Tema"], a:1, s:"Filigran (watermark)."},
+            {q:"Home ve End tuşları ne işe yarar?", o:["Sayfa yukarı/aşağı","Satır başı/satır sonu","Sekme","Ekle/sil","Shift/Ctrl"], a:1, s:"Home satır başı, End satır sonu."},
+            {q:"Sunum kapanışında yapılması gereken iki şey?", o:["Tekrar anlatma","Özet + Soru-Cevap","Teşekkür edip çıkma","Yeni konu","Işıkları kapatma"], a:1, s:"Kısa özet ve soru-cevap."},
+            {q:"Slayt okuyuculuğu hatası nedir?", o:["Somut örnek","Ekrandaki metni aynen okumak","Grafik","Fıkra","Animasyon"], a:1, s:"Sunucu slaytı arkasına dönerek okur."},
+            {q:"Excel sıralamada 'seçimi genişlet' uyarısı nedeni?", o:["Formül hatası","Sadece tek sütun sıralanırsa veri kayar","Filtre aktif","Koşullu biçim","Makro"], a:1, s:"Diğer sütunlar sabit kalır, bozulma olur."},
+            {q:"DÜŞEYARA hangi iş için kullanılır?", o:["Toplama","Karşılaştırma","Ortalama","Arama/eşleme","Max"], a:3, s:"Bir anahtarla başka tablodan veri çeker."},
+            {q:"Veri trendini göstermek için en etkili araç?", o:["Metin","Grafikler","Köprü","Filigran","Doğrulama"], a:1, s:"Çizgi/sütun grafiği trendi net gösterir."},
+            {q:"Sihirli Araç Yaklaşımı temeli?", o:["İrade","Dijital takvim/araçları aktif kullanma","ABC","Mükemmeliyet","Sadece üst yönetim"], a:1, s:"Teknolojiyi sihirli değnek gibi kullanmak."},
+            {q:"Prokrastinasyon nedir?", o:["Mükemmeliyet","Erteleme hastalığı","Yorgunluk","Otonomi","Tükenmişlik"], a:1, s:"Yapılacak işi sürekli erteleme."},
+            {q:"Sanal konferansın krizdeki kritik faydası?", o:["Fatura sıfırlama","Karar alma hızını katlamak","Sadece alt kademe","Yavaşlatma","Veri sızıntısı"], a:1, s:"Hızlı toplanıp karar almak."},
+            {q:"Kick-off Meeting hangi toplantı?", o:["Bilgilendirme","Başlangıç","Pazarlık","Disiplin","Rutin"], a:1, s:"Proje başlangıç toplantısı."},
+            {q:"Vendor Lock-in bulutta neyi ifade eder?", o:["İnternet kopması","Sağlayıcı değiştirme maliyeti çok yüksek","Güncelleme","Elektrik","Siber saldırı"], a:1, s:"Bağımlılık, çıkış maliyeti."},
+            {q:"Verimlilik (Efficiency) nedir?", o:["Hedef vurmak","Kaynakları en az israfla kullanmak","Pazar","Gayri resmi ağ","Tutanak"], a:1, s:"Minimum kaynakla çıktı üretmek."}
+        ],
+        5: [ /* DENEME 5 - 20 soru */
+            {q:"Sistem sınırını belirleyen temel unsur?", o:["Girdiler","Çıktılar","Yetki ve sorumluluklar","Yazılım","Müşteri"], a:2, s:"Sistem sınırı yetki/sorumluluk alanıdır."},
+            {q:"Üst düzey yönetici hangi bilgi türünü kullanır?", o:["Günlük detay","Özet ve makro (stratejik)","Saatlik hata","İzin tablosu","Donanım"], a:1, s:"Üst yönetim özet stratejik bilgi ister."},
+            {q:"Ham verinin bilgiye dönüştüğü aşama?", o:["Geri bildirim","İşleme (Processing)","Şifreleme","Kullanılabilirlik","Bakım"], a:1, s:"İşleme ile veri anlam kazanır."},
+            {q:"İç ağ ile dış ağ arasında güvenlik katmanı?", o:["Biyometrik","Antivirüs","Firewall","MAC","Spam"], a:2, s:"Güvenlik duvarı (Firewall) paket filtreler."},
+            {q:"Sesin dil,dudakla şekillenmesi?", o:["Vurgu","Ezgi","Kavşak","Boğumlanma","Ulama"], a:3, s:"Artikülasyon (boğumlanma)."},
+            {q:"'Kuşlar uçtular' cümlesindeki bozukluk?", o:["Gereksiz sözcük","Yüklem tekli olmalı (hayvan çoğul özne)","Çelişki","Tümleç","Ek"], a:1, s:"Kuşlar tekil yüklem ister: uçtu."},
+            {q:"'Herkes ... tedirgindiler' hatası?", o:["Çelişki","Özne belgisiz olduğunda yüklem tekil olmalı","Tamlama","Nesne","Sözcük"], a:1, s:"Herkes tedirgindi(ler değil)."},
+            {q:"Word'de profesyonel organizasyon şeması aracı?", o:["WordArt","ClipArt","SmartArt","Shapes","Charts"], a:2, s:"SmartArt, hazır şema."},
+            {q:"Notepad ile WordPad arasındaki temel fark?", o:["Notepad sadece düz metin, WordPad biçimlendirme yapar","Notepad Mac","Notepad formül","WordPad sadece video","Aynı"], a:0, s:"Notepad .txt, WordPad hafif zengin metin."},
+            {q:"PowerPoint yazım denetimi ve yorum menüsü?", o:["Görünüm","Tasarım","Ekle","Gözden Geçir","Geçişler"], a:3, s:"Gözden Geçir (Review) sekmesi."},
+            {q:"Animasyon ile geçiş farkı?", o:["Geçiş slayt komple değişir, animasyon nesne hareketi","Animasyon slayt değiştirir","Aynı","Geçiş sadece yazı","Animasyon ses"], a:0, s:"Transition slaytlar arası, Animation nesne içi."},
+            {q:"Excel'de A1:A5 aralığı ne işe yarar?", o:["Bölme","Eşitlik","Aralık seçmek","Kopyalama","Silme"], a:2, s:"Aralık operatörü (:) bir blok belirtir."},
+            {q:"Filtrelemenin amacı nedir?", o:["Sıralamak","Kriter dışı gizleyip alt küme göstermek","Şifrelemek","Tekrarları silmek","Özet tablo"], a:1, s:"Sorgulama ve süzme."},
+            {q:"=EĞER(25<2; A1; B1) sonucu?", o:["A1","B1","#HATA","Toplam","Boş"], a:1, s:"25<2 yanlış → B1."},
+            {q:"Zaman Değerlendirme Yöntemi nedir?", o:["Rapor doldurtmak","Rastgele anlık gözlem","ABC","Pareto","Dijital asistan"], a:1, s:"Habersiz anlık kesitlerle zaman kullanımı ölçme."},
+            {q:"ABC yaklaşımı nedir?", o:["80/20","Önem/aciliyete göre A,B,C önceliklendirme","Sihirli araç","Zaman değerlendirme","Mükemmeliyet"], a:1, s:"A(çok önemli), B(orta), C(az)."},
+            {q:"U tipi oturma düzeninin avantajı?", o:["Beyin fırtınası","Sunucu dolaşabilir, mekan tasarrufu, kısmi göz teması","Tartışma yok","Hiyerarşi","Resmiyet"], a:1, s:"U düzeni esnektir."},
+            {q:"Emrin başarılı olması için en kritik özellik?", o:["Yoruma açık","Açık, net, kesin","Çok zor","Edebi","Jargon"], a:1, s:"Net ve anlaşılır emir."},
+            {q:"Script Kiddie nedir?", o:["Beyaz şapkalı","Siber terörist","Hazır script kullanan amatör","Casus","Ağ yöneticisi"], a:2, s:"Kod bilmeyen, hazır araçlarla saldıran."},
+            {q:"Personel için en temel idari güvenlik önlemi?", o:["Şifre kırmak","Gizlilik sözleşmesi (taahhütname)","Kablolu fare","Sunucu yetkisi","Elden maaş"], a:1, s:"Hukuki taahhütname şarttır."}
+        ]
+    };
+
+    let currentExam = 1;          // 1..5
+    let userAnswers = {};         // { soru_indeksi (0-19): seciliSecenekIndex }
+    let examFinished = false;
+    let totalQuestions = 20;
+
+    // DOM
+    const container = document.getElementById("questionsContainer");
+    const examTitle = document.getElementById("examTitle");
+    const resultsPanel = document.getElementById("resultsPanel");
+    const finishWrapper = document.getElementById("finishBtnWrapper");
+
+    function renderCurrentExam() {
+        const questions = EXAM_DATA[currentExam];
+        if (!questions) return;
+        let html = "";
+        questions.forEach((q, idx) => {
+            const selectedVal = userAnswers[idx] !== undefined ? userAnswers[idx] : null;
+            const isFinishedMode = examFinished;
+            html += `<div class="question-card" data-qidx="${idx}">
+                        <div class="q-text">
+                            <div class="q-num">${idx+1}</div>
+                            <div>${q.q}</div>
+                        </div>
+                        <div class="options" id="opts-${idx}">`;
+            q.o.forEach((opt, optIdx) => {
+                let extraClass = "";
+                let iconSpan = "";
+                if (isFinishedMode) {
+                    if (optIdx === q.a) {
+                        extraClass = "correct-opt";
+                        iconSpan = ' <i class="fa-solid fa-check-circle"></i>';
+                    } else if (selectedVal === optIdx && selectedVal !== q.a) {
+                        extraClass = "wrong-opt";
+                        iconSpan = ' <i class="fa-solid fa-circle-xmark"></i>';
+                    }
+                    extraClass += " locked-opt";
+                } else if (selectedVal === optIdx) {
+                    extraClass = "selected-opt";
+                }
+                html += `<div class="opt-item ${extraClass}" data-q="${idx}" data-opt="${optIdx}">
+                            <span>${String.fromCharCode(65+optIdx)}) ${opt}${iconSpan}</span>
+                         </div>`;
+            });
+            const solutionStyle = (examFinished) ? "show-sol" : "";
+            html += `</div>
+                     <div class="solution-area ${solutionStyle}" id="sol-${idx}">
+                        <strong><i class="fa-regular fa-lightbulb"></i> Çözüm & Püf Noktası:</strong><br>${q.s}
+                     </div>
+                    </div>`;
+        });
+        container.innerHTML = html;
+        examTitle.innerText = `Deneme Sınavı ${currentExam}`;
+        if (!examFinished) attachOptionEvents();
+    }
+
+    function attachOptionEvents() {
+        document.querySelectorAll(".opt-item").forEach(el => {
+            el.removeEventListener("click", optionHandler);
+            el.addEventListener("click", optionHandler);
+        });
+    }
+
+    function optionHandler(e) {
+        if (examFinished) return;
+        const targetDiv = e.currentTarget;
+        const qIdx = parseInt(targetDiv.dataset.q);
+        const optVal = parseInt(targetDiv.dataset.opt);
+        // kaydet
+        userAnswers[qIdx] = optVal;
+        // görsel güncelleme
+        const parentOpts = targetDiv.parentElement;
+        Array.from(parentOpts.children).forEach(child => {
+            child.classList.remove("selected-opt");
+        });
+        targetDiv.classList.add("selected-opt");
+        saveStateToLocal();
+    }
+
+    function saveStateToLocal() {
+        const state = {
+            exam: currentExam,
+            answers: userAnswers,
+            finished: examFinished
+        };
+        localStorage.setItem("isg_final_simulator", JSON.stringify(state));
+    }
+
+    function loadStateFromLocal() {
+        const raw = localStorage.getItem("isg_final_simulator");
+        if (!raw) return;
+        try {
+            const data = JSON.parse(raw);
+            if (data.exam && data.exam >=1 && data.exam <=5) currentExam = data.exam;
+            userAnswers = data.answers || {};
+            examFinished = data.finished || false;
+        } catch(e) {}
+    }
+
+    function switchExam(examNo) {
+        currentExam = examNo;
+        userAnswers = {};
+        examFinished = false;
+        resultsPanel.style.display = "none";
+        finishWrapper.style.display = "block";
+        renderCurrentExam();
+        saveStateToLocal();
+        updateActiveButton();
+    }
+
+    function updateActiveButton() {
+        document.querySelectorAll(".exam-btn").forEach(btn => {
+            const examVal = parseInt(btn.dataset.exam);
+            if (examVal === currentExam) btn.classList.add("active");
+            else btn.classList.remove("active");
+        });
+    }
+
+    function finishExam() {
+        if (examFinished) return;
+        const questions = EXAM_DATA[currentExam];
+        let correct = 0, wrong = 0;
+        for (let i = 0; i < totalQuestions; i++) {
+            const answer = userAnswers[i];
+            if (answer === undefined) continue;
+            if (answer === questions[i].a) correct++;
+            else wrong++;
+        }
+        const empty = totalQuestions - (correct+wrong);
+        let net = correct - (wrong / 4);
+        if (net < 0) net = 0;
+        const score = Math.round((net / totalQuestions) * 100);
+        document.getElementById("finalScore").innerText = score;
+        document.getElementById("statCorrect").innerText = correct;
+        document.getElementById("statWrong").innerText = wrong;
+        document.getElementById("statEmpty").innerText = empty;
+        document.getElementById("statNet").innerText = net.toFixed(2);
+        let msg = "";
+        if (score >= 85) msg = "🌟 Harika! Konulara tamamen hakimsiniz.";
+        else if (score >= 65) msg = "📌 İyi seviye, eksiklerinizi çözümlerden kapatın.";
+        else msg = "⚠️ Çözümleri dikkatlice okuyun, tekrar deneyin.";
+        document.getElementById("resultMessage").innerHTML = msg;
+        resultsPanel.style.display = "block";
+        finishWrapper.style.display = "none";
+        examFinished = true;
+        renderCurrentExam();   // Çözümleri ve doğru/yanlış renklerini göster
+        saveStateToLocal();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function resetExam() {
+        userAnswers = {};
+        examFinished = false;
+        resultsPanel.style.display = "none";
+        finishWrapper.style.display = "block";
+        renderCurrentExam();
+        saveStateToLocal();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function printExamPdf() {
+        window.print();
+    }
+
+    // Event listeners
+    document.querySelectorAll(".exam-btn").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+            const examNo = parseInt(btn.dataset.exam);
+            switchExam(examNo);
+        });
+    });
+    document.getElementById("resetExamBtn").addEventListener("click", resetExam);
+    document.getElementById("printPdfBtn").addEventListener("click", printExamPdf);
+    document.getElementById("finishExamBtn").addEventListener("click", finishExam);
+
+    // INIT
+    loadStateFromLocal();
+    if (!userAnswers || Object.keys(userAnswers).length === 0) examFinished = false;
+    renderCurrentExam();
+    updateActiveButton();
+    if (examFinished) {
+        resultsPanel.style.display = "block";
+        finishWrapper.style.display = "none";
+        // sonuçları tekrar hesapla ve göster
+        finishExam();  // tekrar hesaplar fakat finished true olduğu için erken döner, o yüzden manuel
+        // aslında sonuçları göstermek için veriler localStorage'da var, ama finishExam çağırırsak finished true döner.
+        // alternatif: sonuç hesaplama fonksiyonunu ayrı yapalım
+        if(examFinished){
+            const questions = EXAM_DATA[currentExam];
+            let cor=0,wro=0;
+            for(let i=0;i<totalQuestions;i++){
+                let ans = userAnswers[i];
+                if(ans===undefined) continue;
+                if(ans===questions[i].a) cor++; else wro++;
+            }
+            let emp = totalQuestions-(cor+wro);
+            let net = cor - (wro/4);
+            if(net<0) net=0;
+            let scr = Math.round((net/totalQuestions)*100);
+            document.getElementById("finalScore").innerText = scr;
+            document.getElementById("statCorrect").innerText = cor;
+            document.getElementById("statWrong").innerText = wro;
+            document.getElementById("statEmpty").innerText = emp;
+            document.getElementById("statNet").innerText = net.toFixed(2);
+        }
+    } else {
+        resultsPanel.style.display = "none";
+        finishWrapper.style.display = "block";
+    }
+</script>
+</body>
+</html>

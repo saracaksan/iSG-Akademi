@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ünite 3 - Konu Anlatımı ve Test | İSG Akademi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4c1d95; 
+            --primary-light: #7c3aed; 
+            --secondary: #1e1b4b; 
+            --bg-color: #f3f4f6;
+            --text-dark: #1f2937;
+            --success: #10b981;
+            --danger: #ef4444;
+            --card-bg: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-dark); line-height: 1.6; }
+
+        /* Navbar */
+        nav { background: var(--card-bg); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
+        .logo { font-size: 1.2rem; font-weight: 700; color: var(--primary); }
+        .back-btn { text-decoration: none; color: var(--primary); font-weight: 500; font-size: 0.9rem; border: 1px solid var(--primary); padding: 5px 15px; border-radius: 5px; transition: all 0.3s;}
+        .back-btn:hover { background: var(--primary); color: white; }
+
+        .container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
+        
+        /* Konu Anlatımı Bölümü */
+        .content-section { background: var(--card-bg); padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); margin-bottom: 2rem; }
+        .content-section h1 { color: var(--secondary); margin-bottom: 1rem; font-size: 1.8rem; text-align: center; border-bottom: 2px solid var(--primary-light); padding-bottom: 10px;}
+        .content-section h2 { color: var(--primary); margin-top: 1.5rem; margin-bottom: 1rem; font-size: 1.3rem; display: flex; align-items: center; gap: 10px;}
+        .content-section h3 { color: var(--secondary); margin-top: 1.2rem; margin-bottom: 0.5rem; font-size: 1.1rem; }
+        .content-section p, .content-section li { font-size: 0.95rem; margin-bottom: 0.8rem; text-align: justify; }
+        .highlight-box { background: #fef3c7; border-left: 5px solid #f59e0b; padding: 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .mind-map { background: #eff6ff; border: 1px dashed #3b82f6; padding: 1.5rem; border-radius: 8px; margin: 1rem 0; }
+
+        /* Test Bölümü */
+        .quiz-section { background: var(--card-bg); padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); }
+        .quiz-title { text-align: center; color: var(--secondary); margin-bottom: 1rem; }
+        
+        .memory-badge { display: inline-block; background: #e0e7ff; color: #4338ca; padding: 5px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-bottom: 2rem; border: 1px solid #c7d2fe; }
+
+        .question-card { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e7eb; transition: opacity 0.3s; }
+        .question-text { font-weight: 600; font-size: 1.05rem; margin-bottom: 1rem; }
+        
+        .options-list { display: flex; flex-direction: column; gap: 8px; }
+        .option-btn { 
+            background: #f8fafc; border: 2px solid #e2e8f0; padding: 12px 15px; 
+            border-radius: 8px; text-align: left; font-size: 0.95rem; cursor: pointer; 
+            transition: all 0.2s; display: flex; align-items: center; width: 100%; position: relative;
+        }
+        .option-btn:hover:not(.disabled) { border-color: var(--primary-light); background: #f5f3ff; }
+        
+        /* Şık Durumları */
+        .option-btn.disabled { pointer-events: none; opacity: 0.8; }
+        .option-btn.correct { background: #ecfdf5 !important; border-color: var(--success) !important; color: #065f46; font-weight: 600; }
+        .option-btn.wrong { background: #fef2f2 !important; border-color: var(--danger) !important; color: #991b1b; text-decoration: line-through; }
+        
+        .btn-finish { background: var(--primary); color: white; border: none; padding: 15px 30px; font-size: 1.1rem; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 1rem; transition: background 0.3s;}
+        .btn-finish:hover { background: var(--secondary); }
+        .btn-reset { background: #6b7280; color: white; border: none; padding: 10px 20px; font-size: 0.9rem; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px; width: 100%; transition: background 0.3s;}
+        .btn-reset:hover { background: #4b5563; }
+
+        /* Sonuç ve Çözümler Bölümü */
+        #results-section { display: none; margin-top: 2rem; background: #f0fdf4; padding: 2rem; border-radius: 15px; border: 2px solid var(--success); }
+        .score-display { text-align: center; font-size: 2.5rem; font-weight: bold; color: var(--success); margin-bottom: 1rem; }
+        
+        .solution-box { background: white; padding: 15px; border-left: 4px solid var(--primary-light); margin-bottom: 15px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .solution-box h4 { margin-bottom: 5px; color: var(--secondary); font-size: 1rem;}
+
+        .btn-pdf { background: #dc2626; color: white; border: none; padding: 12px 25px; font-size: 1rem; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 20px; display: inline-flex; align-items: center; gap: 10px; }
+        .btn-pdf:hover { background: #991b1b; }
+
+        footer { text-align: center; padding: 2rem; color: var(--text-light); font-size: 0.9rem; }
+
+        @media print {
+            body { background: white; color: black; font-size: 10pt; line-height: 1.3; }
+            nav, .btn-finish, .btn-reset, .btn-pdf, .back-btn, .memory-badge { display: none !important; }
+            .container { max-width: 100%; margin: 0; padding: 0; }
+            .content-section, .quiz-section { box-shadow: none; border: none; padding: 0; margin-bottom: 10px; }
+            h1 { font-size: 14pt; } h2 { font-size: 12pt; } h3 { font-size: 11pt; }
+            .question-card { margin-bottom: 10px; padding-bottom: 10px; page-break-inside: avoid; border-bottom: 1px solid #ccc;}
+            .option-btn { padding: 4px 8px; border: 1px solid #ccc; margin-bottom: 2px; font-size: 9pt; }
+            .quiz-container-print { column-count: 2; column-gap: 20px; }
+            #results-section { display: block !important; border: none; padding: 0; }
+            .solution-box { border: 1px solid #ddd; padding: 8px; margin-bottom: 5px; page-break-inside: avoid; font-size: 9pt;}
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo"><i class="fa-solid fa-book-open"></i> Ünite 3: İSG Riskleri</div>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-light);">Hazırlayan: Sıraç Aksan</span>
+            <a href="../../index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Ana Sayfaya Dön</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section class="content-section">
+            <h1>Afet ve Acil Müdahale Çalışanlarının Karşılaşabileceği İSG Riskleri</h1>
+            
+            <h2><i class="fa-solid fa-person-digging"></i> 1. Fiziksel ve Psikolojik Riskler</h2>
+            <p>Afet müdahale personeli, hem bedensel hem de ruhsal olarak sınırların zorlandığı ortamlarda çalışır. Bu durum iki ana risk grubunu doğurur:</p>
+            <h3>A. Fiziksel Aşırı Zorlanmalar</h3>
+            <p>Hastaların, enkazın veya ağır ekipmanların uygunsuz tekniklerle uzun süreli <strong>kaldırılması ve taşınması</strong>, özellikle <strong>kas-iskelet sistemi hastalıklarına (KİSH)</strong> yol açar. Bunu önlemek için ergonomik tasarımlı sedyeler kullanılmalı, teknolojik/otomatik indirme sistemlerine geçilmeli ve düzenli teorik/pratik kaldırma eğitimleri verilmelidir.</p>
+            
+            <h3>B. Duygusal Aşırı Gerginlik (Psikolojik Yıpranma)</h3>
+            <p>Ölümler, ağır yaralılar, zaman baskısı ve öngörülemeyen nöbetler ciddi psikolojik yük oluşturur. Bu durumun uzun süreli sonucunda iki önemli tablo ortaya çıkar:</p>
+            <ul>
+                <li><strong>Travma Sonrası Stres Bozukluğu (TSSB):</strong> Teşhis edilebilmesi için belirtilerin olaydan sonra <strong>en az 1 ay</strong> boyunca kesintisiz devam etmesi şarttır. Tedavisinde Bilişsel-Davranışçı Terapi (BDT) ve gerekiyorsa antidepresanlar kullanılır.</li>
+                <li><strong>Tükenmişlik Sendromu:</strong> Üç ana faktörle karakterize edilir: <em>Duygusal tükenmişlik</em>, <em>Azalmış kişisel başarı hissi</em> ve <em>Benlik yitimi (Depersonalizasyon).</em></li>
+            </ul>
+
+            <h2><i class="fa-solid fa-virus"></i> 2. Doğal Afetlerde Bulaşıcı Hastalık Riskleri</h2>
+            <p>Altyapının çökmesi ve çevre koşullarının bozulması müdahale ekiplerini salgın hastalık riskiyle karşı karşıya bırakır. Bulaş yolları şu şekildedir:</p>
+            <ul>
+                <li><strong>Su Aracılı (Gastrointestinal):</strong> İshal, Kolera, Tifo, Hepatit A, Hepatit E, Rotavirüs.</li>
+                <li><strong>Vektör Aracılı (Sivrisinek, kene vb.):</strong> Malarya (Sıtma), Dang Humması, Batı Nil Ateşi.</li>
+                <li><strong>Hava Aracılı (Solunum):</strong> Tüberküloz (Verem).</li>
+                <li><strong>Kan ve Vücut Sıvısı (Müdahale Esnasında):</strong> HIV, Hepatit B, Hepatit C (İğne batması ve açık yaradan bulaşır).</li>
+            </ul>
+            <p><em>Önlem:</em> Ekiplerin aşılanması hayati önem taşır (Tetanos, Hepatit A/B, Kuduz vb. aşılar zayıflatılmış bakteri/virüs proteinleridir).</p>
+
+            <h2><i class="fa-solid fa-biohazard"></i> 3. İnsan Kaynaklı (KBRN ve Terör) Afet Riskleri</h2>
+            <p>Kimyasal, Biyolojik, Radyolojik ve Nükleer (KBRN) sızıntılar ile terör saldırıları müdahale ekipleri için ölümcül riskler barındırır.</p>
+            <ul>
+                <li><strong>Radyasyon Riskleri:</strong> Kısa sürede yüksek doza maruz kalmak <strong>Akut Radyasyon Sendromuna</strong> yol açar. Radyasyon gözle görülmez, koklanmaz. Ölçümü için çalışma prensibine göre (Dedektörler, Dozimetreler) ve kullanım alanına göre (Alan monitörleri, kişisel dozimetreler) cihazlar kullanılır.</li>
+                <li><strong>Terör ve Adli Vakalar:</strong> Teröristler acil müdahale ekiplerini ikincil hedefler olarak seçebilir. Buradaki temel amaç, kurtarıcıları vurarak toplumdaki <strong>korku, kaos ve medya etkisini</strong> artırmaktır.</li>
+                <li><strong>A Kategorisi Biyolojik Silahlar (En Tehlikeli):</strong> Kolay yayılan ve yüksek ölüm oranına sahip biyolojik ajanlardır. <em>Çiçek (Variola major), Şarbon (Bacillus anthracis), Veba (Yersinia pestis), Botülizm.</em></li>
+            </ul>
+            
+            <div class="highlight-box">
+                <h3 style="color: #b45309; margin-bottom: 10px;"><i class="fa-solid fa-triangle-exclamation"></i> Sınavlarda Çıkma Mantığı ve Önemli Tuzaklar</h3>
+                <p><strong>Tuzak 1 (Hepatit Ayrımı):</strong> Sınavlarda "Hangi hepatit su/gıda ile bulaşır, hangisi kanla bulaşır?" sıkça sorulur. <strong>Hepatit A ve E</strong> pis suyla; <strong>Hepatit B ve C</strong> kan/vücut sıvısıyla (iğne batmasıyla) bulaşır.</p>
+                <p><strong>Tuzak 2 (TSSB Teşhis Süresi):</strong> Travma Sonrası Stres Bozukluğu tanısı konması için belirtilerin 1 hafta veya birkaç gün değil, <strong>"En az 1 AY"</strong> sürmesi gerekir.</p>
+                <p><strong>Tuzak 3 (Tükenmişlik Faktörleri):</strong> Tükenmişlik sendromunun faktörlerini soran sorularda şıklara genelde "fiziksel yorgunluk" konur ancak asıl faktör <strong>"Benlik yitimi (Depersonalizasyon)"</strong> dir. Olaylara ve insanlara hissizleşme durumudur.</p>
+            </div>
+
+            <div class="mind-map">
+                <h3 style="color: #1d4ed8; margin-bottom: 10px;"><i class="fa-solid fa-brain"></i> Zihin Haritası & Kodlamalar</h3>
+                <p><strong>Biyolojik Silahlar (A Kategorisi En Tehlikeliler) Kodu: "Ç-A-V-U-Ş"</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li><strong>Ç</strong>içek hastalığı</li>
+                    <li><strong>V</strong>eba</li>
+                    <li><strong>Ş</strong>arbon</li>
+                    <p style="font-size:0.85rem; color:#6b7280; margin-top:5px;">(Botülizm ve Tularemi'yi de aklınızda tutun.)</p>
+                </ul>
+                <p style="margin-top: 10px;"><strong>Kanla Bulaşanlar Formülü: "2H - 1V"</strong> (Hepatit B, Hepatit C, HIV virüsü)</p>
+            </div>
+        </section>
+
+        <section class="quiz-section">
+            <h2 class="quiz-title"><i class="fa-solid fa-list-check"></i> Ünite 3 Final Provası (20 Soru)</h2>
+            <div style="text-align: center;">
+                <div class="memory-badge" id="memory-badge">
+                    <i class="fa-solid fa-floppy-disk"></i> Sistem Devrede: İşaretlenen sorular hafızaya kaydediliyor...
+                </div>
+            </div>
+            
+            <div id="quiz-container" class="quiz-container-print">
+                </div>
+
+            <button class="btn-finish" id="finish-btn" onclick="testiBitir()">
+                <i class="fa-solid fa-flag-checkered"></i> Testi Bitir ve Değerlendir
+            </button>
+            <button class="btn-reset" id="reset-btn" onclick="testiSifirla()">
+                <i class="fa-solid fa-rotate-right"></i> Çözümlerimi Sıfırla ve Baştan Başla
+            </button>
+
+            <div id="results-section">
+                <h2 style="text-align: center; color: var(--secondary);">Sınav Sonucunuz</h2>
+                <div class="score-display">Puan: <span id="score-text">0</span> / 100</div>
+                <p style="text-align: center; margin-bottom: 2rem; font-weight: 500;" id="score-message"></p>
+
+                <h3 style="margin-bottom: 15px; border-bottom: 2px solid #ccc; padding-bottom: 5px;">Detaylı Soru Analizi ve Çözümler</h3>
+                <div id="solutions-container">
+                    </div>
+
+                <div style="text-align: center;">
+                    <button class="btn-pdf" onclick="window.print()">
+                        <i class="fa-solid fa-file-pdf"></i> Konuyu ve Çözümleri Sıkışık PDF Olarak Kaydet
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>Anadolu Üniversitesi İş Sağlığı ve Güvenliği Hazırlık Sistemi &copy; 2026 | Tasarım: Sıraç Aksan</p>
+    </footer>
+
+    <script>
+        // Soru Veritabanı (20 Analitik Soru)
+        const questions = [
+            { q: "Afet bölgelerinde çalışan acil müdahale ekiplerinin aşırı fiziksel güç gerektiren hasta kaldırma ve taşıma işlerinden dolayı en sık yakalandıkları mesleki rahatsızlık hangisidir?", options: ["A) Travma Sonrası Stres Bozukluğu", "B) Kronik Depresyon", "C) Hepatit C Enfeksiyonu", "D) Kas-iskelet sistemi rahatsızlıkları", "E) Solunum yolu hastalıkları"], answer: 3, solution: "Ağır yük kaldırma, yanlış taşıma teknikleri ve tekrarlayan zorlamalar doğrudan kas-iskelet sistemi hastalıklarına (KİSH) yol açar." },
+            { q: "Bir deprem sonrası arama kurtarma ekibi, uzun saatler boyunca enkaz altından ölü ve ağır yaralıları çıkarmış ve aileleriyle iletişim kurmak zorunda kalmıştır. Bu ekibin ilerleyen süreçte karşılaşacağı en olası İSG riski hangisidir?", options: ["A) Biyolojik bulaş riski", "B) Duygusal aşırı gerginlik ve tükenmişlik", "C) Ergonomik postür bozukluğu", "D) Akut radyasyon sendromu", "E) İkincil travmatik malarya"], answer: 1, solution: "Ölüler, ağır yaralılar ve aileleriyle ilgilenmek kurtarma ekiplerinde doğrudan duygusal gerginlik, TSSB ve tükenmişliğe sebep olur." },
+            { q: "İş stresine uzun süreli bir tepki olarak tanımlanan 'Tükenmişlik Sendromu', literatürde üç ana faktörle karakterize edilir. Aşağıdakilerden hangisi bu üç faktörden biri değildir?", options: ["A) Duygusal tükenmişlik", "B) Azalmış kişisel başarı hissi", "C) Benlik yitimi (Depersonalizasyon)", "D) Fiziksel dayanıklılığın artması", "E) İnsanlara karşı hissizleşme"], answer: 3, solution: "Tükenmişlikte fiziksel dayanıklılık artmaz aksine azalır. Sendromun temel 3 ayağı: Duygusal tükenme, başarı hissinin kaybı ve benlik yitimidir." },
+            { q: "Amerikan Psikiyatri Derneği'ne göre, sahada görev yapan bir teknisyene 'Travma Sonrası Stres Bozukluğu (TSSB)' teşhisi konulabilmesi için belirli ruhsal belirtilerin asgari ne kadar süreyle kesintisiz devam etmesi şarttır?", options: ["A) 24 saat", "B) Bir hafta", "C) Bir ay", "D) Altı ay", "E) Bir yıl"], answer: 2, solution: "Akut stres tepkisinden ayrılabilmesi için, travmatik belirtilerin üzerinden en az '1 AY' geçmesi ve devam etmesi gerekir." },
+            { q: "Afet bölgelerinde altyapının çökmesi sonucu temiz suya ulaşılamaması ciddi riskler doğurur. Aşağıdakilerden hangisi doğrudan 'su aracılı (gıda/su ile bulaşan)' hastalıklardan biri değildir?", options: ["A) Malarya (Sıtma)", "B) Kolera", "C) Tifo", "D) Hepatit A", "E) İshal"], answer: 0, solution: "Kolera, Tifo, Hepatit A ve ishaller su ile bulaşır. Malarya (Sıtma) ise vektör (sivrisinek) aracılığıyla kan yoluyla bulaşır." },
+            { q: "Ambulans çalışanlarının olay yerinde yaralıya müdahalesi sırasında; kanama durdurma, damar yolu açma gibi işlemlerde 'iğne batması' veya açık yara teması sonucu bulaşma ihtimali en yüksek viral hastalık grubu hangisidir?", options: ["A) Hepatit A ve Rotavirüs", "B) HIV, Hepatit B ve Hepatit C", "C) Tüberküloz ve Şarbon", "D) Kolera ve Dizanteri", "E) Batı Nil Ateşi ve Veba"], answer: 1, solution: "Kan ve vücut sıvıları ile doğrudan temas riski HIV (AIDS) ile Hepatit B ve C virüslerinin (2H-1V) bulaşmasına sebep olur." },
+            { q: "Nükleer santral sızıntısına müdahale eden KBRN ekiplerinin kısa sürede yüksek dozda radyasyona maruz kalması durumunda ortaya çıkan, bulantı, cilt yanıkları ve hücresel tahribatla karakterize tabloya ne ad verilir?", options: ["A) Kronik radyasyon sendromu", "B) Radyolojik adaptasyon sendromu", "C) Akut radyasyon sendromu", "D) Uzun dönemli radyoterapi etkisi", "E) Radyoaktif bağışıklık çöküşü"], answer: 2, solution: "Kısa sürede yüksek doza maruziyet sonucunda hücrelerin aniden ölmesiyle ortaya çıkan klinik tabloya 'Akut Radyasyon Sendromu' denir." },
+            { q: "Büyük çaplı bir terör eylemine müdahale eden itfaiye ve sağlık ekiplerinin, teröristler tarafından 'ikincil hedef' olarak doğrudan saldırıya uğramasının altındaki temel amaç genellikle hangisidir?", options: ["A) Fiziksel hasar oluşturmak", "B) Müdahale ekiplerinin yetkinliğini test etmek", "C) Toplumda korku, kaos, panik ve medya etkisini zirveye taşımak", "D) Sağlık araçlarını ele geçirmek", "E) Uluslararası yardım kuruluşlarını engellemek"], answer: 2, solution: "Kurtarıcıların vurulması toplumda 'devlet bile bizi koruyamıyor' algısı yaratarak derin bir korku, kaos ve büyük bir medya infiali oluşturur." },
+            { q: "Biyolojik terörizm bağlamında sivillere ve müdahale ekiplerine yönelik en büyük tehdidi oluşturan 'A Kategorisi' (en tehlikeli) maddeler arasında aşağıdakilerden hangisi yer almaz?", options: ["A) Variola major (Çiçek hastalığı)", "B) Bacillus anthracis (Şarbon)", "C) Yersinia pestis (Veba)", "D) Clostridium botulinum (Botülizm)", "E) Hepatit A virüsü"], answer: 4, solution: "Çiçek, Şarbon, Veba ve Botülizm A Kategorisi (yüksek ölüm oranlı ve kolay yayılan) silahlardır. Hepatit A su kaynaklı bir enfeksiyondur, silah olarak A kategorisinde değerlendirilmez." },
+            { q: "Radyasyonun gözle görülmez, koklanmaz ve hissedilmez yapısı nedeniyle olay yerinde tespiti için özel cihazlar kullanılır. Çalışma prensibine göre bu ölçüm cihazları ikiye ayrılır. Bunlar hangileridir?", options: ["A) Geiger sayaçları ve Barometreler", "B) Dedektörler ve Dozimetreler", "C) Spektrometreler ve Termal Kameralar", "D) Kontaminasyon monitörleri ve Turnikeler", "E) Alan monitörleri ve Sismograflar"], answer: 1, solution: "Çalışma prensibine göre radyasyon cihazları anlık algılama yapan 'Dedektörler' ve kümülatif dozu ölçen 'Dozimetreler' olarak iki ana gruba ayrılır." },
+            { q: "Ambulans çalışanlarında kas-iskelet sistemi hastalıkları (KİSH) riskini en aza indirmek için alınması gereken ergonomik tedbirler arasında aşağıdakilerden hangisi yanlıştır?", options: ["A) Taşıma ve duruş teknikleri için uygulamalı eğitimler verilmesi", "B) Ekipmanların ve sedyelerin ergonomik olanlarla değiştirilmesi", "C) Çalışan sirkülasyonunun iptal edilip aynı ekibin sürekli taşıma yapması", "D) Ambulans hasta yükleme işlemlerinde otomatik sistemlere geçilmesi", "E) Sağlık kontrollerinin düzenli yapılıp personelin kayıt altına alınması"], answer: 2, solution: "Çalışan sirkülasyonunun (görev değişiminin) iptal edilmesi değil, tam aksine ergonomik yükü paylaştırmak için vardiya/görev rotasyonlarının iyi ayarlanması gerekir." },
+            { q: "Travma Sonrası Stres Bozukluğu (TSSB) tedavisiyle ilgili aşağıdaki yaklaşımlardan hangisi tıp otoritelerince kabul gören etkili ve yaygın bir yöntemdir?", options: ["A) Personelin izne ayrılarak tamamen yalnız bırakılması", "B) Sadece ağır uyku ilaçlarıyla hafızanın baskılanması", "C) Bilişsel-Davranışçı Terapi (BDT) ve gerektiğinde antidepresan ilaç kullanımı", "D) Travma yaşanan olayın personel tarafından detaylıca haber yapılması", "E) Ekip içinde olayın hiçbir şekilde konuşulmasının yasaklanması"], answer: 2, solution: "TSSB tedavisinde hatalı düşüncelerin değiştirilmesini sağlayan Bilişsel-Davranışçı Terapi (BDT) ve klinik düzeyde depresyon varsa antidepresanlar en etkili yöntemdir." },
+            { q: "Aşılar, vücudun bağışıklık sistemini önceden uyararak savunma mekanizmasını (antikor) geliştiren biyolojik ürünlerdir. Aşağıdakilerden hangisi rutin aşılama programıyla korunulabilen hastalıklardan biri değildir?", options: ["A) Tetanos", "B) Boğmaca", "C) HIV / AIDS", "D) Hepatit B", "E) Kızamık"], answer: 2, solution: "Günümüz tıp teknolojisinde Tetanos, Hepatit B, Boğmaca ve Kızamık için son derece etkili aşılar mevcuttur ancak HIV/AIDS virüsüne karşı geliştirilmiş ve onaylanmış koruyucu bir aşı henüz yoktur." },
+            { q: "Afet bölgelerindeki uluslararası kurtarma operasyonlarında, ekipler arası 'ortak bir dil eksikliği' ve farklı protokollerin uygulanması öncelikle neye zarar verir?", options: ["A) Afetzedelerin beslenme ihtiyacına", "B) Müdahale ekiplerinin kişisel bağışıklığına", "C) Uluslararası iş birliğine ve operasyonel koordinasyona", "D) Bölgedeki iklim koşullarına", "E) Biyolojik silahların etki alanına"], answer: 2, solution: "Farklı ülkelerden gelen ekipler arasındaki iletişim kopukluğu, organizasyon şemasını bozarak doğrudan uluslararası iş birliğini ve operasyonun başarısını zedeler." },
+            { q: "Bir kurtarma personeli yeraltı sığınağında karanlık, havasız ve dar bir alanda uzun saatler çalışmıştır. Bu personelde hangi tip yorgunluk ve riskin ortaya çıkması daha muhtemeldir?", options: ["A) Sadece görsel yorgunluk", "B) Klostrofobik atak ve fiziksel/oksijensiz zorlanma", "C) İşitme kaybı", "D) Radyolojik radyasyon sendromu", "E) Kimyasal yanıklar"], answer: 1, solution: "Kapalı, dar ve havasız (oksijeni kısıtlı) alan çalışmaları hem fiziksel kas zorlanmasına hem de psikolojik klostrofobik (kapalı alan korkusu) etkilere sebep olur." },
+            { q: "Bir depremzedenin kurtarılması sonrasında enkazın altında ölü bulunması, personelde suçluluk duygusu, uyku bozukluğu ve olayı sürekli zihinde yaşama gibi belirtilere neden olmuştur. Bu belirtiler hangi durumun habercisi olabilir?", options: ["A) Fizyolojik tükenmişlik", "B) Malarya enfeksiyonu", "C) Travma Sonrası Stres Bozukluğu (TSSB)", "D) Bilişsel adaptasyon süreci", "E) Akut miyokard infarktüsü"], answer: 2, solution: "Olayı sürekli flashback (yeniden yaşama) şeklinde hatırlama, uyku bozukluğu ve suçluluk duygusu TSSB'nin en tipik psikolojik semptomlarıdır." },
+            { q: "Aşağıdakilerden hangisi sağlık personelinin sahada maruz kalabileceği vektör (taşıyıcı canlı) aracılı hastalıklardan biridir?", options: ["A) Kolera", "B) Tüberküloz", "C) Dang Humması (Dengue Ateşi)", "D) Hepatit E", "E) Şigelloz"], answer: 2, solution: "Dang humması, Batı Nil ateşi ve Sıtma gibi hastalıklar enfekte sivrisinekler veya keneler (vektörler) aracılığıyla insanlara bulaşır." },
+            { q: "Bir itfaiye erinin yıllarca süren meslek hayatı boyunca yavaş yavaş işine karşı ilgisini yitirmesi, mağdurlara karşı hissizleşmesi ve 'ne yaparsam yapayım hiçbir şey değişmiyor' düşüncesine kapılması hangi durumu açıklar?", options: ["A) Benlik yitimi (Depersonalizasyon) ile seyreden Tükenmişlik", "B) Biyolojik zehirlenme", "C) Erken dönem Alzheimer", "D) Radyasyona bağlı nörolojik kayıp", "E) Geçici yorgunluk"], answer: 0, solution: "Hissizleşme, işe karşı alaycı tavır ve anlam kaybı, tükenmişlik sendromunun en tehlikeli aşaması olan 'Depersonalizasyon (Benlik Yitimi)' aşamasıdır." },
+            { q: "Sahada çalışan bir paramedik (Acil Tıp Teknikeri), görev sırasında hangi durumda 'Tüberküloz (Verem)' bakterisine maruz kalma riski taşır?", options: ["A) Temiz olmayan içme suyu tükettiğinde", "B) Yaralının kanı kendi açık yarasına temas ettiğinde", "C) Açık alanda sivrisinek ısırdığında", "D) Enfekte bir hastanın öksürük ve hapşırık damlacıklarını soluduğunda", "E) Enkaz altındaki paslı bir çiviye bastığında"], answer: 3, solution: "Tüberküloz hava yoluyla bulaşan bir bakteridir. Enfekte kişinin solunum damlacıklarının (öksürük/hapşırık) sağlıklı kişi tarafından solunmasıyla akciğerlere yerleşir." },
+            { q: "Aşağıdaki risk faktörlerinden hangisi, afet müdahale ekiplerini diğer meslek gruplarından ayıran, operasyonel sahaya özgü en belirgin tehlikelerden biridir?", options: ["A) Uzun süre masa başında oturmaktan kaynaklı bel ağrısı", "B) Monoton ve öngörülebilir günlük iş rutini", "C) İkincil tehlikelerle (artçı sarsıntı, patlama, sızıntı) dolu kontrolsüz çalışma ortamı", "D) Sadece ofis içi iklimlendirme sorunları", "E) Kariyer planlamasındaki belirsizlikler"], answer: 2, solution: "Afet personelini diğer mesleklerden ayıran en büyük fark, çalışma sahasının sürekli değişken, kontrolsüz ve her an yeni bir patlama, çökme veya sızıntıya (ikincil afet) gebe olmasıdır." }
+        ];
+
+        // Sınav Durumunu Yönetimi
+        let quizState = {}; // Format: { 0: {selected: 1, correct: 1}, 1: {selected: 3, correct: 1} ... }
+        const STORAGE_KEY = "isg_u3_state"; // Bu üniteye özel anahtar
+
+        function stateYukle() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if(saved) {
+                    quizState = JSON.parse(saved);
+                    document.getElementById("memory-badge").innerHTML = `<i class="fa-solid fa-cloud-arrow-down"></i> Önceki oturumunuz başarıyla geri yüklendi. Kaldığınız yerden devam edebilirsiniz.`;
+                    document.getElementById("memory-badge").style.backgroundColor = "#dcfce7";
+                    document.getElementById("memory-badge").style.color = "#166534";
+                    document.getElementById("memory-badge").style.borderColor = "#bbf7d0";
+                }
+            } catch(e) { console.log("State yüklenemedi."); }
+        }
+
+        function stateKaydet() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(quizState));
+        }
+
+        // Soruları Ekrana Çizdirme
+        function renderQuestions() {
+            const container = document.getElementById("quiz-container");
+            const solutionsContainer = document.getElementById("solutions-container");
+            container.innerHTML = "";
+            solutionsContainer.innerHTML = "";
+
+            questions.forEach((q, index) => {
+                // Önceden çözülmüş mü?
+                const isAnswered = quizState.hasOwnProperty(index);
+                const savedData = isAnswered ? quizState[index] : null;
+
+                // Soru Kartı
+                let questionHTML = `
+                    <div class="question-card" id="q-card-${index}">
+                        <div class="question-text">${index + 1}. ${q.q}</div>
+                        <div class="options-list">
+                `;
+
+                q.options.forEach((opt, optIndex) => {
+                    let classes = "option-btn";
+                    let icon = "";
+                    
+                    if(isAnswered) {
+                        classes += " disabled"; // Kilitli
+                        if(optIndex === q.answer) {
+                            classes += " correct";
+                            icon = ' <i class="fa-solid fa-check" style="margin-left:auto;"></i>';
+                        }
+                        if(optIndex === savedData.selected && savedData.selected !== q.answer) {
+                            classes += " wrong";
+                            icon = ' <i class="fa-solid fa-xmark" style="margin-left:auto;"></i>';
+                        }
+                    }
+
+                    questionHTML += `
+                        <div class="${classes}" id="opt-${index}-${optIndex}" onclick="selectOption(${index}, ${optIndex}, ${q.answer})">
+                            ${opt} ${icon}
+                        </div>
+                    `;
+                });
+
+                questionHTML += `</div></div>`;
+                container.innerHTML += questionHTML;
+
+                // Çözüm Kartı (Gizli durur, sonuçlarda görünür)
+                const solutionHTML = `
+                    <div class="solution-box">
+                        <h4>Soru ${index + 1} Çözümü:</h4>
+                        <p><strong>Doğru Cevap:</strong> ${q.options[q.answer]}</p>
+                        <p style="color: var(--text-light); font-size: 0.9rem; margin-top: 5px; text-align:justify;"><i class="fa-solid fa-lightbulb" style="color: var(--primary-light);"></i> <strong>Analiz:</strong> ${q.solution}</p>
+                    </div>
+                `;
+                solutionsContainer.innerHTML += solutionHTML;
+            });
+        }
+
+        // Şık Tıklama
+        function selectOption(qIndex, selectedOptIndex, correctOptIndex) {
+            // Eğer daha önce cevaplanmışsa işlem yapma
+            if(quizState.hasOwnProperty(qIndex)) return;
+
+            // Şıkları kilitle ve renklendir
+            for(let i=0; i<5; i++) {
+                const optElement = document.getElementById(`opt-${qIndex}-${i}`);
+                optElement.classList.add("disabled");
+                
+                if(i === correctOptIndex) {
+                    optElement.classList.add("correct");
+                    optElement.innerHTML += ' <i class="fa-solid fa-check" style="margin-left:auto;"></i>';
+                }
+            }
+
+            if(selectedOptIndex !== correctOptIndex) {
+                const selectedElement = document.getElementById(`opt-${qIndex}-${selectedOptIndex}`);
+                selectedElement.classList.add("wrong");
+                selectedElement.innerHTML += ' <i class="fa-solid fa-xmark" style="margin-left:auto;"></i>';
+            }
+
+            // Hafızaya Kaydet
+            quizState[qIndex] = {
+                selected: selectedOptIndex,
+                correct: correctOptIndex
+            };
+            stateKaydet();
+        }
+
+        // Testi Bitir ve Değerlendir
+        function testiBitir() {
+            const answeredCount = Object.keys(quizState).length;
+            
+            if(answeredCount < questions.length) {
+                if(!confirm(`Dikkat: Henüz ${questions.length - answeredCount} soruyu boş bıraktınız. Boşlar yanlış sayılacaktır. Yine de bitirmek istiyor musunuz?`)) {
+                    return;
+                }
+            }
+
+            // Puan Hesapla (Doğru Sayısı * 5)
+            let score = 0;
+            for(let key in quizState) {
+                if(quizState[key].selected === quizState[key].correct) {
+                    score += 5;
+                }
+            }
+
+            // Görünümleri Ayarla
+            document.getElementById("finish-btn").style.display = "none";
+            document.getElementById("results-section").style.display = "block";
+            
+            // Sonuç Metni
+            document.getElementById("score-text").innerText = score;
+            let message = "";
+            if(score >= 90) message = "Mükemmel analiz! İSG risklerini ve müdahale senaryolarını tam anlamıyla kavramışsınız.";
+            else if(score >= 70) message = "Başarılı bir sonuç. Biyolojik ajanlar ve psikolojik faktörler kısımlarını tekrar gözden geçirebilirsiniz.";
+            else message = "Bu ünitedeki tıbbi ve teknik terimler zorlayıcı olabilir. Lütfen çözümleri dikkatle okuyunuz.";
+            document.getElementById("score-message").innerText = message;
+
+            // Ana sayfa genel ilerleme tikini aktifleştirme (Opsiyonel Entegrasyon)
+            try {
+                let progress = JSON.parse(localStorage.getItem("isg_progress") || "[]");
+                if(!progress.includes("afet_unite_3")) {
+                    progress.push("afet_unite_3");
+                    localStorage.setItem("isg_progress", JSON.stringify(progress));
+                }
+            } catch(e) {}
+
+            document.getElementById("results-section").scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Sistemi Sıfırla
+        function testiSifirla() {
+            if(confirm("Tüm cevaplarınız kalıcı olarak silinecek ve teste baştan başlayacaksınız. Emin misiniz?")) {
+                localStorage.removeItem(STORAGE_KEY);
+                window.location.reload();
+            }
+        }
+
+        // Sayfa Başlangıcı
+        window.onload = () => {
+            stateYukle();
+            renderQuestions();
+        };
+
+    </script>
+</body>
+</html>

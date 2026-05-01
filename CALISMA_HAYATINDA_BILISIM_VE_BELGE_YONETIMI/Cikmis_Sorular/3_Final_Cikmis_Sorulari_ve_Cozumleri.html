@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>105 Soruluk Dev Final Kampı | Bilişim ve Belge Yönetimi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1e3a8a; --primary-light: #3b82f6; --secondary: #0f172a; 
+            --accent: #f59e0b; --bg: #f8fafc; --text: #1e293b; --text-muted: #64748b;
+            --success: #10b981; --danger: #ef4444; --card: #ffffff;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg); color: var(--text); line-height: 1.6; }
+        
+        header { background: var(--primary); color: white; padding: 2rem 5%; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100;}
+        header h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 0.5rem; }
+        header p { font-size: 0.95rem; color: #cbd5e1; }
+        
+        .container { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
+        
+        /* Analiz Tablosu ve Paneli */
+        .analysis-panel { background: var(--card); padding: 2rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 2rem; border-top: 5px solid var(--accent); }
+        .analysis-panel h2 { color: var(--secondary); margin-bottom: 1.5rem; text-align: center; font-size: 1.6rem; }
+        
+        .analysis-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; font-size: 0.95rem; }
+        .analysis-table th { background: var(--primary); color: white; padding: 12px; text-align: left; border: 1px solid #cbd5e1; }
+        .analysis-table td { padding: 12px; border: 1px solid #e2e8f0; vertical-align: top; }
+        .analysis-table tr:nth-child(even) { background: #f1f5f9; }
+        .analysis-table strong { color: var(--primary-light); }
+
+        .tips-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        .tip-card { background: #fffbeb; border-left: 4px solid var(--accent); padding: 15px; border-radius: 8px; }
+        .tip-card h4 { color: #b45309; margin-bottom: 8px; font-size: 1.05rem;}
+        
+        /* Test Kontrolleri */
+        .controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; background: var(--card); padding: 1rem 1.5rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); flex-wrap: wrap; gap: 15px;}
+        .btn { padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; font-size: 0.95rem;}
+        .btn-study { background: var(--accent); color: white; }
+        .btn-study:hover { background: #d97706; }
+        .btn-reset { background: #6c757d; color: white; }
+        .btn-reset:hover { background: #5a6268; }
+        .btn-home { background: #2c3e66; color: white; }
+        .btn-home:hover { background: #1e2a4a; }
+        .btn-print { background: var(--secondary); color: white; }
+        .btn-print:hover { background: #334155; }
+        
+        /* Soru Kartları */
+        .q-card { background: var(--card); padding: 1.5rem 2rem; border-radius: 12px; margin-bottom: 1.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border: 1px solid #e2e8f0; }
+        .q-tag { font-size: 0.75rem; background: #e0e7ff; color: #1e40af; padding: 4px 8px; border-radius: 4px; font-weight: 700; margin-bottom: 10px; display: inline-block; letter-spacing: 0.5px;}
+        .q-tag.final { background: #fef3c7; color: #b45309; }
+        .q-text { font-size: 1.05rem; font-weight: 600; color: var(--secondary); margin-bottom: 1.5rem; display: flex; gap: 12px; }
+        .q-num { background: var(--primary); color: white; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 0.85rem; flex-shrink: 0; margin-top: 2px;}
+        
+        .opts { display: flex; flex-direction: column; gap: 8px; padding-left: 40px; }
+        .opt { background: var(--bg); border: 2px solid #e2e8f0; padding: 10px 15px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-weight: 500; font-size: 0.95rem; display: flex; align-items: center; justify-content: space-between;}
+        .opt:hover:not(.locked) { border-color: var(--primary-light); background: #f0f9ff; transform: translateX(4px); }
+        .opt.selected { background: #dbeafe; border-color: var(--primary-light); }
+        .opt.correct { background: #ecfdf5 !important; border-color: var(--success) !important; color: #065f46; font-weight: 700; }
+        .opt.wrong { background: #fef2f2 !important; border-color: var(--danger) !important; color: #991b1b; text-decoration: line-through; }
+        .opt.locked { pointer-events: none; }
+        
+        .sol { display: none; background: #f8fafc; padding: 1rem 1.5rem; border-left: 4px solid var(--primary-light); margin-top: 15px; margin-left: 40px; border-radius: 0 8px 8px 0; font-size: 0.9rem; color: #334155; line-height: 1.5;}
+        .sol.show { display: block; animation: fadeIn 0.4s; }
+        .sol strong { color: var(--primary-light); }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .finish-area { text-align: center; margin: 3rem 0; }
+        .btn-finish { background: var(--success); color: white; font-size: 1.2rem; padding: 15px 40px; border-radius: 50px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
+        .btn-finish:hover { background: #059669; transform: scale(1.02); }
+
+        #results { display: none; background: #f0fdf4; padding: 3rem 2rem; border-radius: 15px; border: 2px solid var(--success); text-align: center; margin-bottom: 2rem; }
+        .score { font-size: 4rem; font-weight: 800; color: var(--success); margin-bottom: 0.5rem; line-height: 1;}
+        .stats { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; margin-top: 1.5rem;}
+        .stat-box { background: white; padding: 15px 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); font-weight: 600; font-size: 1.1rem;}
+
+        @media print {
+            body { background: white; color: black; font-size: 9pt; }
+            header, .controls, .finish-area, .analysis-panel, #results { display: none !important; }
+            .container { max-width: 100%; margin: 0; padding: 0; display: block; }
+            .q-card { padding: 5px 0; border: none; border-bottom: 1px solid #ccc; box-shadow: none; border-radius: 0; margin-bottom: 10px; page-break-inside: avoid; }
+            .q-num { background: #555; width: 22px; height: 22px; font-size: 8pt; }
+            .q-text { font-size: 10pt; margin-bottom: 8px; color: black; }
+            .opts { padding-left: 30px; gap: 2px; }
+            .opt { border: none; padding: 2px 5px; background: none !important; font-size: 9pt; color: black; }
+            .opt.correct { font-weight: bold; border: 1px solid black !important; }
+            .opt.wrong { text-decoration: none; }
+            .sol { display: block !important; padding: 5px 10px; margin-left: 30px; background: #f9f9f9; border-left: 2px solid #666; font-size: 8pt; color: black; }
+            #q-list { column-count: 2; column-gap: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1><i class="fa-solid fa-graduation-cap"></i> 105 Soruluk Dev Final & Vize Simülasyonu</h1>
+        <p>Bilişim ve Belge Yönetimi | Hazırlayan: Sıraç Aksan | 4 Yanlış 1 Doğruyu Götürür</p>
+    </header>
+
+    <div class="container">
+        
+        <div class="analysis-panel">
+            <h2><i class="fa-solid fa-chart-pie"></i> Dönem Sonu (Final) Sınav Analizi ve Çıkma İhtimalleri</h2>
+            
+            <table class="analysis-table">
+                <thead>
+                    <tr>
+                        <th>Ünite Konusu</th>
+                        <th>Final Ağırlığı</th>
+                        <th>Sınavda En Çok Sorulan (Favori) Kavramlar</th>
+                        <th>AÖF Klasik Sınav Tuzakları</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Hesap Tabloları (Excel)</strong></td>
+                        <td>% 25</td>
+                        <td>Düşeyara (VLOOKUP), Özet Tablo (Pivot), Koşullu Biçimlendirme, Filtreleme, Hata kodları.</td>
+                        <td>Sıfıra bölme hatasını (#SAYI/0!) <em>YOK</em> hatasıyla karıştırmanızı isterler. Tablo kelimesi geçiyorsa cevap Word değil, Excel'dir.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sözlü/Yazılı Anlatım</strong></td>
+                        <td>% 20</td>
+                        <td>Özne-Yüklem uyumsuzluğu, Beden dili, Ulama, Akıcılık, İletişim Ögeleri.</td>
+                        <td>Cansız varlıklar özne olduğunda yüklem <strong>TEKİL</strong> olur. "Var/Yok/Bitti" gibi yüklemler çoğul eki alamaz.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sözcük ve Sunum</strong></td>
+                        <td>% 20</td>
+                        <td>Slayt okuyuculuğu, Prezi (Path, Frame menüleri), Filigran, Adres Mektup Birleştirme.</td>
+                        <td>Filigran paragraf değil <strong>Sayfa</strong> düzeyindedir. Prezi'deki "Path" menüsünü sorup şıklara Frame koyarlar.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Zaman ve Toplantı</strong></td>
+                        <td>% 15</td>
+                        <td>Gündem, 80/20 (Pareto) Kuralı, Kick-off Meeting, Etkinlik vs. Verimlilik.</td>
+                        <td>Toplantıdaki en büyük idari hata <strong>Gündem</strong> gönderilmemesidir. U ve Daire düzeni en çok sorulandır.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Bilişim, Güvenlik, Bulut</strong></td>
+                        <td>% 20</td>
+                        <td>Casus yazılım, Solucan, Bütünlük/Gizlilik, SaaS, Bütünleşik Sistem (ERP).</td>
+                        <td>Solucan (Worm) kendi kendine yayılır (dosyaya yapışmaz). Bilgi güvenliğinde B-G-K kodlamasını unutmayın.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <h4><i class="fa-solid fa-brain"></i> Kodlama: Bilgi Güvenliği</h4>
+                    <p>Güvenliğin 3 şartı <strong>B-G-K</strong>'dır: <strong>B</strong>ütünlük (bozulmaması), <strong>G</strong>izlilik (görülmemesi), <strong>K</strong>ullanılabilirlik (sistem çökmemesi).</p>
+                </div>
+                <div class="tip-card">
+                    <h4><i class="fa-solid fa-brain"></i> Kodlama: Kötü Yazılımlar</h4>
+                    <p><strong>Solucan (Worm):</strong> Ağı tıkar, dosyasız ürer. <br><strong>Truva Atı (Trojan):</strong> Faydalı görünür (oyun), kapı açar.<br><strong>Keylogger:</strong> Klavyeyi dinler.</p>
+                </div>
+                <div class="tip-card">
+                    <h4><i class="fa-solid fa-brain"></i> Kodlama: Excel Hataları</h4>
+                    <p>Hücreyi sıfıra veya boşa bölersen <strong>#SAYI/0!</strong> verir. Düşeyara aradığı TC no'yu bulamazsa <strong>#YOK</strong> verir.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div style="font-weight:600; color:var(--primary);"><i class="fa-solid fa-cloud-arrow-down"></i> İlerleme Otomatik Kaydedilir</div>
+            <div style="display:flex; gap:10px;">
+                <button class="btn btn-study" id="studyBtn"><i class="fa-solid fa-book-open-reader"></i> Çalışma Modu (Tüm Çözümler)</button>
+                <button class="btn btn-reset" id="resetBtn"><i class="fa-solid fa-arrows-rotate"></i> Soruları Tekrar Çöz</button>
+                <a href="../../index.html" class="back-btn"><i class="fa-solid fa-house"></i> Ana Sayfa</a>
+
+                <button class="btn btn-print" onclick="window.print()"><i class="fa-solid fa-file-pdf"></i> Sıkışık PDF Al</button>
+            </div>
+        </div>
+
+        <div id="results">
+            <h2>Dev Simülasyon Sonucunuz</h2>
+            <div class="score">%<span id="scoreVal">0</span></div>
+            <p id="scoreMsg" style="font-size: 1.2rem; color: var(--secondary); font-weight: 600; margin-bottom: 1rem;"></p>
+            <div class="stats">
+                <div class="stat-box" style="color:var(--success)">Doğru: <span id="s-corr">0</span></div>
+                <div class="stat-box" style="color:var(--danger)">Yanlış: <span id="s-wr">0</span></div>
+                <div class="stat-box" style="color:var(--text-muted)">Boş: <span id="s-emp">0</span></div>
+                <div class="stat-box" style="color:var(--primary)">Net: <span id="s-net">0</span></div>
+            </div>
+        </div>
+
+        <div id="q-list"></div>
+
+        <div class="finish-area" id="finishArea">
+            <button class="btn btn-finish" id="finishBtn"><i class="fa-solid fa-flag-checkered"></i> 105 Soruluk Sınavı Bitir ve Puanımı Hesapla</button>
+        </div>
+
+    </div>
+
+    <script>
+        // ----- TÜM 105 SORU (VİZE + 2022-2025 FİNALLER) -----
+        const db = [
+            // BÖLÜM 1: ARA SINAV / VİZE / YAZ OKULU SORULARI - 25 Soru
+            {m:"VİZE / YAZ OKULU", q:"Faaliyetlere ilişkin ortaya çıkan verileri toplayan ve yöneticiler için karar almaya yarayan 'bilgi' üreten sistem hangisidir?", o:["Bilgi sistemi", "Uzman sistem", "Mekanik sistem", "Tedarik zinciri", "Faaliyet sistemi"], a:0, s:"Verileri işleyip bilgiye dönüştüren ve karar mekanizmasını destekleyen sistem 'Bilgi Sistemi'dir."},
+            {m:"VİZE / YAZ OKULU", q:"İşletmelerdeki yönetim düzeyleri düşünüldüğünde, 'Alt Düzey Yöneticilerin' ihtiyaç duyduğu bilginin niteliği nasıldır?", o:["Geleceğe dönük ve stratejik", "Çok detaylı, anlık ve günlük rutin", "Sadece işletme dışı", "Özet ve yapısal olmayan", "Yıllık hedefleri içeren"], a:1, s:"Alt düzey (operasyonel) yöneticiler ustabaşı gibidir; günlük, anlık ve ÇOK DETAYLI bilgiye ihtiyaç duyarlar. Özet bilgi üst yönetime lazımdır."},
+            {m:"VİZE / YAZ OKULU", q:"Bir işletmede, satışların puantajlarının ve üretim verilerinin tek bir havuzda tutularak veri tekrarının önlendiği (ERP) sistem yapısına ne ad verilir?", o:["Ayrık Sistem", "Bütünleşik (Ortak Veritabanı) Bilgi Sistemi", "Kapalı Sistem", "Yapay Zeka", "Manuel Sistem"], a:1, s:"Farklı departmanların (İK, Muhasebe vb.) ortak veritabanı kullanmasına Bütünleşik (Entegre) Bilgi Sistemi denir."},
+            {m:"VİZE / YAZ OKULU", q:"İnsan kaynakları bilgi sistemi (İKBS), işçilere ait fazla mesai ve puantaj verilerini maaş ödemesi yapılabilmesi için hangi alt sistemle paylaşmak zorundadır?", o:["Pazarlama", "Lojistik", "Muhasebe Bilgi Sistemi", "Stok", "Halkla İlişkiler"], a:2, s:"Maaş, vergi ve ödeme süreçleri (finansal kısımlar) Muhasebe Bilgi Sisteminin görevidir."},
+            {m:"VİZE / YAZ OKULU", q:"Bilgilerin değiştirilmemiş, bozulmamış, eksiksiz, tutarlı ve doğru kalmasını ifade eden bilgi güvenliği unsuru hangisidir?", o:["Gizlilik", "Kullanılabilirlik", "Bütünlük (Integrity)", "Şifreleme", "Erişilebilirlik"], a:2, s:"Bilgi güvenliği B-G-K'dır. Bilginin orijinal kalması ve yetkisizce düzenlenememesi 'Bütünlük' ilkesidir."},
+            {m:"VİZE / YAZ OKULU", q:"Bilgilerin, ihtiyaç duyulduğunda sadece yetkisi olan kişiler tarafından görülmesini ve başkalarının eline geçmemesini sağlayan ilke nedir?", o:["Bütünlük", "Gizlilik (Mahremiyet)", "Kullanılabilirlik", "Tutarlılık", "Yedekleme"], a:1, s:"Bilginin yetkisiz kişilerden saklanması ve şifrelenmesi Gizlilik (Mahremiyet) unsurudur."},
+            {m:"VİZE / YAZ OKULU", q:"Kendisini diğer bilgisayarlara yaymak için bir dosyaya veya insan müdahalesine ihtiyaç duymadan ağ üzerinde kendi kendine kopyalanan ve ağı tıkayan zararlı yazılım hangisidir?", o:["Truva atı", "Tuş kaydedici", "Casus yazılım", "Solucan (Worm)", "Fidye yazılımı"], a:3, s:"Dosyaya yapışan Virüstür. İnsan müdahalesi olmadan ağ kablolarında kendi kendine üreyen ve ağı yavaşlatan yazılım Solucandır."},
+            {m:"VİZE / YAZ OKULU", q:"Faydalı bir program (oyun, pdf) gibi görünerek kullanıcının onu kurmasını sağlayan, ancak arka planda bilgisayara zarar veren veya arka kapı açan yazılım türü nedir?", o:["Solucan", "Virüs", "Truva Atı (Trojan)", "Spam", "Güvenlik Duvarı"], a:2, s:"Tarihteki Truva atı gibi, yararlı bir hediye gibi görünüp arka planda kaleyi (bilgisayarı) içten fetheden yazılımdır."},
+            {m:"VİZE / YAZ OKULU", q:"Türkiye'de kamu kurumlarında belgeler için kullanılan gizlilik seviyelerinin DÜŞÜKTEN YÜKSEĞE doğru sıralanışı nasıldır?", o:["Hizmete Özel < Özel < Gizli < Çok Gizli", "Özel < Hizmete Özel < Gizli < Çok Gizli", "Gizli < Çok Gizli < Özel < Hizmete Özel", "Hizmete Özel < Gizli < Özel < Çok Gizli", "Özel < Gizli < Çok Gizli < Hizmete Özel"], a:0, s:"Sıralama: 1. Hizmete Özel (en düşük), 2. Özel, 3. Gizli, 4. Çok Gizli şeklindedir."},
+            {m:"VİZE / YAZ OKULU", q:"Her zaman bilgi sistemlerine yetkisiz giriş yaparak zarar verme, hırsızlık ve yıkım amacında olan kötü niyetli korsanlara ne ad verilir?", o:["Beyaz Şapkalı", "Gri Şapkalı", "Kara Şapkalı (Black Hat)", "Script Kiddie", "Güvenlik Uzmanı"], a:2, s:"Kötü niyetli ve zarar verici olanlar 'Kara Şapkalı', etik olanlar ve sistemi koruyanlar 'Beyaz Şapkalı' korsanlardır."},
+            {m:"VİZE / YAZ OKULU", q:"İç ağ (yerel ağ) ile dış dünya (internet) arasında duran, gelen-giden veri trafiğini kurallara göre filtreleyen güvenlik yazılımı/donanımı nedir?", o:["Antivirüs", "Güvenlik Duvarı (Firewall)", "MAC Filtresi", "Bulut", "Kriptografi"], a:1, s:"Ağ ile internet arasındaki gümrük kapısı (bekçi) görevini gören sistem Güvenlik Duvarı'dır."},
+            {m:"VİZE / YAZ OKULU", q:"Bilgisayar programlama konusunda yetkin olmayan, başkalarının yazdığı hazır kodlarla sağa sola saldıran amatör korsanlara ne ad verilir?", o:["Script Kiddie", "Kara Şapkalı", "Siber Terörist", "Biyometrik Hacker", "White Hat"], a:0, s:"Hazır komut dosyalarını (script) çocuk (kiddie) gibi kullanan, teknik bilgisi olmayan amatör saldırganlardır."},
+            {m:"VİZE / YAZ OKULU", q:"Parmak izi, retina taraması veya yüz tanıma gibi kişinin fiziksel özellikleriyle sisteme giriş yapmasını sağlayan güvenlik yöntemine ne denir?", o:["Kriptografi", "Güvenlik Duvarı", "Biyometrik Kimlik Doğrulama", "İki faktörlü SMS", "MAC Filtreleme"], a:2, s:"İnsanın biyo-fiziksel yapısını kullanan güvenlik sistemlerine Biyometrik doğrulama denir."},
+            {m:"VİZE / YAZ OKULU", q:"Modemlere veya ağ cihazlarına, sadece önceden tanımlanmış fiziksel donanım adresine sahip bilgisayarların girmesini sağlayan ağ güvenlik önlemi nedir?", o:["MAC Adresi Filtreleme", "IP Gizleme", "Port Yönlendirme", "Spam Filtresi", "Trojan Engeli"], a:0, s:"Her cihazın değişmez donanım kimliği MAC adresidir. Bunu modemden kısıtlamaya MAC Filtreleme denir."},
+            {m:"VİZE / YAZ OKULU", q:"Sistem yaklaşımında, bir işletmenin faaliyet sisteminin sınırını aşağıdakilerden hangisi belirler?", o:["Girdiler", "Çıktılar", "Sistemin yetki ve sorumluluklarının başlangıç ve bitiş noktaları", "Kullanılan yazılımlar", "Müşteriler"], a:2, s:"Sistem sınırı fiziksel bir duvar değildir; o departmanın veya sistemin yetki ve sorumluluk çerçevesidir."},
+            {m:"VİZE / YAZ OKULU", q:"Aşağıdakilerden hangisi bilgi işleme sisteminin 'Çıktı (Output)' evresine bir örnektir?", o:["Veri toplamak", "Rapor üretmek", "Verileri sınıflandırmak", "Klavye ile giriş yapmak", "Veriyi depolamak"], a:1, s:"Veri sınıflandırma ve toplama süreçleme ve girdidir. İşlenmiş bilginin ekrana veya kağıda yansıtılması (Rapor) çıktıdır."},
+            {m:"VİZE / YAZ OKULU", q:"Kişisel bilgisayarların ilk sürümlerinin (1980'ler) yaygınlaşması, bilgi sistemleri tarihinde kaçıncı aşamadır?", o:["1. Aşama", "2. Aşama", "3. Aşama", "4. Aşama", "5. Aşama"], a:1, s:"Tarihsel süreç: 1. Basılı Belge, 2. Kişisel Bilgisayar (PC), 3. Veritabanı Sistemleri, 4. Web Tabanlı (Bulut) Teknolojiler."},
+            {m:"VİZE / YAZ OKULU", q:"İşe yeni alınacak personelin bilgi güvenliği ihlali yapmasını idari olarak engellemek için işverenin uygulaması gereken en temel belge nedir?", o:["Özgeçmiş formu", "Sağlık raporu", "Bilgi güvenliği taahhütnamesi (Gizlilik Sözleşmesi)", "Maaş bordrosu", "Diploma fotokopisi"], a:2, s:"İnsan faktörünü kontrol altına almak için personele şirket sırlarını ifşa etmeyeceğine dair Gizlilik (Taahhütname) sözleşmesi imzalatılır."},
+            {m:"VİZE / YAZ OKULU", q:"Klavyede yazılan her harfi ve girilen şifreleri arka planda gizlice kaydederek korsana yollayan kötü amaçlı yazılım hangisidir?", o:["Truva Atı", "Solucan", "Tuş Kaydedici (Keylogger)", "Adware", "Ransomware"], a:2, s:"Klavye (Key) vuruşlarını kaydeden casus yazılımlara Tuş Kaydedici (Keylogger) denir."},
+            {m:"VİZE / YAZ OKULU", q:"WhatsApp, Skype, Google Docs gibi yazılımların bilgisayara kurulmadan internet tarayıcısından kullanılması, bulut bilişimin hangi hizmet modelidir?", o:["IaaS (Altyapı)", "PaaS (Platform)", "SaaS (Yazılım Hizmeti)", "DaaS", "NaaS"], a:2, s:"Son kullanıcıya bitmiş bir programın internetten sunulması Software as a Service (SaaS - Yazılım Hizmeti) modelidir."},
+            {m:"VİZE / YAZ OKULU", q:"Sadece belirli bir ortak misyonu paylaşan kurumların (örneğin devlet hastaneleri birliği) ortaklaşa kurup kullandığı bulut yayılım modeli hangisidir?", o:["Kamu (Public)", "Özel (Private)", "Topluluk (Community) Bulutu", "Melez (Hybrid)", "Ortak Bulut"], a:2, s:"Masrafların ve güvenliğin benzer kuruluşlar tarafından paylaşıldığı yapıya 'Topluluk Bulutu' denir."},
+            {m:"VİZE / YAZ OKULU", q:"Bulut bilişimin, geleneksel kurum içi sunucu sistemlerine göre işletmelere sağladığı en büyük FİNANSAL avantaj nedir?", o:["Büyük başlangıç donanım maliyetlerini (CapEx) ortadan kaldırıp, kullandıkça öde mantığı sunması", "Yazılımcı maaşlarını artırması", "İnternet faturasını sıfırlaması", "Vergilerden muafiyet sağlaması", "Bilgisayar satarak kâr edilmesi"], a:0, s:"Milyonlarca lira verip sunucu odası kurmak yerine, sadece kullanılan alan kadar kira ödenmesi bulutun en büyük ekonomik cazibesidir."},
+            {m:"VİZE / YAZ OKULU", q:"Bir işletmenin bulut bilişim hizmeti alırken, hizmeti aldığı şirkete tamamen bağlanması ve fiyatlar artsa bile verilerini başka yere taşımakta zorlanmasına ne ad verilir?", o:["SaaS", "Topluluk bulutu", "Sağlayıcıya bağımlılık (Vendor Lock-in)", "Kullanılabilirlik sorunu", "Firewall kısıtlaması"], a:2, s:"Tüm altyapıyı tek bir firmaya emanet etmenin en büyük ticari riski, o firmaya bağımlı kalmak ve sistem değiştirememektir."},
+            {m:"VİZE / YAZ OKULU", q:"Amaca ulaşmak 'Etkinlik / Etkililik' olarak tanımlanırken; bu amaca ulaşırken minimum kaynak (zaman, maliyet) harcamayı ifade eden yönetim kavramı hangisidir?", o:["Otonomi", "Sinerji", "Verimlilik (Efficiency)", "Eşgüdüm", "Koordinasyon"], a:2, s:"Hedefi vurmak etkinlik, hedefi vururken en az mermiyi harcamak ise 'Verimlilik'tir."},
+            {m:"VİZE / YAZ OKULU", q:"Bir işletmede faaliyetlerin sonuçlarının (kârın) %80'inin, yapılan işlerin sadece en kritik %20'sinden kaynaklandığını savunan zaman yönetimi kuralı nedir?", o:["Parkinson Yasası", "80/20 Kuralı (Pareto İlkesi)", "ABC Analizi", "Sihirli Araç Yaklaşımı", "Zaman Değerlendirme"], a:1, s:"Az çabayla çok iş yapmanın formülü olan 80/20 kuralı (Pareto), zamanın en kritik %20'lik işe (büyük getiri sağlayana) harcanmasını öğütler."},
+
+            // BÖLÜM 2: 2022 DÖNEM SONU (FİNAL) - 20 Soru
+            {m:"2022 DÖNEM SONU", q:"Toplantılarda yapılan ve katılımcıların hazırlıksız gelmesine, zaman israfına yol açan EN BÜYÜK idari hata aşağıdakilerden hangisidir?", o:["Toplantıda çay ikram edilmemesi", "Katılımcılara toplantı öncesinde 'Gündem (Ne konuşulacağı)' gönderilmemesi", "Toplantının sabah yapılması", "Yuvarlak masa kullanılması", "Yöneticinin çok konuşması"], a:1, s:"Gündem, toplantının pusulasıdır. Gündemsiz toplantı konunun dağılmasına ve devasa zaman kaybına yol açar."},
+            {m:"2022 DÖNEM SONU", q:"Büyük bir projenin başlatılacağı ilk gün, tüm proje ekibinin tanıştığı, hedeflerin anlatıldığı ve motivasyonun artırıldığı toplantı türüne literatürde ne ad verilir?", o:["Kapanış Toplantısı", "Brifing", "Kick-off Meeting (Başlangıç Toplantısı)", "Kongre", "Pazarlık Toplantısı"], a:2, s:"Futbolda maçın ilk vuruşuna kick-off dendiği gibi, projelerin başlama fişeğinin ateşlendiği tanışma toplantılarına 'Kick-Off Meeting' denir."},
+            {m:"2022 DÖNEM SONU", q:"Toplantıda 'Eşgüdüm (Koordinasyon)' yaratılması, statü farkının ortadan kalkması ve rahatça Beyin Fırtınası yapılabilmesi için en ideal oturma düzeni hangisidir?", o:["Sınıf düzeni", "T düzeni", "Daire (Oval / Yuvarlak Masa) düzeni", "V düzeni", "Konferans düzeni"], a:2, s:"Daire veya yuvarlak masada 'başköşe' yoktur. Herkes eşittir ve herkes birbiriyle doğrudan göz teması kurar. İletişim için en iyi düzendir."},
+            {m:"2022 DÖNEM SONU", q:"Eğitim amaçlı (bir uzmanın ders anlattığı) toplantılarda, katılımcıların dikkatinin sadece eğitmene odaklandığı oturma düzeni hangisidir?", o:["Sınıf Düzeni", "Daire Düzeni", "U Düzeni", "Kare Düzen", "Karşılıklı Düzen"], a:0, s:"Sınıf düzeninde tüm sandalyeler tek bir yöne (tahtaya/eğitmene) bakar. Pasif dinleme gerektiren eğitimler için idealdir."},
+            {m:"2022 DÖNEM SONU", q:"Toplantıda raportörün (tutanak tutanın) ASIL görevi aşağıdakilerden hangisidir?", o:["Herkesin anlattığı her kelimeyi eksiksiz ve harfi harfine yazmak", "Toplantıda alınan kararları ve sadece 'gerekli/önemli' konuları not almak", "Tartışmalara katılıp oy kullanmak", "Başkanın yerine toplantıyı yönetmek", "Süreyi hatırlatmak"], a:1, s:"Raportör dedikoduları veya gereksiz diyalogları yazmaz. Sadece eylem planını, kararları ve 'gerekli' konuları kayda alır."},
+            {m:"2022 DÖNEM SONU", q:"Yöneticinin rastgele zamanlarda üretim bandına veya ofise inerek anlık gözlem yaptığı ve personelin o an zamanı nasıl kullandığını ölçtüğü tekniğe ne ad verilir?", o:["80/20 Kuralı", "ABC Analizi", "Sihirli Araçlar", "Zaman Değerlendirme Yöntemi", "Mükemmeliyetçilik Test"], a:3, s:"Rastgele (habersiz) anlarda ofis içinde dolaşarak anlık kesitler üzerinden verimliliği ölçme metoduna 'Zaman Değerlendirme Yöntemi' denir."},
+            {m:"2022 DÖNEM SONU", q:"Sanal (Video / Tele) konferansların işletmelere sağladığı faydalar arasında aşağıdakilerden hangisi YANLIŞTır?", o:["Seyahat ve konaklama harcamalarını sıfıra indirir.", "Mekân bağımsızlığı sağlar.", "Toplanma ve karar alma hızını ciddi oranda yavaşlatır.", "Şubelerdeki personelin merkeze gelmesindeki zaman kaybını bitirir.", "Hızla organize edilebilir."], a:2, s:"Sanal toplantıların en büyük faydası 'hız'dır. İnsanların uçağa binip gelmesini beklemediğiniz için, 'karar alma hızını yavaşlatmaz, aksine çok ARTIRIR'."},
+            {m:"2022 DÖNEM SONU", q:"Zaman yönetiminin önündeki en büyük 'İçsel' engellerden biri olan ve 'bir işi yapmak için sürekli yarına veya daha sonraya bırakma' hastalığına psikolojide ne ad verilir?", o:["Akrofobi", "Prokrastinasyon (Erteleme Hastalığı)", "Mükemmeliyetçilik", "Hayır diyememek", "Yetki devretmemek"], a:1, s:"Zor, sıkıcı veya belirsiz işlerden kaçmak için beynin o işi sürekli ileri bir tarihe atması hastalığına Prokrastinasyon (Erteleme) denir."},
+            {m:"2022 DÖNEM SONU", q:"Bir yöneticinin aşırı 'Mükemmeliyetçi' olması, zaman yönetimi açısından nasıl değerlendirilir?", o:["Çok faydalıdır, zamanı korur.", "Kaliteyi artırdığı için önerilir.", "Aşırı mükemmeliyetçilik, detaylarda gereksiz yere boğulmaya neden olduğu için devasa bir 'zaman hırsızıdır'.", "İşletmenin kârını ikiye katlar.", "Astların motivasyonunu artırır."], a:2, s:"Önemli olan işi mükemmel yapmak değil, 'doğru işi, ilk seferde, yeterli doğruluğa ulaşacak kadar' yapmaktır. Kılı kırk yarmak zamanı öldürür."},
+            {m:"2022 DÖNEM SONU", q:"Aşağıdakilerden hangisi bir emirin/talimatın taşıması gereken özelliklerden biri DEĞİLDİR?", o:["Açık olmalıdır", "Net ve anlaşılır olmalıdır", "Yorumlanabilir (esnek) olmalıdır", "Yerine getirilebilir (mümkün) olmalıdır", "Kesin olmalıdır"], a:2, s:"İyi bir emir, yoruma kapalı olmalıdır. Eğer emir yorumlanabilirse, her çalışan kendi keyfine göre anlar ve iş hatalı yapılır."},
+            {m:"2022 DÖNEM SONU", q:"Aşağıdaki cümlelerin hangisinde 'Organ, bitki, hayvan, zaman adları ve cansız varlıkların çoğulları özne olduğunda YÜKLEM TEKİL OLUR' kuralına UYULMAMASINDAN kaynaklanan anlatım bozukluğu vardır?", o:["İnsanlar sabah erken uyandılar.", "Öğrenciler derse katıldılar.", "Ağaçların yaprakları sararıp döküldüler.", "Misafirler otelden ayrıldılar.", "Çocuklar parkta oynadılar."], a:2, s:"Yapraklar (cansız/bitki çoğul) özne olduğunda, yüklem TEKİL olmalıdır. 'Döküldüler' yanlış, 'Döküldü' doğru kullanımdır."},
+            {m:"2022 DÖNEM SONU", q:"'Herkes bu durumdan çok tedirgindiler.' cümlesindeki anlatım bozukluğunun nedeni nedir?", o:["Gereksiz sözcük kullanımı", "Özne belirsizlik zamiri (herkes, hiçbiri) ise yüklemin TEKİL olması kuralına uyulmaması", "Dolaylı tümleç eksikliği", "Mantıksal tutarsızlık", "Tamlama hatası"], a:1, s:"'Herkes, hepsi, hiçbiri, kimse' gibi belgisiz (belirsizlik) zamirleri özne olduğunda yüklem daima TEKİL olur. 'Tedirgindi' olmalıdır."},
+            {m:"2022 DÖNEM SONU", q:"'Ahmet ve ben dün akşam tiyatroya gitti.' cümlesindeki anlatım bozukluğu nasıl düzeltilir?", o:["'gitti' yerine 'gittik' yazılarak", "Ahmet kelimesi çıkarılarak", "'dün akşam' kelimesi başa alınarak", "'gitti' yerine 'gittiler' yazılarak", "Cümleye 'birlikte' kelimesi eklenerek"], a:0, s:"Özne 'Ahmet ve ben' yani 'BİZ'dir. Biz öznesinin yüklemi 1. Çoğul Şahıs (-k) ile bitmelidir. Doğrusu 'gittik' olmalıdır."},
+            {m:"2022 DÖNEM SONU", q:"'Odadaki pastalar ve tatlılar çok lezzetliydiler, ama maalesef bittiler.' cümlesinde hangi kural ihlal edilmiştir?", o:["Kişileştirme kuralı", "Yabancı sözcük kullanımı", "Var, yok, bitti, lazım gibi kelimeler ile cansız varlıkların yüklemi tekil olmalıdır kuralı", "Tamlama uyumsuzluğu", "Düzeltme işareti kuralı"], a:2, s:"Cansız varlıklar (pastalar) özne olduğunda ve bitmek/var/yok gibi yüklemler geldiğinde kesinlikle çoğul (-ler) eki alamaz. 'Lezzetliydi, bitti' olmalıdır."},
+            {m:"2022 DÖNEM SONU", q:"'Eminim ki o da bu saatlerde eve gelmiş olmalı.' cümlesindeki anlatım bozukluğunun türü nedir?", o:["Özne-yüklem uyumsuzluğu", "Gereksiz sözcük kullanımı", "Anlamca çelişen sözcüklerin bir arada kullanılması (Mantıksal Tutarsızlık)", "Yanlış yerde sözcük kullanımı", "Eksik öge kullanımı"], a:2, s:"'Eminim ki' kesinlik bildirirken, 'olmalı' ihtimal/şüphe bildirir. Kesinlik ve ihtimalin aynı cümlede kullanılması çelişki (tutarsızlık) yaratır."},
+            {m:"2022 DÖNEM SONU", q:"'Zenginler ve varlıklı insanlar yoksullara yardım etmelidir.' cümlesindeki bozukluk hangisidir?", o:["Gereksiz (Eş anlamlı) sözcük kullanımı", "Çelişen sözcük kullanımı", "Kişi uyuşmazlığı", "Tamlama yanlışı", "Öge eksikliği"], a:0, s:"Zengin ve varlıklı aynı anlama gelir. İkisinden birinin kullanılması yeterlidir (Özlülük ilkesi ihlal edilmiş)."},
+            {m:"2022 DÖNEM SONU", q:"Sözlü anlatımda (iletişimde), cümlenin anlamını değiştirebilecek şekilde sesi duraklatma ve es verme özelliğine ne ad verilir?", o:["Ulama", "Kavşak ve Durak", "Vurgu", "Tonlama", "Boğumlanma"], a:1, s:"Virgülün yeri anlamı değiştirir (Örn: Oku, baban gibi eşek olma / Oku baban gibi, eşek olma). Konuşurken bu anlam farkını yaratmak için yapılan eslere Kavşak/Durak denir."},
+            {m:"2022 DÖNEM SONU", q:"Konuşma esnasında kelimelerin sonundaki ünsüz harfin, bir sonraki kelimenin ünlü harfine köprü kurarak okunması ve konuşmaya 'Akıcılık' katması kuralına ne ad verilir?", o:["Vurgu", "Tonlama", "Ulama", "Diksiyon", "Durak"], a:2, s:"Örn: 'Dün akşam' kelimesinin 'Dü-nakşam' şeklinde akıcı okunmasına Ulama denir."},
+            {m:"2022 DÖNEM SONU", q:"Dilimize yabancı dillerden geçen bazı kelimelerde hem ünlü uzunluğunu hem de inceliğini ayırt etmek için kullanılan (Örn: şura-şûra, hala-hâlâ) yazım işaretine ne ad verilir?", o:["Kesme işareti", "Tırnak işareti", "Düzeltme (İnceltme) işareti (^)", "Vurgu işareti", "Kavşak işareti"], a:2, s:"Şapka olarak da bilinen '^' işareti (düzeltme/inceltme işareti), anlamı değişen kelimelerde yazıda anlam ayırıcı olarak kullanılır."},
+            {m:"2022 DÖNEM SONU", q:"'Trafik kazasında yaralananlara ilk yardım yapıldı ve hastaneye kaldırıldı.' cümlesindeki bozukluk nasıl giderilir?", o:["'kaldırıldı' kelimesinden önce 'yaralılar' (özne) eklenerek", "'ilk yardım' kelimesi silinerek", "'Trafik' kelimesi atılarak", "'kaldırıldı' kelimesi 'gitti' yapılarak", "Cümleye virgül konularak"], a:0, s:"Hastane kaldırılan kim? İlk yardım mı hastaneye kaldırıldı? Hayır. '...yardım yapıldı ve YARALILAR hastaneye kaldırıldı' olmalıdır (Özne eksikliği)."},
+
+            // BÖLÜM 3: 2023 DÖNEM SONU - 20 Soru
+            {m:"2023 DÖNEM SONU", q:"Aşağıdakilerden hangisi bir iletişim (anlatım) sürecinin 4 temel ögesinden biri DEĞİLDİR?", o:["Kaynak (Gönderici)", "Alıcı (Dinleyen)", "İleti (Mesaj)", "Gürültü (Bozucu etken)", "Dil (Şifre)"], a:3, s:"İletişimin temel ögeleri Kaynak, Alıcı, İleti ve Dil'dir. Gürültü iletişimi bozan bir etkendir, temel öge (şart) değildir."},
+            {m:"2023 DÖNEM SONU", q:"Bir yazarın makalesinde süslü kelimelerden, anlaşılmaz uzun cümlelerden kaçınarak; mesajını en net ve herkesin anlayabileceği şekilde ifade etmesi, anlatımın hangi ilkesidir?", o:["Özgünlük", "Açıklık", "Doğallık", "Akıcılık", "Özlülük"], a:1, s:"Mesajın tek bir anlama gelmesi ve net (karmaşık olmaması) durumu 'Açıklık' ilkesidir."},
+            {m:"2023 DÖNEM SONU", q:"'geliyo, şimdik, yanlız, herkez' gibi kelimelerin kullanılması Türkçe kuralları açısından nasıl değerlendirilir?", o:["Bu kelimeler yöresel ağızdır, resmi yazışmalarda serbesttir.", "Bu kelimeler ses düşmesi/daralmasıdır, sadece KONUŞMA diliyle sınırlıdır ve YAZIDA ASLA gösterilmez.", "Türkçenin yeni kurallarıdır.", "Yazıda düzeltme işareti ile yazılmalıdırlar.", "Sadece romanlarda kullanılabilir."], a:1, s:"Konuşurken 'geliyo' diyebiliriz ancak bunu kağıda döktüğümüzde kesinlikle standart dil kurallarına (geliyor, yalnız, herkes) uymak zorundayız."},
+            {m:"2023 DÖNEM SONU", q:"Yazılı anlatımın 'Gelişme' bölümünün temel işlevi (amacı) nedir?", o:["Konuya ana hatlarıyla kısa bir giriş yapılması", "Söylenecek son sözün söylenip metnin özetlenmesi", "Sadece başlığın yazılması", "Konunun türlü yönlerden açılıp genişlediği, zenginleşip örneklerle olgunlaştığı bölüm olması", "İçindekiler listesinin hazırlanması"], a:3, s:"Giriş konuyu tanıtır, Gelişme örneklerle konuyu büyütüp zenginleştirir, Sonuç ise noktayı koyar."},
+            {m:"2023 DÖNEM SONU", q:"Konuşmacının sözlü anlatımı sırasında beden diliyle (başını aşağı yukarı sallayarak) dinleyiciye 'seni dinliyorum ve anlıyorum' mesajı vermesi hangi amaca hizmet eder?", o:["Karşı tarafı susturmaya", "Dinleyiciye 'anlaşıldım' duygusu yaşatarak iletişimi (empatiyi) güçlendirmeye", "Zaman kazanmaya", "Kendi fikrini dayatmaya", "Ortamı germeye"], a:1, s:"Baş sallamak (nodding), iletişimde onaylama ve empati göstermenin en güçlü 'beden dili' aracıdır."},
+            {m:"2023 DÖNEM SONU", q:"Aşağıdaki kelimelerden hangisinin yazımı Türk Dil Kurumu (TDK) kurallarına göre DOĞRUDUR?", o:["Entellektüel", "Gardolap", "Herkez", "Parlamento", "Tasviye"], a:3, s:"Doğruları: Entelektüel (tek l), Gardırop, Herkes (s ile), Tasfiye (f ile). Ancak 'Parlamento' kelimesinin yazımı doğrudur."},
+            {m:"2023 DÖNEM SONU", q:"'Sözcük İşlemci' (Word Processor) terimi tarihsel süreçte bilgisayarlardan bile önce, 1960'larda hangi cihazların geliştirilmesi döneminde ilk kez ortaya atılmıştır?", o:["Telgraf", "Mekanik hesap makineleri", "Elektrikli daktilolar", "Akıllı telefonlar", "Tabletler"], a:2, s:"AÖF kitabında vurgulanır. Sözcük işlemci terimi PC'lerden önce 1960'larda hataları silebilen şerit kasetli 'Elektrikli Daktilolar' ile doğmuştur."},
+            {m:"2023 DÖNEM SONU", q:"Windows işletim sisteminde sadece 'düz metin' (biçimsiz, renksiz, resimsiz) dosyalarını (.txt) düzenlemek için kullanılan basit, önceden yüklü uygulama hangisidir?", o:["WordPad", "NotePad (Not Defteri)", "Microsoft Word", "OneNote", "TextPad"], a:1, s:"Hiçbir kalınlık veya tablo özelliği barındırmayan, en ilkel ve temel düz metin yazıcı NotePad'dir."},
+            {m:"2023 DÖNEM SONU", q:"Sözcük işlemcilerde imlecin SOLUNDAKİ karakteri silmek için ------, imlecin SAĞINDAKİ (önündeki) karakteri silmek için ise ------ tuşu kullanılır. Boşluklara ne gelmelidir?", o:["Delete / BackSpace", "BackSpace / Delete", "Shift / Enter", "Home / End", "Tab / Esc"], a:1, s:"BackSpace (Geri tuşu) solundakini yutar. Delete (Sil tuşu) ise sağındakini yutar."},
+            {m:"2023 DÖNEM SONU", q:"Aşağıdakilerden hangisi bir Sözcük İşlemcide (Word) 'Sayfa Düzeyi'nde yapılan bir düzenleme işlemi DEĞİLDİR?", o:["Kenar boşluklarını ayarlamak", "Sayfa yönünü dikey/yatay yapmak", "Sayfa arka planına Filigran eklemek", "Paragraflara 'Madde İşareti (Büllet)' eklemek", "Sayfaya üst ve alt bilgi eklemek"], a:3, s:"Madde işaretleri, numaralandırma ve hizalama işlemleri SAYFA düzeyinde değil, doğrudan PARAGRAF düzeyinde yapılan işlemlerdir."},
+            {m:"2023 DÖNEM SONU", q:"Belgeye eklenebilen ve OpenOffice Writer uygulamasında bulunmayan, ancak Microsoft Word uygulamasında bulunan, hiyerarşi ve döngü grafikleri çizmeye yarayan gelişmiş öge hangisidir?", o:["Video", "Tablo", "Akıllı Şekil (SmartArt)", "Formül", "Resim"], a:2, s:"SmartArt, Microsoft Word'e özgü olan ve saniyeler içinde profesyonel organizasyon şemaları çizmenizi sağlayan akıllı araçtır."},
+            {m:"2023 DÖNEM SONU", q:"Sözcük işlemcilerde (Word) aşağıdakilerden hangisi belgeye dışarıdan eklenebilen ancak kelime işlemci 'içerisinde' DÜZENLENEMEYEN (Örn: kesilip montajlanamayan) tek ögedir?", o:["Tablo", "Akıllı Şekil", "Yazı Sanatı (WordArt)", "Video", "Grafik (Çizelge)"], a:3, s:"Word'e video ekleyip oynatabilirsiniz ancak Word bir video montaj programı olmadığı için videoyu kesip biçemezsiniz."},
+            {m:"2023 DÖNEM SONU", q:"Belgede tutarlı bir genel görünüm (ahenk) oluşturmak için benzersiz bir renk paleti, yazı tipi ve efekt kümesini içeren, tüm belgenin tasarımını tek tıkla değiştiren hazır yapıya ne ad verilir?", o:["Stil", "Biçim", "Filigran", "Şablon", "Tema (Theme)"], a:4, s:"Bir belgenin tüm başlık renklerini, fontlarını ve genel tarzını birbiriyle uyumlu hale getiren üst tasarım kümesine Tema denir."},
+            {m:"2023 DÖNEM SONU", q:"Aşağıdakilerden hangisi Word uygulamasında belgeyi (dosyayı) korumak amacıyla gerçekleştirilen profesyonel işlemlerden biri DEĞİLDİR?", o:["Belgenin salt okunur hâle getirilmesi", "Parola (şifre) ile kilitlenmesi", "Belgeye dijital imza eklenmesi", "Düzenleme olanaklarının kısıtlanması", "Yazı renginin sayfa arka plan rengiyle aynı (beyaz) yapılarak görünmez hâle getirilmesi"], a:4, s:"Yazıyı beyaza boyamak metni sadece gözden saklar (fareyle seçince görünür). Bu bir şifreleme veya güvenlik önlemi değil, basit bir hiledir."},
+            {m:"2023 DÖNEM SONU", q:"Bir belge üzerinde aynı anda birden fazla kişinin eş zamanlı olarak çalışması (ortak düzenleme) için gerekli olan temel teknolojik koşul nedir?", o:["Aynı ofiste yan yana oturmaları", "Belgenin salt okunur olması", "Belgenin Word Online ya da Google Docs gibi 'bulut tabanlı' bir servisle internet üzerinden düzenleniyor olması", "Belgenin flash bellekte taşınması", "Kişilerin aynı bilgisayar kasasına bağlanması"], a:2, s:"Eşzamanlı ortak çalışma, dosyanın bulutta (SaaS) tutulması ve herkesin aynı anda o bulut dosyasına tarayıcıdan bağlanmasıyla mümkündür."},
+            {m:"2023 DÖNEM SONU", q:"Bir kullanıcı, Word belgesindeki bir kelimeye tıkladığında bilgisayarın otomatik olarak bir web sitesini veya başka bir PDF dosyasını açmasını istemektedir. Bu işlemi sağlayan özellik nedir?", o:["Yer İmi (Bookmark)", "Dipnot", "Sonnot", "Köprü (Hyperlink / Bağlantı)", "Makro"], a:3, s:"Belge içindeki bir yazıyı dış dünya (internet) veya başka bir dosya ile bağlayan tıklanabilir metinlere 'Köprü / Bağlantı' denir."},
+            {m:"2023 DÖNEM SONU", q:"Sayfaların en altına, o sayfadaki kelimelerin anlamlarını açıklayan numaralandırılmış küçük metinler ekleme işlemine ne ad verilir?", o:["Alt Bilgi (Footer)", "Sonnot", "Dipnot (Footnote)", "Üst Bilgi", "Dizin"], a:2, s:"Sadece bulunduğu sayfanın dibine eklenen açıklamalara 'Dipnot', tüm kitabın en son sayfasına topluca atılan açıklamalara ise 'Sonnot' denir."},
+            {m:"2023 DÖNEM SONU", q:"İmlecin bulunduğu yerden hızla tüm belgenin (veya satırın) en başına (soluna) ve en sonuna (sağına) atlamak için sırasıyla hangi iki klavye tuşu kullanılır?", o:["PageUp / PageDown", "Shift / Ctrl", "Tab / Esc", "Home / End", "Insert / Delete"], a:3, s:"'Home' (Ev/Başlangıç) tuşu imleci en başa atar. 'End' (Son) tuşu ise imleci en sona fırlatır."},
+            {m:"2023 DÖNEM SONU", q:"Çalışma hayatında, Excel'deki 1000 kişilik isim listesini alıp, Word'deki bir davetiye metniyle eşleştirerek saniyeler içinde 1000 farklı mektup oluşturan işlevin adı nedir?", o:["Düşeyara", "Koşullu Biçimlendirme", "Adres Mektup Birleştirme (Mail Merge)", "PivotTable", "Akıllı Metin"], a:2, s:"Kelime işlemci (Word) ile işlem tablosunun (Excel) entegre çalışarak toplu basım yaptığı bu muazzam özelliğe Adres Mektup Birleştirme denir."},
+            {m:"2023 DÖNEM SONU", q:"Gizli ve kopyalanmaması gereken evrakların zeminine (metnin arkasına silik bir şekilde) 'GİZLİ' veya şirket logosu eklenmesi işlemine Word'de ne ad verilir?", o:["Hologram", "Filigran (Watermark)", "Antet", "Şablon", "Tema"], a:1, s:"Belgenin arka planında, metinlerin arkasından silik bir şekilde görünen güvenlik yazılarına/resimlerine 'Filigran (Su damgası)' denir."},
+
+            // BÖLÜM 4: 2024 DÖNEM SONU - 20 Soru
+            {m:"2024 DÖNEM SONU", q:"Klavyede yazarken harflerin araya girmeyip, sağındaki mevcut harfleri yutarak (silerek) üstüne yazmasına neden olan klavye tuşu hangisidir?", o:["CapsLock", "NumLock", "ScrollLock", "Insert", "Pause/Break"], a:3, s:"Insert (Araya Ekleme / Üzerine Yazma) tuşuna basıldığında, yazılan yeni harf bir sonrakini itmez, onu yutarak üstüne yazar."},
+            {m:"2024 DÖNEM SONU", q:"Etkili bir sunumun 'Hazırlık' aşamasında sunucu tarafından yapılması gereken işlerden biri DEĞİLDİR?", o:["Sunum yapma amacını belirlemek", "Katılımcıların yaş ve eğitim durumuyla ilgili bilgi toplamak", "Sunumun süresini belirlemek için katılımcılara anket/oylama uygulamak", "Katılımcılardan gelebilecek sorulara karşı hazırlık yapmak", "Sunum yapılacak mekânı (ışık, havalandırma) önceden incelemek"], a:2, s:"Süreyi sunucu konunun ağırlığına göre kendi belirler; süreyi belirlemek için dinleyiciye anket yapılmaz. Anket sadece beklentileri öğrenmek içindir."},
+            {m:"2024 DÖNEM SONU", q:"Etkili bir sunumun 'Aktarma' (sunuş) aşamasında, dinleyicilerin kolayca anlayabilmesi için cümle yapıları nasıl olmalıdır?", o:["En az 30-40 kelimelik, edebi ve uzun cümleler kurulmalıdır.", "En fazla 10-15 kelimeden oluşan kısa cümleler ve etken (aktif) fiiller kullanılmalıdır.", "Sadece karmaşık mesleki jargonlar kullanılmalıdır.", "Çok bilinmeyen kavramlardan başlanarak sunum yapılmalıdır.", "Sadece edilgen fiiller kullanılmalıdır."], a:1, s:"Uzun cümleler ve karmaşık jargon, dinleyicinin not almasını ve anlamasını imkansız hale getirir. Cümleler kısa (10-15 kelime) ve net olmalıdır."},
+            {m:"2024 DÖNEM SONU", q:"Sunumda verilmek istenen mesajın kalıcılığını sağlamak için 'Kapanış' bölümünde yapılması gereken en doğru eylem hangisidir?", o:["Hazırlanılan sunumu başa alıp dinleyicilerin tekrar etmesini istemek", "Sunumda anlatılanların en önemli noktalarını içeren kısa bir özetle birlikte 'Soru-Cevap' bölümüne yer vermek", "Sadece 'teşekkürler' diyerek sahneden hızla inmek", "Konuyla ilgili zorlu bir yazılı test uygulamak", "Girişten bağımsız yepyeni bir konuya geçmek"], a:1, s:"İyi bir kapanışın iki altın şartı vardır: 1. Konuyu toparlayan kısa bir özet, 2. Etkileşimi sağlayan bir Soru-Cevap oturumu."},
+            {m:"2024 DÖNEM SONU", q:"Aşağıdakilerden hangisi sunumlarda (özellikle slayt hazırlamada) yapılan ve dinleyiciyi sıkan en büyük hatalardan biridir?", o:["Sunuma dikkat çekici bir anı veya fıkra ile başlamak", "Genel ifadeler yerine somut örnekler vermek", "Slaytlarda yazılanları izleyiciye bakmadan aynen tekrarlamak (Slayt Okuyuculuğu)", "Çok bilinenden az bilinene doğru ilerlemek", "Görsel ve grafikleri dengeli kullanmak"], a:2, s:"Slaytlar teleprompter (okuma cihazı) değildir. Ekrandakini aynen okumak, dinleyiciyi en çok sıkan sunum hatasıdır."},
+            {m:"2024 DÖNEM SONU", q:"PowerPoint sunuları hazırlarken, slaytların arka plan stilini, rengini ve kağıt boyutunu ayarlamak için kullanılan ana sekme (menü) hangisidir?", o:["Ekle (Insert)", "Gözden Geçir (Review)", "Tasarım (Design)", "Görünüm (View)", "Geçişler (Transitions)"], a:2, s:"Slaydın görsel temasını, kağıt boyutunu ve 'Arka Planını (Background)' değiştirmek doğrudan 'Tasarım' menüsünün işidir."},
+            {m:"2024 DÖNEM SONU", q:"Bulut tabanlı bir sunum aracı olan 'Prezi'nin, kullanıcılarına sunduğu hizmetlerden biri DEĞİLDİR?", o:["Sunumları internet (çevrimiçi) ortamda saklamak", "Çevrimiçi ortamda davet edilen kişilerle 'aynı sunum üzerinde eşzamanlı çalışmak'", "Sunumlara flash animasyonlar ve videolar eklemek", "Slaytlar arasında zoom in/out yaparak doğrusal olmayan sunumlar tasarlamak", "Çevrimiçi video-konferans (Örn: Zoom gibi) düzenlenmesine izin vermek"], a:4, s:"Prezi sadece bir 'sunum hazırlama' aracıdır. Üzerinden canlı görüntülü görüşme (video konferans) yapılan bir iletişim aracı değildir."},
+            {m:"2024 DÖNEM SONU", q:"Prezi uygulamasında bilgisayardan fotoğraf, pdf dosyası veya YouTube videosunu sunuma 'eklemeye' yarayan menü hangisidir?", o:["Frame (Çerçeve)", "Insert (Ekle)", "Path (Yol)", "Colors & Fonts", "Theme"], a:1, s:"İngilizce 'Insert' kelimesi 'İçine koy / Ekle' demektir. Her türlü dış medyanın sunuma eklenmesini sağlar."},
+            {m:"2024 DÖNEM SONU", q:"Prezi uygulamasında işaretlenen ögelerin sunuma hangi sırayla katılacağını, kameranın hangi rotayı izleyeceğini belirleyen menü hangisidir?", o:["Insert", "Frame", "Colors & Fonts", "Path (Yol)", "Share"], a:3, s:"İngilizce 'Path' yol/rota demektir. Prezi'de sunum sırasında kameranın hangi yolu (1. nesne, 2. nesne) izleyeceğini bu menü belirler."},
+            {m:"2024 DÖNEM SONU", q:"Bir satış müdürü PowerPoint sunumuna bir tablo eklemiş ve bu tablonun ekrana 'Önce 1. çeyrek, ardından tıklamayla 2. çeyrek verileri uçarak gelecek' şekilde girmesini istemiştir. Bu işlem hangi sekmeden yapılır?", o:["Geçişler (Transitions)", "Animasyonlar (Animations)", "Tasarım", "Slayt Gösterisi", "Gözden Geçir"], a:1, s:"Karıştırılan iki kavram: Sayfaların komple değişmesine 'Geçişler' denir. Sayfa içindeki bir nesnenin (yazı, resim) hareket etmesine 'Animasyon' denir."},
+            {m:"2024 DÖNEM SONU", q:"PowerPoint'te sunum hazırlayan bir eğitmen, slaytların altına sadece kendi ekranında görebileceği (dinleyicilerin projeksiyonda görmeyeceği) kopya metinleri yazmak için hangi alanı kullanır?", o:["Slayt Sıralayıcısı", "Notlar (Notes) Bölümü", "SmartArt", "Üst Bilgi", "Slayt Ustası"], a:1, s:"Slaytların hemen altında bulunan 'Notlar' kısmı, sunucunun kendine özel kopya çekmesi veya hatırlatmalar (prompt) yazması için tasarlanmış gizli kısımdır."},
+            {m:"2024 DÖNEM SONU", q:"Sunum programlarında yer alan 'Slayt Sıralayıcısı (Slide Sorter)' görünüm modunun en büyük işlevi nedir?", o:["Sunuma video eklemek", "Slaytlardaki yazım hatalarını düzeltmek", "Tüm slaytları küçük resimler hâlinde tek ekranda göstererek, sürükle-bırak ile slaytların yerlerini değiştirmeyi sağlamak", "Slaytları otomatik çevirmek", "Dosyayı buluta kaydetmek"], a:2, s:"Slide Sorter, 50 sayfalık bir sunuma kuşbakışı bakmanızı ve 15. sayfayı tutup 2. sıraya taşımanızı sağlayan pratik organizasyon ekranıdır."},
+            {m:"2024 DÖNEM SONU", q:"Etkili sunumun aktarım aşamasında, sunucunun 'Çok bilinenden az bilinene doğru ilerlemek' tekniğini kullanmasının psikolojik faydası nedir?", o:["Sunumun süresini uzatmak", "Dinleyicinin kafasını karıştırmak", "Sunucunun bilgisini abartmak", "Dinleyicinin konuya aşinalık (güven) kazanmasını sağlayarak, yeni ve zor bilgileri bu temel üzerine kolayca inşa etmesini sağlamak", "Soru sorulmasını engellemek"], a:3, s:"Önce bildikleri konulardan başlarsanız, dinleyici size güvenir ve ardından vereceğiniz karmaşık (az bilinen) bilgiyi kolayca özümser."},
+            {m:"2024 DÖNEM SONU", q:"PowerPoint programında, sunumdaki yazım (imla) hatalarını denetlemek, dili değiştirmek, çeviri yapmak ve sunuma açıklamalar (yorumlar) eklemek için kullanılan sekme hangisidir?", o:["Görünüm (View)", "Giriş (Home)", "Tasarım", "Gözden Geçir (Review)", "Ekle (Insert)"], a:3, s:"Gözden Geçir (Review) menüsü tasarım yapmaz. Metindeki hataları (Yazım Denetimi), dilleri, çevirileri 'gözden geçirip' düzeltmeyi sağlar."},
+            {m:"2024 DÖNEM SONU", q:"Prezi uygulamasında kullanılan 'Frame' (Çerçeve) aracının asıl işlevi nedir?", o:["Sunuma PDF eklemek", "Yazı tipini değiştirmek", "Belirli metinleri ve görselleri mantıksal bir grup hâlinde içine alarak kameranın o bölgeye topluca odaklanmasını sağlamak", "Sunumu silmek", "Müzik eklemek"], a:2, s:"İngilizce Frame 'çerçeve' demektir. Prezi devasa bir boş tuvaldir. Birbiriyle ilgili resim ve yazıları bir çember (frame) içine alırsınız ki kamera oraya topluca Zoom yapsın."},
+            {m:"2024 DÖNEM SONU", q:"Prezi'nin geleneksel PowerPoint'e kıyasla 'daha yaratıcı' kabul edilmesinin altındaki en temel yazılım mimarisi farkı nedir?", o:["Sadece siyah beyaz olması", "İnternetsiz çalışması", "PowerPoint'in doğrusal (linear) bir yapıda olması; Prezi'nin ise doğrusal olmayan (non-linear) devasa bir tuval üzerinde yakınlaşıp uzaklaşması (zoom in/out) mantığıyla çalışması", "Prezi'ye tablo eklenememesi", "PowerPoint'in bulut desteğinin olmaması"], a:2, s:"PowerPoint kitap sayfası gibi doğrusal (linear) ilerler. Prezi ise kocaman bir haritada kameranın oradan oraya uçarak Zoom yapması prensibiyle çalışır."},
+            {m:"2024 DÖNEM SONU", q:"Aşağıdaki yazılımlardan hangisi bir 'Hesap Tablosu' yazılımı DEĞİLDİR?", o:["Excel", "Numbers (Apple)", "Calc (OpenOffice)", "VisiCalc", "Access (Microsoft)"], a:4, s:"Excel, Calc, Numbers hesap tablolarıdır. 'Access' ise Microsoft'un Veritabanı (Database) programıdır."},
+            {m:"2024 DÖNEM SONU", q:"Hesap tablolarının (Excel) kullanılmasının neredeyse 'zorunlu' olduğu işlem aşağıdakilerden hangisidir?", o:["Şirket içi mail listesinin alt alta yazılması", "Broşür ve dergi tasarımı yapılması", "Şirketin aylık satış rakamlarının analiz edilip, kâr-zarar grafiğinin çizilmesi", "Uzun bir makale veya kitap yazılması", "Sunum için slayt hazırlanması"], a:2, s:"Yüzlerce sayılık 'Satış grafiğinin çizilmesi' ve finansal/istatistiksel hesaplamalar yapılması için Excel (Hesap tablosu) zorunludur."},
+            {m:"2024 DÖNEM SONU", q:"Hesap tablolarında bir hücreye formül (işlev) yazmaya başlarken, programın hesaplama yapması gerektiğini anlaması için hücrenin başına MUTLAKA konulması gereken karakter hangisidir?", o:["+ (Artı)", "* (Yıldız)", "= (Eşittir)", "$ (Dolar)", "@ (Kuyruklu a)"], a:2, s:"Bir hücreye '2+2' yazarsanız metin olarak kalır. Ancak '=2+2' yazarsanız sonucu '4' olarak hesaplar. Formüller daima EŞİTTİR ile başlar."},
+            {m:"2024 DÖNEM SONU", q:"Hesap tablosu adresleme sisteminde iki hücre arasında kullanılan 'iki nokta üst üste ( : )' işareti (Örn: A1:A5) ne anlama gelir?", o:["A1 hücresini A5 hücresine böl", "A1 ile A5 ARASINDAKİ tüm hücrelerin oluşturduğu 'Adres aralığı'", "A1 ve A5 hücrelerinin kesişim kümesi", "Sadece A1 ve A5 hücreleri", "Eşit değildir işareti"], a:1, s:"İki nokta (:) işareti matematikteki bölme işlemi DEĞİLDİR. Excel'de bir 'aralığı (Range)' baştan sona topluca seçmek için kullanılır."},
+
+            // BÖLÜM 5: 2025 DÖNEM SONU - 20 Soru
+            {m:"2025 DÖNEM SONU", q:"Bir hücrede formül sonucu olarak '#SAYI/0!' (veya #DIV/0!) ifadesinin oluşmasına neden olan hata türü aşağıdakilerden hangisidir?", o:["Aranan değerin listede bulunamaması (#YOK hatası)", "Hatalı parametre kullanımı", "Bir sayının veya hücrenin sıfıra (0) ya da içi boş olan bir hücreye bölünmeye çalışılması (Sıfıra bölme hatası)", "Metinlerin yanlış yazılması", "Sütun genişliğinin sayıya yetmemesi (####)"], a:2, s:"Matematikte hiçbir sayı 0'a bölünemez. Bir hücreyi, içi boş olan veya '0' yazan başka bir hücreye böldüğünüzde program bu 'Sıfıra Bölme' hatasını fırlatır."},
+            {m:"2025 DÖNEM SONU", q:"Hesap tablolarında '=ÇARPINIM(KAREKÖK(25))' ifadesi bir hücreye yazıldığında çıkacak sonuç aşağıdakilerden hangisidir?", o:["5", "25", "100", "120", "625"], a:3, s:"Karekök(25) = 5'tir. Çarpınım işlemi (Faktöriyel) 5! demektir. 5x4x3x2x1 = 120 sonucunu verir."},
+            {m:"2025 DÖNEM SONU", q:"Bir İK personeli, 'Maaş Ödenenler Listesi' ile 'İşten Ayrılanlar Listesi'ndeki TC Kimlik Numaralarını eşleştirerek, diğer tablodan veri çekmek istemektedir. Kullanması gereken Excel formülü hangisidir?", o:["=TOPLA", "=EĞER", "=ORTALAMA", "=DÜŞEYARA (VLOOKUP)", "=MAK"], a:3, s:"Araştır 3'te vurgulanır. İki farklı listedeki verileri ortak bir değere (TC No) göre dikey olarak arayıp karşılığındaki veriyi eşleştiren formül 'DÜŞEYARA'dır."},
+            {m:"2025 DÖNEM SONU", q:"Bir İSG uzmanı, kaza kayıtları tablosunda sadece 'Aralık ayında meydana gelen ve Yüksekten Düşme olan' kazaları ekranda görmek, diğerlerini ekrandan gizlemek istemektedir. Uzmanın kullanması gereken araç hangisidir?", o:["Koşullu Biçimlendirme", "Filtreleme (Süzme)", "Sıralama (A-Z)", "Özet Tablo", "Satır Silme"], a:1, s:"Devasa listedeki gereksiz verileri ekrandan gizleyerek, sadece görmek istediğiniz 'alt veri kümelerini' karşınıza getirmeye Filtreleme denir."},
+            {m:"2025 DÖNEM SONU", q:"Listelerdeki sütun başlıklarının bir tablo üzerine yerleştirilerek o alanlardaki verilerin sayılması, toplanması ve büyük verilerin saniyeler içinde ÖZETLENMESİ için kullanılan en güçlü araç nedir?", o:["Radar Grafiği", "Makro", "Özet Tablo (Pivot Table)", "Düşeyara", "Hedef Ara"], a:2, s:"Binlerce satırlık veriyi (Örn: Hangi bölge ne kadar satmış?) saniyeler içinde gruplayıp, toplayan ve 'özetleyen' araç Excel'deki 'Özet Tablo'dur."},
+            {m:"2025 DÖNEM SONU", q:"Aşağıdakilerden hangisi bir Özet Tablo (Pivot Table) şablonunda sağ tarafta yer alan 4 temel bölmeden biri DEĞİLDİR?", o:["Satırlar", "Sütunlar", "Filtreler", "Değerler", "Toplam"], a:4, s:"Pivot Table alanları 4 tanedir: Satırlar, Sütunlar, Filtreler ve Değerler. 'Toplam' diye bir bölme yoktur."},
+            {m:"2025 DÖNEM SONU", q:"Bir Özet Tablo oluştururken, 'Cinsiyet (Kadın/Erkek)' gibi SAYISAL OLMAYAN (metinsel) bir sütunu 'Değerler' bölmesine sürüklerseniz, Excel bu veri üzerinde otomatik olarak hangi işlemi uygular?", o:["TOPLA (Sum)", "SAY (Count)", "ORTALAMA (Average)", "ÇARP", "MİN"], a:1, s:"'Kadın' ve 'Erkek' kelimeleri rakam olmadığı için Excel bunları toplayamaz. Sadece kaç tane Kadın, kaç tane Erkek olduğunu 'SAYAR'."},
+            {m:"2025 DÖNEM SONU", q:"Veri listesinde yer alan hücrelerin, içindeki değere göre (Örneğin; Puan 50'den küçükse hücreyi kırmızı yap, büyükse yeşil yap) otomatik olarak renklenmesi işlemine ne ad verilir?", o:["Filtreleme", "Koşullu Biçimlendirme", "Sıralama", "Grafik Ekleme", "Hücre Kilitleme"], a:1, s:"Belirli bir 'şarta (koşula)' göre hücrenin arka plan renginin otomatik değişmesine (veri görselleştirme) 'Koşullu Biçimlendirme' denir."},
+            {m:"2025 DÖNEM SONU", q:"Bir kalite kontrol listesinde '=EĞER(25<2; A1; B1)' formülü yazılmıştır. Excel bu sınamayı değerlendirdiğinde hücreye hangi sonucu getirir?", o:["Hata mesajı verir", "A1'deki veriyi getirir", "B1'deki veriyi getirir", "25'i yazar", "2'yi yazar"], a:2, s:"EĞER formülü şartı sorar: '25 küçüktür 2'den'. Bu ifade YANLIŞTIR. Formül yanlış olduğunda virgülden sonraki İKİNCİ işlemi (Yani B1'i getirmeyi) yapar."},
+            {m:"2025 DÖNEM SONU", q:"Tablolarda sıralama (A-Z) işlemi yapılırken sadece tek bir sütunu (Örn: Ad sütununu) seçip sırala derseniz Excel size 'Seçimi genişletmek ister misiniz?' şeklinde bir uyarı verir. Bu uyarının temel sebebi nedir?", o:["İsimlerin alfabetik sıraya uymaması", "Maaşların sıfıra bölünme riski", "Sadece 'Ad' sütunu sıralanırsa, soyad ve maaş sütunları yerinde kalacağı için kişilerin verilerinin kayması ve tablonun bozulması", "Tabloda filtre olması", "Büyük küçük harf uyumsuzluğu"], a:2, s:"Sadece tek bir sütunu sıralarsanız, Ahmet'in yanındaki maaş Mehmet'e kayar. Excel verinin bozulmasını engellemek için sizi uyarır."},
+            {m:"2025 DÖNEM SONU", q:"Hesap tablosunda (Excel) bir hücreye tıklayıp içindeki eski veriyi silmeden doğrudan düzenleme moduna geçmek (imleci hücrenin içine almak) için klavyeden hangi kısayol tuşuna basılır?", o:["F1", "F2", "F5", "Esc", "Insert"], a:1, s:"Excel'de bir hücreye tıklayıp klavyeden doğrudan yazarsanız eski veriyi silip üstüne yazar. Veriyi silmeden içine girmek (düzenlemek) için 'F2' tuşuna basılır."},
+            {m:"2025 DÖNEM SONU", q:"AÖF kitabındaki 'Araştır 3' bölümünde bir belgenin Google veya Word çeviri (Translate) performansı ölçülmüştür. Makine çevirisi yapılırken, Türkçeden İngilizceye çevrilen bir metnin tekrar İngilizceden Türkçeye geri çevrilmesi (Back Translation) eyleminin temel amacı nedir?", o:["Bilgisayara yeni bir dil kütüphanesi yüklemek", "Çeviri motorunun algoritmasının 'anlamı bozup bozmadığını' ve çeviri başarımını test etmek", "Belgenin şifrelenmesini sağlamak", "Yazım denetimi sözlüğünü kapatmak", "Metnin kelime sayısını artırmak"], a:1, s:"Makine çevirilerinin mantıksal performansını ölçmek için metin önce hedef dile, sonra tekrar ana dile çevrilir. Çıkan metin saçma sapan ise yazılımın 'çeviri başarımı (kalitesi)' düşük demektir."},
+            {m:"2025 DÖNEM SONU", q:"Aşağıdakilerden hangisi bir belgenin 'Belge Düzeyinde' (Karakter, Paragraf veya Sayfa değil, doğrudan tüm kitabın bütünlüğü) yapılan profesyonel işlemlerden biri olarak kabul edilir?", o:["Kelimeyi kırmızı ve kalın yapmak", "Satır aralığını 1.5 olarak ayarlamak", "Sayfaya kenarlık eklemek", "İçindekiler tablosu ve Kaynakça (Atıf) listesi oluşturmak", "Sadece ilk harfi büyük yazmak"], a:3, s:"İçindekiler listesi, Kaynakça ve Dizin oluşturma gibi işlemler, metnin neresinde ne olduğunu takip eden ve tüm kitabı organize eden 'Belge Düzeyinde' işlemlerdir."},
+            {m:"2025 DÖNEM SONU", q:"Bir Microsoft Word belgesi içinde çalışırken, başka bir programı (Örn: Excel) ayrı bir pencere olarak açmadan, doğrudan Word sayfasının içine canlı bir 'Microsoft Excel Çalışma Kitabı' gömmek için izlenmesi gereken doğru menü yolu hangisidir?", o:["EKLE -> Nesne", "GİRİŞ -> Yapıştır -> Özel Yapıştır", "TASARIM -> Sayfa Arka Planı", "GÖZDEN GEÇİR -> Karşılaştır", "GÖRÜNÜM -> Yeni Pencere"], a:0, s:"Word'ün içine başka bir programı veya dosyayı canlı bir parça olarak entegre etmek için 'Ekle' sekmesindeki 'Nesne (Object)' düğmesi kullanılır."},
+            {m:"2025 DÖNEM SONU", q:"İş hayatında sıklıkla kullanılan Word (Sözcük İşlemci) uygulamasında, sekmeleri (Giriş, Ekle, Tasarım vb.) barındıran üst şeridi kendi ihtiyaçlarımıza göre kişiselleştirmek (yeni düğmeler eklemek) için yapılması gereken işlem nedir?", o:["Bilgisayara yeni bir ekran kartı takmak", "Şeridin boş alanında farenin sağ tuşuna tıklayıp 'Şeridi Özelleştir' seçeneğini kullanmak", "Ctrl+Alt+Delete tuşlarına aynı anda basmak", "Görünüm menüsünden 'Makrolar'ı seçmek", "Belgeyi salt okunur olarak kaydetmek"], a:1, s:"Word'deki üst menü bandına (şerit) sağ tıklayarak 'Şeridi Özelleştir' derseniz, gizli komutları veya kendi özel menünüzü ekleyebilirsiniz."},
+            {m:"2025 DÖNEM SONU", q:"Aşağıdakilerden hangisi, sunumlarda yazılı metinlerin font (yazı tipi) ve puntosu (büyüklüğü) seçilirken uyulması gereken bir kural DEĞİLDİR?", o:["Slaytlarda çok farklı büyüklükte (karmaşık) puntoların bir arada kullanılmaması", "Okunabilirliği yüksek, sade karakterli (Örn: Arial, Calibri) yazı tiplerinin seçilmesi", "En arka sıradaki dinleyicinin bile rahatça okuyabileceği büyüklükte olması", "Tüm metnin dikkat çekmesi için tamamen BÜYÜK HARFLERLE (Caps Lock açık) yazılması", "Arka plan ile yazının birbirine zıt (kontrast) renklerde (Örn: Koyu zemin-açık yazı) olması"], a:3, s:"Bilişim ve sunum etiğinde 'Tamamı BÜYÜK HARFLE' yazılmış metinler; hem okumayı inanılmaz derecede zorlaştırır hem de dijital dilde 'BAĞIRMAK' anlamına gelir."},
+            {m:"2025 DÖNEM SONU", q:"AÖF kitabında geçen 'Okumayı zorlaştıran koyu renk fon kullanmak' hatası, özellikle hangi fiziksel koşulda dinleyiciler için sunumu bir işkenceye dönüştürür?", o:["Çok karanlık (ışıklandırılmamış) bir salonda", "Çok aydınlık veya güneş alan (yansıma yapan) bir salonda", "Sadece küçük toplantı odalarında", "Mikrofon olmayan ortamlarda", "Sadece sabah saatlerinde yapılan sunumlarda"], a:1, s:"Aydınlık veya güneş vuran bir salonda, projeksiyon perdesindeki 'Koyu Renk' arka planlar tamamen silikleşir ve parlar. Yazılar kesinlikle okunmaz hale gelir."},
+            {m:"2025 DÖNEM SONU", q:"Sözlü ve görsel iletişimin bir arada kullanıldığı sunumlarda, sunucunun slaytlardaki uzun metinleri olduğu gibi ekrana yansıtmasının 'AÖF Araştır-2' analizine göre yarattığı en büyük sorun nedir?", o:["Slayt dosyasının boyutunun (MB) büyümesi", "Dinleyicilerin, sunucuyu dinlemek yerine ekrandaki yazıyı okumaya çalışması ve böylece not almalarının (odaklanmalarının) imkânsızlaşarak sunumun etkililiğinin sıfırlanması", "Sunucunun çok yorulması", "Slaytların renklerinin bozulması", "Projeksiyon cihazının ömrünün kısalması"], a:1, s:"İnsan beyni aynı anda hem uzun bir metni okuyup hem de birini dinleyemez. Uzun metin, dinleyiciyi 'okuyucu' yapar ve sunucunun sesini tamamen arka plana atar."},
+            {m:"2025 DÖNEM SONU", q:"Bir finans müdürü, aylık bütçe raporunu sunarken; sayılarla dolu karmaşık bir Excel tablosunu doğrudan PowerPoint'e kopyalayıp yapıştırmıştır. Etkili sunum teknikleri açısından bu müdürün yapması gereken asıl doğru işlem aşağıdakilerden hangisidir?", o:["Tabloyu daha da küçülterek slayta sığdırmaya çalışmak", "Tablodaki verileri tek tek okuyarak zamanı doldurmak", "Tabloyu tamamen silip sadece sözlü anlatım yapmak", "Karmaşık rakam yığınları (tablo) yerine, bu verilerin sonucunu özetleyen anlaşılır bir 'Grafik (Pasta veya Sütun grafiği)' kullanmak", "Tabloyu Prezi'ye kopyalamak"], a:3, s:"Sunumlarda yüzlerce rakamın olduğu tablolar okunmaz ve anlaşılmaz. Rakamların (Örn: kâr/zarar) eğilimini gösteren görsel bir grafik, mesajı 1 saniyede beyne iletir."},
+            {m:"2025 DÖNEM SONU", q:"Hesap tablolarındaki bir hücrede yer alan #YOK (veya #N/A) hatasının, #SAYI/0! hatasından farkını belirleyen temel teknik sebep aşağıdakilerden hangisidir?", o:["#YOK hatası matematiksel bir bölme işleminden kaynaklanır.", "#YOK hatası, genellikle DÜŞEYARA gibi formüllerde 'aranan değerin (Örn: TC No) listede bulunamaması' sonucunda fırlatılan bir hatadır.", "#YOK hatası hücrenin çok dar olduğunu gösterir.", "#YOK hatası metinlerin yanlış yazılmasından doğar.", "#YOK hatası sadece makrolarda ortaya çıkar."], a:1, s:"Sıfıra bölme (#SAYI/0!) matematiksel bir tanımsızlıktır. #YOK (Not Available / N/A) hatası ise arama fonksiyonlarının tablodaki o veriyi bulamadığını (yok olduğunu) söyler."}
+        ];
+
+        const allQuestions = db;
+        let quizState = {};
+        let studyModeActive = false;
+        let isFinished = false;
+
+        function initApp() {
+            try {
+                const saved = localStorage.getItem('isg_105_dev_kampi');
+                if(saved) {
+                    const parsed = JSON.parse(saved);
+                    quizState = parsed.quizState || {};
+                    isFinished = parsed.isFinished || false;
+                    studyModeActive = parsed.studyModeActive || false;
+                }
+            } catch(e) {}
+            renderQuestions();
+            if(isFinished) {
+                showResults();
+                document.getElementById("studyBtn").disabled = false;
+                document.getElementById("studyBtn").style.opacity = "1";
+            } else {
+                updateStudyButtonUI();
+            }
+        }
+
+        function stateKaydet() {
+            localStorage.setItem('isg_105_dev_kampi', JSON.stringify({ 
+                quizState, 
+                isFinished,
+                studyModeActive 
+            }));
+        }
+
+        function updateStudyButtonUI() {
+            const btn = document.getElementById("studyBtn");
+            if(studyModeActive) {
+                btn.innerHTML = `<i class="fa-solid fa-eye-slash"></i> Çalışma Modunu Kapat`;
+                btn.style.background = "#ef4444";
+            } else {
+                btn.innerHTML = `<i class="fa-solid fa-book-open-reader"></i> Çalışma Modu (Tüm Çözümler)`;
+                btn.style.background = "";
+            }
+        }
+
+        function toggleStudyMode() {
+            studyModeActive = !studyModeActive;
+            updateStudyButtonUI();
+            const solElements = document.querySelectorAll('.sol');
+            if(studyModeActive) {
+                solElements.forEach(el => el.classList.add('show'));
+            } else {
+                solElements.forEach(el => el.classList.remove('show'));
+            }
+            stateKaydet();
+        }
+
+        function renderQuestions() {
+            const list = document.getElementById("q-list");
+            list.innerHTML = "";
+            let html = "";
+
+            allQuestions.forEach((q, i) => {
+                const s = quizState[i];
+                const isFinalTag = q.m.includes("DÖNEM SONU") || q.m.includes("FİNAL");
+                const tagClass = isFinalTag ? "q-tag final" : "q-tag";
+                
+                html += `
+                <div class="q-card" id="q-${i}">
+                    <div class="${tagClass}"><i class="fa-solid fa-star"></i> ÇIKMIŞ SORU: ${q.m}</div>
+                    <div class="q-text">
+                        <div class="q-num">${i + 1}</div>
+                        <div>${q.q}</div>
+                    </div>
+                    <div class="opts">
+                `;
+                q.o.forEach((opt, oIdx) => {
+                    let cls = "opt";
+                    let ico = "";
+                    if (isFinished) {
+                        cls += " locked";
+                        if (oIdx === q.a) { cls += " correct"; ico = ' <i class="fa-solid fa-check"></i>'; }
+                        else if (s && s.sel === oIdx) { cls += " wrong"; ico = ' <i class="fa-solid fa-xmark"></i>'; }
+                    } else if (s && s.sel === oIdx) {
+                        cls += " selected";
+                    }
+                    html += `<div class="${cls}" onclick="selectOpt(${i}, ${oIdx}, ${q.a})" id="o-${i}-${oIdx}">${String.fromCharCode(65 + oIdx)}) ${opt}${ico}</div>`;
+                });
+                
+                let solCls = "sol";
+                if (isFinished || studyModeActive) solCls += " show";
+                html += `</div>
+                    <div class="${solCls}" id="s-${i}"><strong><i class="fa-solid fa-lightbulb"></i> Püf Noktası:</strong> ${q.s}</div>
+                </div>`;
+            });
+            list.innerHTML = html;
+        }
+
+        function selectOpt(qIdx, oIdx, cIdx) {
+            if (isFinished) return;
+            quizState[qIdx] = { sel: oIdx, cor: cIdx };
+            
+            for(let i=0; i<5; i++) {
+                let el = document.getElementById(`o-${qIdx}-${i}`);
+                if(el) el.classList.remove('selected');
+            }
+            document.getElementById(`o-${qIdx}-${oIdx}`).classList.add('selected');
+            stateKaydet();
+        }
+
+        function finishTest() {
+            if (isFinished) return;
+            const answered = Object.keys(quizState).length;
+            if (answered < allQuestions.length) {
+                if (!confirm(`Henüz ${allQuestions.length - answered} soruyu boş bıraktınız. Boşlar yanlış sayılmaz ancak netinizi etkilemez. Bitirmek istiyor musunuz?`)) return;
+            }
+
+            isFinished = true;
+            stateKaydet();
+            showResults();
+            document.getElementById("studyBtn").disabled = false;
+            document.getElementById("studyBtn").style.opacity = "1";
+        }
+
+        function resetTest() {
+            quizState = {};
+            studyModeActive = false;
+            isFinished = false;
+            localStorage.removeItem('isg_105_dev_kampi');
+            
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('finishArea').style.display = 'block';
+            
+            renderQuestions();
+            updateStudyButtonUI();
+            document.getElementById("studyBtn").disabled = false;
+            document.getElementById("studyBtn").style.opacity = "1";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goHome() {
+            // Bir üst klasöre yönlendir (ana sayfa)
+            window.location.href = "../";
+        }
+
+        function showResults() {
+            let c = 0, w = 0;
+            for (let i = 0; i < allQuestions.length; i++) {
+                if (quizState[i]) {
+                    if (quizState[i].sel === quizState[i].cor) c++;
+                    else w++;
+                }
+            }
+            let e = allQuestions.length - (c + w);
+            let net = c - (w / 4);
+            if (net < 0) net = 0;
+            
+            let score = Math.round((net / allQuestions.length) * 100);
+
+            document.getElementById('s-corr').innerText = c;
+            document.getElementById('s-wr').innerText = w;
+            document.getElementById('s-emp').innerText = e;
+            document.getElementById('s-net').innerText = net.toFixed(2);
+            document.getElementById('scoreVal').innerText = score;
+            
+            let msg = "";
+            if(score >= 90) msg = "Efsanevi Bir Başarı! AÖF sınav mantığını ve tüm İSG/Bilişim hilelerini deşifre etmişsiniz.";
+            else if(score >= 70) msg = "Çok iyi! AÖF mantığını kavramışsınız. Çıkan birkaç pürüzü püf noktalarından halledebilirsiniz.";
+            else msg = "Tehlike çanları! Sınavda şıklar çok benzeşir. Lütfen yukarıdaki 'Çalışma Modunu' açarak tüm çözümleri ezberleyin.";
+            document.getElementById('scoreMsg').innerText = msg;
+
+            document.getElementById('finishArea').style.display = 'none';
+            document.getElementById('results').style.display = 'block';
+            renderQuestions(); 
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        window.onload = () => {
+            initApp();
+            document.getElementById("finishBtn").onclick = finishTest;
+            document.getElementById("studyBtn").onclick = toggleStudyMode;
+            document.getElementById("resetBtn").onclick = resetTest;
+            document.getElementById("homeBtn").onclick = goHome;
+        };
+    </script>
+</body>
+</html>

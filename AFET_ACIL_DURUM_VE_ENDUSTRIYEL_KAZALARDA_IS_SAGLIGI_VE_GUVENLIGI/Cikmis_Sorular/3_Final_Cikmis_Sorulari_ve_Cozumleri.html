@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sınav Analizi ve Çıkmış Sorular | İSG Akademi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4c1d95; 
+            --primary-light: #7c3aed; 
+            --secondary: #1e1b4b; 
+            --accent: #f59e0b;
+            --bg-color: #f8fafc;
+            --text-dark: #0f172a;
+            --text-light: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --card-bg: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-dark); line-height: 1.6; }
+
+        /* Navbar */
+        nav { background: var(--card-bg); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
+        .logo { font-size: 1.3rem; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+        .back-btn { text-decoration: none; color: var(--primary); font-weight: 600; font-size: 0.9rem; border: 2px solid var(--primary); padding: 6px 18px; border-radius: 8px; transition: all 0.3s;}
+        .back-btn:hover { background: var(--primary); color: white; }
+
+        .container { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
+        
+        /* Analiz Bölümü */
+        .analysis-section { background: var(--card-bg); padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); margin-bottom: 2rem; border-top: 5px solid var(--accent); }
+        .analysis-section h1 { color: var(--secondary); margin-bottom: 1rem; font-size: 2rem; text-align: center; }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+        .stat-card { background: #f1f5f9; padding: 1.5rem; border-radius: 12px; text-align: center; border: 1px solid #e2e8f0; }
+        .stat-card i { font-size: 2rem; color: var(--primary-light); margin-bottom: 10px; }
+        .stat-card h3 { font-size: 1.8rem; color: var(--secondary); font-weight: 800; }
+        .stat-card p { font-size: 0.9rem; color: var(--text-light); font-weight: 500; }
+
+        .tips-container { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-top: 2rem; }
+        .tip-box { background: #eff6ff; border-left: 5px solid #3b82f6; padding: 1.5rem; border-radius: 0 10px 10px 0; }
+        .tip-box h4 { color: #1e40af; margin-bottom: 5px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+
+        /* Test Bölümü */
+        .quiz-section { background: var(--card-bg); padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); }
+        .quiz-header { text-align: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid #e2e8f0; }
+        
+        .controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 10px; }
+        .memory-badge { background: #ecfccb; color: #166534; padding: 6px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; border: 1px solid #bbf7d0; display: inline-flex; align-items: center; gap: 5px;}
+        .study-mode-btn { background: #f59e0b; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.3s; }
+        .study-mode-btn:hover { background: #d97706; }
+
+        .question-card { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px dashed #cbd5e1; }
+        .question-meta { font-size: 0.85rem; color: #b45309; font-weight: 700; background: #fef3c7; display: inline-block; padding: 3px 10px; border-radius: 5px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .question-text { font-weight: 600; font-size: 1.1rem; margin-bottom: 1.2rem; color: var(--secondary); display: flex; gap: 10px;}
+        .q-number { background: var(--primary); color: white; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 0.9rem; flex-shrink: 0;}
+        
+        .options-list { display: flex; flex-direction: column; gap: 10px; padding-left: 40px;}
+        .option-btn { 
+            background: #f8fafc; border: 2px solid #e2e8f0; padding: 12px 18px; 
+            border-radius: 10px; text-align: left; font-size: 0.95rem; cursor: pointer; 
+            transition: all 0.2s; display: flex; align-items: center; width: 100%; font-weight: 500;
+        }
+        .option-btn:hover:not(.disabled) { border-color: var(--primary-light); background: #f5f3ff; transform: translateX(5px); }
+        
+        .option-btn.disabled { pointer-events: none; opacity: 0.85; }
+        .option-btn.correct { background: #ecfdf5 !important; border-color: var(--success) !important; color: #065f46; font-weight: 700; }
+        .option-btn.wrong { background: #fef2f2 !important; border-color: var(--danger) !important; color: #991b1b; text-decoration: line-through; }
+        
+        .solution-box { display: none; background: #fffbeb; padding: 1.5rem; border-left: 5px solid #f59e0b; margin-top: 15px; margin-left: 40px; border-radius: 0 8px 8px 0; animation: fadeIn 0.5s; }
+        .solution-box.visible { display: block; }
+        .solution-box h4 { color: #b45309; margin-bottom: 8px; font-size: 1rem; }
+        .solution-box p { color: #451a03; font-size: 0.95rem; text-align: justify; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .btn-finish { background: var(--primary); color: white; border: none; padding: 15px 30px; font-size: 1.1rem; border-radius: 10px; cursor: pointer; width: 100%; font-weight: 700; margin-top: 2rem; transition: background 0.3s; box-shadow: 0 4px 6px rgba(76, 29, 149, 0.2); }
+        .btn-finish:hover { background: var(--secondary); }
+
+        #results-section { display: none; margin-top: 2rem; background: #f0fdf4; padding: 2.5rem; border-radius: 15px; border: 2px solid var(--success); text-align: center; }
+        .score-display { font-size: 3rem; font-weight: 800; color: var(--success); margin-bottom: 1rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+        
+        @media print {
+            body { background: white; color: black; }
+            nav, .btn-finish, .study-mode-btn, .memory-badge { display: none !important; }
+            .container { max-width: 100%; margin: 0; padding: 0; }
+            .analysis-section, .quiz-section { box-shadow: none; border: none; padding: 0; }
+            .solution-box { display: block !important; border: 1px solid #ccc; background: white; page-break-inside: avoid; margin-left:0;}
+            .option-btn { border: 1px solid #ccc; padding: 8px; margin-bottom: 4px; }
+            .options-list { padding-left: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo"><i class="fa-solid fa-chart-line"></i> 80 Soruluk Final Sınav Analizi</div>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-light);">Hazırlayan: Sıraç Aksan</span>
+            <a href="../../index.html" class="back-btn"><i class="fa-solid fa-house"></i> Ana Sayfa</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        
+        <!-- DETAYLI SINAV ANALİZİ BÖLÜMÜ -->
+        <section class="analysis-section">
+            <h1><i class="fa-solid fa-magnifying-glass-chart"></i> 2022-2025 Final ve Yaz Okulu Analizi</h1>
+            <p style="text-align: center; color: var(--text-light); max-width: 800px; margin: 0 auto;">Toplam 80 adet çıkmış soru, tekrar edenler elenerek en özgün ve kritik hâlleriyle listelenmiştir. Bu analiz, final sınavında hangi konunun nasıl sorulduğunu deşifre etmektedir.</p>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <i class="fa-solid fa-helmet-safety"></i>
+                    <h3>%35</h3>
+                    <p>Bina Çökmeleri, İtfaiye ve KKD (Ünite 4,5,6)</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fa-solid fa-biohazard"></i>
+                    <h3>%25</h3>
+                    <p>Salgınlar, KBRN ve Riskler (Ünite 3,8)</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fa-solid fa-scale-balanced"></i>
+                    <h3>%40</h3>
+                    <p>Mevzuat, BEKRA, İSG ve Planlama (Ünite 1,2,7)</p>
+                </div>
+            </div>
+
+            <div class="tips-container">
+                <div class="tip-box">
+                    <h4><i class="fa-solid fa-key"></i> Sınavın Püf Noktaları ve Tuzakları</h4>
+                    <ul style="margin-left: 20px; font-size: 0.95rem; color: #1e3a8a;">
+                        <li><strong>Zarar Görebilirlik Tuzağı:</strong> Soruda "psikolojik, sosyolojik, demografik" kelimelerini görüyorsanız cevap kesinlikle <strong>Sosyal Zarar Görebilirlik</strong>'tir.</li>
+                        <li><strong>Hastalık ve Bulaş Yolları:</strong> KBRN ve afet müdahalesinde Hepatit B her zaman "vücut sıvıları ve kan" ile bulaşır. Sınavda bunu "su ile bulaşanlar" (Hepatit A) arasına koyup çeldirici yaparlar.</li>
+                        <li><strong>Çökme Şekilleri:</strong> Binalardaki çökmeler: Yamyassı (Pancake), V-şeklinde, A-şeklinde ve Desteksiz çökmedir. "Birikimli çökme" diye bir kavram yoktur.</li>
+                        <li><strong>İtfaiyeci Eğitimleri:</strong> "Binada bulunan tehlikeler", yangın başladıktan sonra değil <strong>"Yangın Öncesi Eğitimi"</strong> konusudur. Sınavlarda en çok karıştırılan konudur.</li>
+                        <li><strong>Mevzuat Süreleri:</strong> İş kazası bildirimi "3 iş günü"; Acil durum planı yenileme süreleri "Çok Tehlikeli (2), Tehlikeli (4), Az Tehlikeli (6)" yıldır.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ÇIKMIŞ SORULAR VE ÇÖZÜMLER BÖLÜMÜ -->
+        <section class="quiz-section">
+            <div class="quiz-header">
+                <h2 style="color: var(--secondary); font-size: 1.8rem;"><i class="fa-solid fa-star"></i> Orijinal Çıkmış Sorular Bankası (80 Soru)</h2>
+                <p style="color: var(--text-light);">2022-2025 Yılları Arası Master Soru Seti</p>
+            </div>
+            
+            <div class="controls">
+                <div class="memory-badge" id="memory-badge">
+                    <i class="fa-solid fa-floppy-disk"></i> Otomatik Kayıt Devrede
+                </div>
+                <button class="study-mode-btn" id="study-mode-btn" onclick="toggleStudyMode()">
+                    <i class="fa-solid fa-book-open-reader"></i> Tüm Çözümleri Göster (Çalışma Modu)
+                </button>
+            </div>
+            
+            <div id="quiz-container">
+                <!-- Sorular JS ile yüklenecek -->
+            </div>
+
+            <button class="btn-finish" id="finish-btn" onclick="testiBitir()">
+                <i class="fa-solid fa-flag-checkered"></i> Denemeyi Bitir ve Puanımı Gör
+            </button>
+
+            <!-- SONUÇLAR -->
+            <div id="results-section">
+                <h2>Final Simülasyonu Sonucu</h2>
+                <div class="score-display">%<span id="score-text">0</span> Başarı</div>
+                <p id="score-message" style="font-size: 1.1rem; color: var(--secondary);"></p>
+                <button class="back-btn" style="margin-top: 20px; display: inline-block;" onclick="window.print()"><i class="fa-solid fa-file-pdf"></i> Arşiv İçin Sıkışık PDF Al</button>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // 80 Adet Çıkmış Soru Veritabanı
+        const questions = [
+            // ÜNİTE 1-2 KAVRAMLAR VE MEVZUAT
+            { meta: "2022 Bahar Final / 2024 Yaz Okulu", q: "Bireylerin ve toplumun psikolojik, sosyolojik ve demografik faktörler nedeniyle maruz kalabilecekleri, ölçülmesi güç, hatta imkânsız olan hasar derecesine ne ad verilir?", options: ["A) Sosyal zarar görebilirlik", "B) Tehlike", "C) Kırılganlık", "D) Savunmasızlık", "E) Hassasiyet"], answer: 0, solution: "Kavram analizi: İşin içine 'psikoloji, sosyoloji ve demografi (nüfus yapısı)' giriyorsa, fiziksel bir yıkımdan değil, toplumun olaydan ruhen ve yapısal olarak ne kadar etkileneceğinden bahsediliyordur. Bu durum doğrudan 'Sosyal Zarar Görebilirlik' olarak tanımlanır." },
+            { meta: "2023 Yaz Okulu / 2025 Deneme", q: "Mesleki Yeterlilik Kurumunca (MYK) onaylanan 'Arama Kurtarma Uzmanı Ulusal Meslek Standardı'na göre, ekibin olaya müdahale sürecini yönlendirme kapsamında yaptığı işlerden biri DEĞİLDİR?", options: ["A) Olay bölgesinde ekipler arasında görev dağılımı yapar", "B) Enkaz destekleme ve tahkimat çalışmalarını yapar/yapılmasını sağlar", "C) Uygun aşı ve tıbbi müdahaleyi bizzat hastaya uygular", "D) Yapılan plana göre müdahaleyi başlatır", "E) Ekiplerin güvenli çalışma koşullarını denetler"], answer: 2, solution: "Püf Noktası (Tuzak): Arama kurtarma uzmanları ilk yardım yapabilir ancak 'tıbbi müdahale, iğne, aşı, ilaç' uygulamak kesinlikle SADECE sağlık personelinin (doktor, paramedik) yetkisindedir." },
+            { meta: "2022 Yaz Okulu / 2024 Final", q: "Afetlerin genel (evrensel) özellikleri ile ilgili aşağıdakilerden hangisi yanlıştır?", options: ["A) Can ve mal kaybına neden olurlar.", "B) Fiziksel, ekonomik ve sosyal kayıplara neden olabilirler.", "C) Doğal, teknolojik veya insan kaynaklı olabilirler.", "D) Başladıktan sonra çok uzun zaman alırlar ve yavaş gelişirler.", "E) Toplumun baş etme kapasitesini aşarlar."], answer: 3, solution: "Mantık Yürütme: Kuraklık gibi yavaş gelişenleri olsa da; Deprem, Patlama, Tsunami gibi afetler saniyeler içinde (çok kısa zamanda) gerçekleşir. Bu nedenle 'başladıktan sonra çok uzun zaman alırlar' genellemesi kesinlikle yanlıştır." },
+            { meta: "2024 Final", q: "Bir toplum veya topluluğun mevcut toplumsal, ekonomik, politik, kültürel, teknik ve çevresel koşullarda kabul ettiği ve başa çıkabileceği potansiyel kayıpların seviyesine ne ad verilir?", options: ["A) Kabul edilebilir risk", "B) Tehlike", "C) Dayanıklılık", "D) Direnç", "E) Hassasiyet"], answer: 0, solution: "Toplumun mevcut koşullarda başa çıkabileceğini öngördüğü ve katlandığı kayıp seviyesi 'Kabul edilebilir risk'tir." },
+            { meta: "2022 Bahar Ara / 2025 Yaz Okulu", q: "Afet yönetiminde 'Ne olabilir?' sorusuna verilen cevabın karşılığı nedir?", options: ["A) Tehlike", "B) Risk", "C) Savunmasızlık", "D) Direnç", "E) Dayanıklılık"], answer: 0, solution: "Ne olabilir sorusu doğrudan potansiyel durumu yani 'Tehlikeyi' sorgular. Risk ise tehlikenin gerçekleşme ihtimalidir." },
+            { meta: "2023 Final", q: "Yerel, bölgesel ve sınırlı bir etkiye sahip olan, yerel imkanlarla baş edilebilen olaylara ne ad verilir?", options: ["A) Olay", "B) Kaza", "C) Acil durum", "D) Afet", "E) Olağanüstü hâl"], answer: 2, solution: "Yerel ve sınırlı etkiye sahip durumlar 'Acil Durum' olarak tanımlanır. Afet çok daha büyük çaplıdır ve dış yardım gerektirir." },
+            { meta: "2024 Yaz Okulu", q: "Arama kurtarma ekibinin kurulması ve gerekli donanımlarının sağlanması afet ve acil durum yönetimi bakımından hangi dönemi kapsar?", options: ["A) Zarar azaltma", "B) İyileştirme", "C) Müdahale", "D) Risk", "E) Hazırlık"], answer: 4, solution: "Arama kurtarma ekibi kurma, eğitim ve tatbikat yapma işlemleri afet olmadan önce yapılan 'Hazırlık' evresidir." },
+            { meta: "2025 Deneme", q: "Toplumun tamamının veya belli kesimlerinin normal hayat ve faaliyetlerini durduran veya kesintiye uğratan ve acil müdahaleyi gerektiren kriz hâline ne ad verilir?", options: ["A) Acil durum", "B) Risk analizi", "C) Arama kurtarma planlaması", "D) İş sağlığı ve güvenliği planlaması", "E) Afet acil durum planlaması"], answer: 0, solution: "Normal hayatı kesintiye uğratan olayların yarattığı kriz hâli kavramsal olarak Acil Durum'un spesifik bir tanımıdır." },
+            { meta: "2022 Yaz Okulu", q: "DSÖ'ye göre 'dışarıdan olağanüstü yardım gerektirecek kadar kötüleşmesine neden olan her türlü oluşumdur.' tanımı hangisine aittir?", options: ["A) Afet", "B) Olay", "C) Kaza", "D) Acil durum", "E) Risk"], answer: 0, solution: "Dünya Sağlık Örgütünün 'dışarıdan olağanüstü yardım gerektirecek kadar kötüleşme' ifadesi, olayın bir 'Afet' boyutuna ulaştığının kesin kanıtıdır." },
+            { meta: "2023 Yaz Okulu", q: "Hyogo Çerçeve Eylem Planı’nda 'bir topluluğun, tehlikelerin etkilerine karşı duyarlılığını artıran koşullar' şeklinde yapılan tanımlamaya ne ad verilir?", options: ["A) Zarar görebilirlik", "B) Ramak kala", "C) Tehlike", "D) Direnç", "E) Felaket"], answer: 0, solution: "Duyarlılığı (hassasiyeti) artıran negatif koşullar bütünü 'Zarar görebilirlik (Savunmasızlık)' olarak ifade edilir." },
+            { meta: "2024 Final", q: "Aşağıdakilerden hangisi etkin bir afet planlaması basamaklarından biri DEĞİLDİR?", options: ["A) İş yerlerinde kalite kontrol sistemini yerleştirmek", "B) Planlama takımı oluşturmak", "C) Mevcut durumu analiz etmek", "D) Afet planı geliştirmek", "E) Afet planını güncellemek"], answer: 0, solution: "Kalite kontrol sistemleri İSG'nin değil, genel işletme üretim kalitesinin bir parçasıdır. Afet planlaması adımlarından değildir." },
+            { meta: "2025 Yaz Okulu", q: "Her iş yerinin acil durum planı hazırlaması ve uygulaması hangi mevzuatla zorunlu hâle getirilmiştir?", options: ["A) İş Yerlerinde Acil Durumlar Hakkında Yönetmelik", "B) Anayasa", "C) Borçlar Kanunu", "D) Cumhurbaşkanlığı Kararnamesi", "E) Devlet Memurları Kanunu"], answer: 0, solution: "Türkiye'de acil durum planlarının yasal dayanağı doğrudan 'İş Yerlerinde Acil Durumlar Hakkında Yönetmelik'tir." },
+            { meta: "2022 Final", q: "Aşağıdakilerden hangisi insan kaynaklı afetlerden biri değildir?", options: ["A) Deprem", "B) Patlamalar", "C) Yangın", "D) Savaş", "E) Kazalar"], answer: 0, solution: "Deprem tamamen doğa kaynaklı bir afettir. Yangın, savaş, kaza, patlama insan kaynaklı olabilir." },
+            { meta: "2023 Yaz Okulu", q: "Meydana gelen şiddetli bir depremin ardından bölgedeki büyük bir sanayi tesisinde gaz sızıntısı sonucu büyük bir patlama yaşanmıştır. Gaz sızıntısı ve patlama nasıl adlandırılır?", options: ["A) Doğal kaynaklı asıl tehlike durumu", "B) İkincil afet ve acil durum tehlikesi", "C) Kabul edilebilir bölgesel risk durumu", "D) Sosyolojik tahribat yaratan kaza durumu", "E) Toplumsal düzeyde zarar görebilirlik"], answer: 1, solution: "Ana afetin (deprem) tetiklediği diğer olaylar (patlama, sızıntı, yangın) afet terminolojisinde kesinlikle 'İkincil afet' olarak kodlanır." },
+            { meta: "2024 Bahar", q: "Kurum ve kuruluşların faaliyetlerini, herhangi bir afet ve acil durumunda tamamen durdurmadan, önceden belirlenen asgari ve kritik seviyede yürütebilme becerisine ne isim verilmektedir?", options: ["A) İş sağlığı ve güvenliği kültürü", "B) İş yeri kaza önleme prensibi", "C) Kurumsal iyileştirme politikası", "D) İş sürekliliği yönetimi kapasitesi", "E) Acil durum tahliye standardizasyonu"], answer: 3, solution: "Faaliyetlerin asgari ve kritik düzeyde yürüme becerisi sınavların favori tanımı olan 'İş Sürekliliği Yönetimi'dir." },
+            { meta: "2025 Deneme", q: "TDK'ya göre bir kimsenin hayatını kazanmak için yaptığı, kuralları toplum tarafından belirlenmiş ve belli bir eğitimle kazanılan bilgi ve becerilere dayalı faaliyetler bütününe ne ad verilir?", options: ["A) Çırak", "B) Meslek", "C) Teknik personel", "D) İşçi", "E) Usta"], answer: 1, solution: "Hayat kazanmak için yapılan, kurallı ve eğitime dayalı bu kavrama 'Meslek' adı verilir." },
+            { meta: "2022 Yaz Okulu", q: "Bir mesleğin başarı ile icra edilebilmesi için MYK tarafından kabul edilen gerekli bilgi, beceri, tavır ve tutumların neler olduğunu gösteren asgari norma ne ad verilir?", options: ["A) Ulusal Meslek Standardı", "B) Meslek Profili", "C) Avrupa Yeterlilikler Çerçevesi", "D) Ulusal Mesleki Yeterlilik Sistemi", "E) Mesleki Yeterlilik Belgesi"], answer: 0, solution: "MYK tarafından onaylanan ve mesleğin asgari şartlarını belirleyen belgeye 'Ulusal Meslek Standardı' denir." },
+            { meta: "2023 Final", q: "Aşağıdaki mesleklerden hangisi 5544 Sayılı MYK Kanunu kapsamında yer alır?", options: ["A) Eczacılık", "B) Veterinerlik", "C) Arama kurtarma uzmanı", "D) Mimarlık", "E) Mühendislik"], answer: 2, solution: "Eczacılık, veterinerlik, mimarlık ve mühendislik gibi mesleklerin kendi özel kanunları vardır ve MYK kapsamı dışındadır. Arama kurtarma uzmanı ise kapsama dâhildir." },
+            { meta: "2024 Yaz Okulu", q: "Sanat, ticaret ve mesleğin, olgun kişilik, ahlak ve doğruluğun iç içe girmiş alaşımına ne ad verilir?", options: ["A) Sanatkâr", "B) Tüccar", "C) Zanaatkâr", "D) Ahilik", "E) Dülger"], answer: 3, solution: "Ahlak, doğruluk, sanat ve mesleğin bir arada yoğrulduğu geleneksel yapı 'Ahilik' teşkilatıdır." },
+            { meta: "2025 Yaz Okulu", q: "Arama ve Kurtarma Teknisyenliği Yönetmeliğine göre arama ve kurtarma teknisyenlerinin görevlerinden biri DEĞİLDİR?", options: ["A) Araç ve gereçlerini kullanmak", "B) Tıbbi müdahalede bulunmak", "C) Beden sağlığını korumak", "D) İnsani yardım faaliyetlerine katılmak", "E) Görevlere ilişkin belge hazırlamak"], answer: 1, solution: "Tıbbi müdahalede bulunmak hekimlerin ve sağlık profesyonellerinin görevidir, teknisyenlerin değil." },
+
+            // ÜNİTE 3 - 4 RİSKLER, KBRN VE KKD
+            { meta: "2022 Final / 2024 Yaz Okulu", q: "I. Hepatit A\nII. Hepatit B\nIII. Tüberküloz\nIV. Yara iltihapları\nYukarıdakilerden hangileri afetzedelerle temas hâlindeki müdahale ekiplerini kan veya vücut sıvısı yoluyla etkileyebilecek enfeksiyonlardandır?", options: ["A) Yalnız II", "B) I ve III", "C) II ve IV", "D) I, II ve IV", "E) II, III ve IV"], answer: 2, solution: "Kodlama: 'Kanla bulaşanlar 2H-1V (Hepatit B, Hepatit C, HIV)'. Hepatit A suyla bulaşır. Tüberküloz havayla bulaşır. Hepatit B ve yara iltihapları kan temasıyla bulaşır." },
+            { meta: "2023 Yaz Okulu / 2025 Deneme", q: "KBRN ve benzeri tehlikeli maddelerden etkilenen itfaiyecinin olay yerinde uygulaması gereken ZORUNLU işlem aşağıdakilerden hangisidir?", options: ["A) Risk değerlendirmesi yapmak", "B) En yakın su kaynağına gidip yıkanmak", "C) Mobil dekontaminasyon aracında temizlenmek", "D) Acil servise hızlıca girmek", "E) İstasyonuna gidip üniformayı atmak"], answer: 2, solution: "Kontamine olan personel sivil alana veya hastaneye giremez. Derhal olay yerindeki 'Mobil Dekontaminasyon' çadırlarında arındırılmak ZORUNDADIR." },
+            { meta: "2022 Bahar", q: "Aşağıdakilerden hangisi acil müdahale ekiplerinin aşırı fiziksel güç gerektiren iş yapmalarından dolayı yakalanabilecekleri rahatsızlıklardan biridir?", options: ["A) Travma sonrası stres bozukluğu", "B) Duygusal tükenmişlik", "C) Hepatit C", "D) Kas-iskelet sistemi rahatsızlıkları", "E) Tüberküloz"], answer: 3, solution: "Ağır yük kaldırma (sedye, enkaz) fiziksel bir efordur ve doğrudan kas-iskelet sistemi hastalıklarına (KİSH) yol açar." },
+            { meta: "2023 Final", q: "Acil tıbbi müdahale ekiplerinin işlerinde karşılaştıkları temel fiziksel zorlanmaya neden olan eylem aşağıdakilerden hangisidir?", options: ["A) Serum takma", "B) Kaldırma ve taşıma", "C) Boyunluk takma", "D) Olay yerine ulaşma", "E) Hareketsiz aktivite"], answer: 1, solution: "Hastaların ve ağır ekipmanların uygunsuz tekniklerle uzun süreli 'kaldırılması ve taşınması' en büyük fiziksel zorlanma sebebidir." },
+            { meta: "2024 Yaz Okulu", q: "Amerikan Psikiyatri Derneğine göre, Travma Sonrası Stres Bozukluğu (TSSB) teşhis kriterlerinin en az ne kadar süre boyunca devam etmesi durumunda teşhis edilebilir?", options: ["A) Bir gün", "B) Bir hafta", "C) Bir ay", "D) Altı ay", "E) Bir yıl"], answer: 2, solution: "Akut stres tepkisinden ayrılabilmesi için, travmatik belirtilerin üzerinden en az '1 AY' geçmesi ve devam etmesi gerekir." },
+            { meta: "2025 Yaz Okulu", q: "Aşağıdakilerden hangisi su aracılı (suyla bulaşan) hastalıklardan biri DEĞİLDİR?", options: ["A) Malarya", "B) Kolera", "C) İshal", "D) Tifo", "E) Hepatit A"], answer: 0, solution: "Kolera, Tifo, Hepatit A ve ishaller su ile bulaşır. Malarya (Sıtma) ise vektör (sivrisinek) aracılığıyla kan yoluyla bulaşır." },
+            { meta: "2022 Final", q: "Kısa sürede yüksek dozda radyasyona maruz kalmanın sebep olduğu, hücresel yıkımla karakterize hastalığa ne ad verilir?", options: ["A) Kronik radyasyon sendromu", "B) Radyolojik rahatsızlık", "C) Radyoloji", "D) Radyoaktif hastalık", "E) Akut radyasyon sendromu"], answer: 4, solution: "Kısa sürede yüksek doza maruziyet sonucunda hücrelerin aniden ölmesiyle ortaya çıkan klinik tabloya 'Akut Radyasyon Sendromu' denir." },
+            { meta: "2023 Yaz Okulu", q: "Terör saldırılarında, acil müdahale ekiplerinin ikincil hedef olarak doğrudan ve bilerek hedef alınmasında aşağıdaki etkilerden hangisi amaçlanır?", options: ["A) Hasar etkisi", "B) Korku etkisi", "C) Panik etkisi", "D) Medya etkisi", "E) Kaos etkisi", "F) Tümü / (Soruda Medya Etkisi veya Korku Kaos sorulur)"], answer: 3, solution: "Kurtarıcıların vurulması toplumda devlet otoritesinin zayıfladığı algısı yaratarak büyük bir 'Medya Etkisi' ve infial oluşturur. (Not: Şıklara göre en kapsamlısı aranır)." },
+            { meta: "2024 Final", q: "Aşağıdakilerden hangisi variola major (çiçek hastalığı), bacillus anthracis (şarbon), yersinia pestis (veba) gibi maddelerin 'En Tehlikeli (A Kategorisi)' kabul edilmesinin nedenlerinden biri DEĞİLDİR?", options: ["A) Kolayca insandan insana yayılması", "B) Yaygın etki potansiyeliyle çok ölüme sebep olması", "C) Bu maddelerin çok ucuza ve kolayca bulunabilir olması", "D) Kamuoyunda paniğe neden olması", "E) Halk sağlığı için özel eylem gerektirmesi"], answer: 2, solution: "Şarbon, Çiçek, Veba gibi A kategorisi biyolojik silahlar sıradan markette bulunmaz; elde edilmeleri ve silahlaştırılmaları laboratuvar ortamı gerektirir." },
+            { meta: "2025 Deneme", q: "Felaket bölgelerindeki ekipler arasında ortak bir dil eksikliği ve uyumsuz bilgi kanalları özellikle neyi olumsuz etkiler?", options: ["A) Gruplar arası işbirliğini", "B) Yerel işbirliğini", "C) Ulusal işbirliğini", "D) Bölgesel işbirliğini", "E) Uluslararası işbirliğini"], answer: 4, solution: "Farklı ülkelerden gelen ekipler arasındaki dil ve protokol uyumsuzluğu doğrudan 'Uluslararası İşbirliğini' zedeler." },
+            { meta: "2022 Yaz Okulu", q: "Tehlikeli bir olayın meydana gelme olasılığı ile yol açabileceği yaralanma/sağlık bozulmasının ciddiyet derecesinin (şiddet) bileşimine ne ad verilir?", options: ["A) Risk değerlendirmesi", "B) Risk", "C) Tehlike", "D) Risk analizi", "E) Olay"], answer: 1, solution: "Olasılık ve Şiddetin matematiksel bileşimi (çarpımı) doğrudan 'Risk' kavramını tanımlar." },
+            { meta: "2023 Final", q: "0 ile 1 arasında bir rakamla ifade edilen, gerçekleşme şansının ölçümüdür. 0 imkânsızı, 1 ise kesin gerçekleşmeyi gösterir. Bu tanım hangisidir?", options: ["A) Olasılık", "B) Risk toleransı", "C) Risk iştahı", "D) Risk", "E) Tehlike"], answer: 0, solution: "İstatistiksel olarak bir olayın meydana gelme şansının 0 ile 1 arasındaki matematiksel ifadesine 'Olasılık' (İhtimal) denir." },
+            { meta: "2024 Yaz Okulu", q: "Belirli bir faaliyetin yapılması için birey tarafından giyilen, takılan veya tutulan koruyucu aygıta ne ad verilir?", options: ["A) Kendini korumak", "B) Kişisel koruyucu teknolojisi", "C) Ferdi kurtarıcı", "D) KKD", "E) Spor ekipmanı"], answer: 3, solution: "Kişinin tehlikelerden korunmak amacıyla giydiği, taktığı veya tuttuğu donanımların yasal ve teknik genel adı KKD'dir." },
+            { meta: "2025 Final", q: "Kişisel Koruyucu Donanımların İşyerlerinde Kullanılması Hakkında Yönetmelik'e göre aşağıdakilerden hangisi KKD kapsamında YER ALIR?", options: ["A) Kara taşımacılığında kullanılan kişisel koruyucular", "B) Spor ekipmanı", "C) Nefsi müdafaayı hedefleyen ekipman", "D) Riskleri saptayan taşınabilir cihazlar", "E) Baret"], answer: 4, solution: "Spor aletleri, ölçüm cihazları ve silahlar mevzuatta KKD kapsamı DIŞINDA tutulmuştur. Baret ise baş koruyucu temel bir KKD'dir." },
+            { meta: "2022 Bahar", q: "Aşağıdakilerden hangisi ortam atmosferinden bağımsız görev yapan bağımsız solunum cihazlarından biri DEĞİLDİR?", options: ["A) Bağımsız solunum cihazı", "B) Rejenerasyon cihazları", "C) Ayrılmaz filtreli yüz maskeleri", "D) Temiz hava hortumu üniteleri", "E) Basınçlı hava hortumu üniteleri"], answer: 2, solution: "Filtreli yüz maskeleri ortamdaki havayı süzer. Ortamda oksijen biterse işe yaramazlar. Yani ortama 'bağımlı'dırlar." },
+            { meta: "2023 Yaz Okulu", q: "Bir bağımsız 'kısa süreli (kaçış)' solunum cihazının tek seferde kullanım süresi kaç dakikadır?", options: ["A) 10", "B) 30", "C) 45", "D) 60", "E) 90"], answer: 0, solution: "Kısa süreli (kaçış) solunum cihazları sadece tehlikeli alandan çıkacak kadar (10-15 dakika) hava sağlar." },
+            { meta: "2024 Final", q: "Aşağıdakilerden hangisi yangına yaklaşım elbisesi katmanlarından biri DEĞİLDİR?", options: ["A) Nem bariyeri", "B) Isı bariyeri", "C) İç astar", "D) Çelik malzeme", "E) Dış astar"], answer: 3, solution: "İtfaiyeci elbisesi D-N-I-İ (Dış astar, Nem bariyeri, Isı bariyeri, İç astar) katmanlarından oluşur. Çelik malzeme botların ucundadır." },
+            { meta: "2025 Yaz Okulu", q: "Yangın esnasında yoğun duman ve diğer nedenlerle hareket yeteneğini yitirmiş baygın hâldeki itfaiyecinin yerini belli etmek amaçlı sesli ve ışıklı ikaz veren cihaza ne ad verilir?", options: ["A) Sensör", "B) Siren", "C) Kişisel Hareketsizlik Cihazı (PASS)", "D) Düdük", "E) Alarm"], answer: 2, solution: "PASS (Personal Alert Safety System) cihazı, itfaiyeci düştüğünde veya 30 saniye hareketsiz kaldığında yüksek desibelde alarm vererek ekibin onu bulmasını sağlar." },
+            { meta: "2022 Final", q: "İş kazalarının oluşmasına neden olan iki temel etken iş yerlerindeki ………………. ile çalışanların yaptığı ……… davranışlardır. Boşluklara ne gelmelidir?", options: ["A) Güvensiz durumlar / Güvensiz", "B) Güvenli durumlar / Güvensiz", "C) Tehlikeli davranışlar / Güvensiz", "D) Dirençsiz durumlar / Kırılgan", "E) Dayanıksız durumlar / Kötü"], answer: 0, solution: "İş kazalarının %88'i 'Güvensiz Davranışlar' (İnsan hatası), %10'u ise 'Güvensiz Durumlar' (Makine, ortam hatası) kaynaklıdır." },
+            { meta: "2023 Yaz Okulu", q: "Kişisel Koruyucu Donanımlar (KKD), korudukları riskin ciddiyetine göre kategorize edilirler. Geriye dönüşü olmayan ve hayati tehlike oluşturan risklere karşı koruma sağlayan KKD'ler hangi kategoriye girer?", options: ["A) Kategori 0", "B) Kategori 1", "C) Kategori 2", "D) Kategori 3", "E) Kategori 4"], answer: 3, solution: "Ölümcül ve geriye dönüşü imkansız hasarlar veren riskler karşısında kullanılan KKD'ler her zaman 'Kategori 3' tür ve sıkı denetime tabidir." },
+
+            // ÜNİTE 5 - 6 İTFAİYE, BİNA ÇÖKMELERİ
+            { meta: "2024 Yaz Okulu", q: "Aşağıdakilerden hangisi 2006 yılında yayımlanan Belediye İtfaiye Yönetmeliği’ne göre itfaiye teşkilatının görevlerinden biri DEĞİLDİR?", options: ["A) Su baskınlarına müdahale etmek", "B) Doğal afetler ve kurtarma çalışmalarına katılmak", "C) Şehrin İmar planlarını yapmak", "D) Belediye sınırları dışındaki olaylara müdahale etmek", "E) Belediye başkanının verdiği diğer görevleri yapmak"], answer: 2, solution: "İmar planlarını yapmak itfaiyenin değil, belediyenin İmar ve Şehircilik Dairesi'nin görevidir." },
+            { meta: "2025 Deneme", q: "İstisnasız her hâl ve şartta çalışanın sağlığının ve güvenliğinin korunması hükmünün yer aldığı kanun hangisidir?", options: ["A) Borçlar Kanunu", "B) İş Sağlığı ve Güvenliği Kanunu", "C) Anayasa", "D) İş Kanunu", "E) Devlet Memurları Kanunu"], answer: 1, solution: "Tüm çalışma alanlarını kapsayan ve temel amacı çalışanın sağlığını korumak olan yasa 6331 sayılı İSG Kanunu'dur." },
+            { meta: "2022 Yaz Okulu", q: "Aşağıdakilerden hangisi, yangın yerindeki tehlikeler yanıcı madde özelliğine ve ortam şartlarına bağlı olarak ortaya çıkan tehlikelerden biridir?", options: ["A) Kalp hastalığı", "B) Gaz zehirlenmeleri", "C) Kas-iskelet yaralanmaları", "D) Patlama tehlikesi", "E) Cilt yanıkları"], answer: 3, solution: "Yangın sahasında yanıcı gazların ve sıcaklığın birleşmesi doğrudan 'Patlama (Backdraft/Flashover)' tehlikesi yaratır." },
+            { meta: "2023 Final", q: "Kanda, sinir sisteminde ve hücrelerde zararlara yol açan, oksijenin hücrelere ulaşmasını engelleyen gaz grubu genellikle nasıl adlandırılır?", options: ["A) İkinci grup gazlar", "B) Üçüncü grup (Zehirli) gazlar", "C) Oksijen", "D) Azot", "E) Su buharı"], answer: 1, solution: "Boğucu ve zehirli gazlar (Karbonmonoksit vb.) hücresel seviyede tahribat yarattıkları için zehirli (üçüncü) grup olarak anılırlar." },
+            { meta: "2024 Bahar", q: "İtfaiyecilerin iç hacimde uyguladığı sprey akımın buharlaşması ile bunalarak yaşadıkları '………………..' aslında bağıl nemin artışıyla artan '……………' dir. Boşluklara ne gelmelidir?", options: ["A) Yanma / Zehirlenmektir", "B) Zehirlenme / Boğulmaktır", "C) Hissedilen sıcaklık / Haşlanma hissidir", "D) Boğulma / Zehirlenmektir", "E) Haşlanma hissi / Hissedilen sıcaklıktır"], answer: 4, solution: "Buharlaşan su ortamdaki nemi artırır. Nem artışı insan vücudunun terleyerek soğumasını engellediği için 'hissedilen sıcaklık' artar ve ciltte 'haşlanma hissi' yaratır." },
+            { meta: "2025 Yaz Okulu", q: "Aşağıdakilerden hangisi, su ile reaksiyona girerek yanıcı gaz üreten maddelerden biri DEĞİLDİR?", options: ["A) Sodyum", "B) Çelik", "C) Kalsiyum metalleri", "D) Karpit", "E) Potasyum"], answer: 1, solution: "Sodyum, kalsiyum, potasyum ve karpit su ile şiddetli reaksiyona girer. Çelik ise su ile yanıcı gaz üreten bir reaksiyona girmez." },
+            { meta: "2022 Final", q: "Aşağıdakilerden hangisi, itfaiyecilikte mesleki ölümlerde birinci sırayı alan mesleki hastalıklarından biridir?", options: ["A) İşitme ve koku kayıpları", "B) Bel/fıtık ağrısı", "C) Kalp hastalıkları", "D) Solunum sistemi hastalıkları", "E) Kanser"], answer: 2, solution: "Stres, adrenalin patlamaları, ağır efor ve dumanın etkisi birleştiğinde itfaiyecilerde ani 'Kalp krizleri ve kalp hastalıkları' ölümlerde açık ara 1. sıradadır." },
+            { meta: "2023 Yaz Okulu", q: "Aşağıdakilerden hangisi itfaiyecilerin duman ve toksin maddelere maruz kalmaları sonucu ortaya çıkan hastalıklardan biridir?", options: ["A) Akciğerler hastalıkları", "B) Kas hastalığı", "C) Kalp hastalığı", "D) İşitme kaybı", "E) Nörolojik hastalıklar"], answer: 0, solution: "Zehirli duman, asbest ve poliaromatik hidrokarbon solunması doğrudan Akciğer hastalıklarına ve kansere yol açar." },
+            { meta: "2024 Final", q: "İşyeri Tehlike Sınıfları Tebliği’ne (NACE) göre 'İtfaiye hizmetleri' hangi tehlike sınıfında yer alır?", options: ["A) Tehlikeli", "B) Çok tehlikeli", "C) Az tehlikeli", "D) Tehlikesiz", "E) Orta tehlikeli"], answer: 1, solution: "İtfaiyecilik, madencilik, inşaat gibi işler mevzuatta en üst risk grubu olan 'Çok Tehlikeli' sınıftadır." },
+            { meta: "2025 Deneme", q: "Aşağıdakilerden hangisi, itfaiyeciler için düzenlenen genel yangın bilgisi eğitimin konularından biri DEĞİLDİR?", options: ["A) Yangın ve çeşitleri", "B) Tehlikeli maddeler", "C) İlkyardım bilgisi", "D) İş Kanunu", "E) Söndürme usulleri"], answer: 3, solution: "Yangın eğitimi sahaya yönelik operasyonel bilgiler içerir (söndürme, ilk yardım vb.). İş Kanunu hukuki bir konudur, yangın taktiği değildir." },
+            { meta: "2022 Yaz Okulu", q: "Kentsel arama kurtarma çalışmalarının başarıyla yürütülmesi ve tamamlanmasında başlıca (en hayati) şart aşağıdakilerden hangisidir?", options: ["A) Disiplin ve organizasyon kültürü", "B) Personel sayısı", "C) Alet ekipman durumu", "D) Ekonomik yeterlilik", "E) Yabancı ülkelerin destekleri"], answer: 0, solution: "Milyonluk ekipmanınız olsa da kargaşa ortamında 'Disiplin ve Organizasyon Kültürü' yoksa kurtarma faaliyeti faciaya döner." },
+            { meta: "2023 Final", q: "İkincil çökmeler ile ilgili aşağıdaki ifadelerden hangisi YANLIŞTIR?", options: ["A) Artçı depremler sonucu oluşabilirler.", "B) İkinci bir patlama sonucu oluşabilirler.", "C) Dayanak, destek çalışmaları yapılmadan binaya girilmesi tehlikelidir.", "D) İkincil çökme riskinin tespiti çok zor olmayan basit bir iştir.", "E) Tamamen çökmüş (yassı) bir yapıda ikincil çökme ihtimali çok azdır."], answer: 3, solution: "Ayakta kalmış hasarlı bir binanın ne zaman çökeceğini (ikincil çökme) tespit etmek uzman mühendisler için bile oldukça ZOR bir iştir." },
+            { meta: "2024 Bahar", q: "Binalarda çökmeye sebep olma açısından en az etkili/önemli olay aşağıdakilerden hangisidir?", options: ["A) Depremler", "B) Yangınlar", "C) Bilinçsiz tadilatlar (kolon kesme vb.)", "D) Toprak kaymaları", "E) Yetersiz ısı yalıtımı"], answer: 4, solution: "Isı yalıtımının yetersiz olması binayı soğutur veya ısıtır ancak taşıyıcı sisteme zarar verip binayı ÇÖKERTMEZ." },
+            { meta: "2025 Yaz Okulu", q: "Toksik ve kimyasal maddelere maruz kalma tehlikesi açısından bina yapısı konusunda aşağıdaki hususlardan hangisi daha öncelikli araştırılmalıdır?", options: ["A) Binanın kat sayısı", "B) Binada restorasyon yapılıp yapılmadığı", "C) Binanın kullanım amacı (hastane, laboratuvar, fabrika vb.)", "D) Binanın taşıyıcı sistemi", "E) Yapı malzemesinin standardı"], answer: 2, solution: "Binanın kimyasal tehlike barındırıp barındırmadığı, binanın 'kullanım amacına' (Örn: Kimya laboratuvarı, boya atölyesi) bakılarak anlaşılır." },
+            { meta: "2022 Final", q: "Arama kurtarma çalışmalarında (K-A-V-E hiyerarşisi) güvenlik önceliği olarak ilk sırada kimin güvenliği bulunur?", options: ["A) Kurtarmacı personelin güvenliği", "B) Afetzedelerin güvenliği", "C) Diğer vatandaşların güvenliği", "D) Arama köpeklerinin güvenliği", "E) Ekipman ve araç güvenliği"], answer: 0, solution: "Arama kurtarmanın altın kuralı: Kendi güvenliğini sağlayamayan başkasını kurtaramaz. Sıralama K-A-V-E (Kurtarmacı, Afetzede, Vatandaş, Ekipman)." },
+            { meta: "2023 Yaz Okulu", q: "Olay yeri güvenliğine yönelik yapılan aşağıdaki uygulamalardan hangisi YANLIŞTIR?", options: ["A) Olay yerinde yangın varsa derhâl müdahale edilmelidir.", "B) Tehdit altında olmaksızın çalışılmalıdır.", "C) İkinci çökme riskine karşı önlemler alınmalıdır.", "D) Yangın olmayan enkazlarda gaz ölçümlerine ihtiyaç yoktur.", "E) Personel arasında iş bölümü yapılmalıdır."], answer: 3, solution: "Yangın olmasa bile enkaz altında ezilen doğalgaz boruları, kanalizasyon metan gazı veya evdeki tüpler patlama riski yaratır. Gaz ölçümü HER ZAMAN ZORUNLUDUR." },
+            { meta: "2024 Final", q: "Kaçış rotasıyla ilgili aşağıdaki ifadelerden hangisi YANLIŞTIR?", options: ["A) Ani afetler karşısında en hızlı uzaklaşmayı sağlayan güzergâhtır.", "B) Mutlaka operasyon başlamadan önce belirlenmelidir.", "C) Kaçış rotaları her zaman 'en kısa yol' olmak zorundadır.", "D) Fosforlu sprey boya veya şeritle belirlenmelidir.", "E) Tüm ekipler kaçış rotalarını bilmelidir."], answer: 2, solution: "Kaçış rotası en kısa yol olmak ZORUNDA DEĞİLDİR. Önemli olan en 'güvenli' ve engelsiz yoldur." },
+            { meta: "2025 Deneme", q: "Dayanak ve destek çalışmalarıyla (Tahkimat) ilgili aşağıdaki ifadelerden hangisi YANLIŞTIR?", options: ["A) Kullanılacak dayanaklar yükün ağırlığına uygun seçilmelidir.", "B) Çalışmalara hasar oluşan seviyenin altından başlanmalıdır.", "C) Dayanaklar dışarıdan başlayarak kademe kademe içerlere doğru yapılmalıdır.", "D) Bitişikteki binanın çökme riski varsa büyük iş makineleriyle bu bina desteklenmelidir.", "E) Kiriş, kolon ve duvarlar destek çalışmalarıyla tamamen yıkılmalıdır."], answer: 4, solution: "Destek çalışmalarının amacı kiriş/kolon yıkmak değil, onları 'sağlamlaştırmak ve sabitlemek'tir." },
+            { meta: "2022 Yaz Okulu", q: "Aşağıdakilerden hangisi enkazda dikey yönde (yukarıdan aşağı) ilerlemenin dezavantajlarından biridir?", options: ["A) Dar ve tozlu bir alanda çalışmak gerekir.", "B) Karanlık alan fobisi olanlar için zordur.", "C) Afetzedeye ulaşmak için daha uzun bir rotadır.", "D) Delinen noktaların altında ne olduğu kesin olarak bilinemeyebilir.", "E) İkincil bir çökmede sıkışma ihtimali çok yüksektir."], answer: 3, solution: "Dikey ilerlemenin (tavanı delmenin) en büyük riski kör noktaya işlem yapmaktır. Altta patlayıcı tüp veya afetzede olabilir." },
+            { meta: "2023 Final", q: "Aşağıdakilerden hangisi enkazda yatay yönde (yandan içe doğru) ilerlemenin avantajlarındandır?", options: ["A) Kolon ve kirişlere göre daha ince olan döşeme delinir.", "B) Delik açıldığında duvar mobilya kolayca çıkarılır.", "C) Afetzedelerin mevcut hâllerine ilave (taş düşmesi vb.) zarar verilmesi ihtimali daha azdır.", "D) Kurtarmacı daha tozsuz ve havadar çalışır.", "E) İkincil çökmede sıkışma ihtimali daha azdır."], answer: 2, solution: "Yatay ilerleme dardır (dezavantaj) ancak yukarıdan afetzedenin kafasına taş düşürmediğiniz için afetzedeye ekstra zarar verme ihtimaliniz düşüktür (avantaj)." },
+
+            // ÜNİTE 7-8 ENDÜSTRİYEL KAZALAR, BEKRA, ACİL DURUM
+            { meta: "2024 Yaz Okulu", q: "I. Yamyassı (pancake) çökme\nII. Birikimli çökme\nIII. Desteksiz çökme\nIV. V şeklinde çökme\nYukarıdakilerden hangisi/hangileri büyük depremlerde binalarda en sık görülen tipik çökme şekilleri arasında yer alır?", options: ["A) Yalnız I", "B) I, III ve IV", "C) II ve IV", "D) I, II ve III", "E) I, II, III ve IV"], answer: 1, solution: "Arama kurtarma literatüründe 'Birikimli çökme' diye bir kavram ASLA yoktur. Çökme tipleri: Yamyassı, V şekli, A şekli ve Desteksiz çökmelerdir." },
+            { meta: "2025 Yaz Okulu", q: "Aşağıdakilerden hangisi doğal afetlerin tetiklediği teknolojik afetlere (Natech) bir örnektir?", options: ["A) Çevresel etkiler / Rafineri yangını", "B) Depremin kendisi", "C) Sel suları", "D) Volkan patlaması", "E) Kasırga rüzgarı"], answer: 0, solution: "Doğa olaylarının (Deprem vb.) tetiklediği teknolojik facialara (Boru hattı patlaması vb.) literatürde Natech (Çevresel Etkili Teknolojik Afet) denir." },
+            { meta: "2022 Final", q: "Aşağıdakilerden hangisi 'çevre faktörleri ile hastalık' arasındaki ilişkinin 'çevre faktörleri ile kaza' arasındaki ilişkiye de uyarlanabileceğini savunan kaza kuramıdır?", options: ["A) Epidemiyoloji kuramı", "B) Çok Etken", "C) Epidemi", "D) Pandemi", "E) Salgın"], answer: 0, solution: "Epidemiyoloji salgın hastalıkların çevreyle ilişkisini inceler. Bu teorinin kazalar için uyarlanmasına Epidemiyoloji Kuramı denir." },
+            { meta: "2023 Yaz Okulu", q: "Aşağıdakilerden hangisi kök sebep analizinde kullanılan uluslararası yöntemlerden biri DEĞİLDİR?", options: ["A) Kaza / Olay analizi (Basit kayıt tutma)", "B) Beş neden analizi (5 Whys)", "C) Bariyer analizi", "D) Değişiklik analizi", "E) Pareto analizi"], answer: 0, solution: "5 Neden, Bariyer ve Pareto birer 'kök sebep' bulma tekniğidir. Genel kayıt tutma (Kaza/olay analizi) tek başına bir metot değildir." },
+            { meta: "2024 Final", q: "Aşağıdakilerden hangisi iş kazası meydana geldikten sonra ortaya çıkan kusur oranları, hukuki ve cezai durumları ele alan hukuk dalıdır?", options: ["A) İş Hukuku", "B) Deniz Hukuku", "C) Medeni Hukuk", "D) Sendikalar Kanunu", "E) Avrupa Birliği Hukuku"], answer: 0, solution: "İşçi ve işveren arasındaki kaza, tazminat ve sorumluluk süreçleri doğrudan 'İş Hukuku' çerçevesinde ele alınır." },
+            { meta: "2025 Deneme", q: "Büyük kaza senaryo dokümanında senaryo edilen her bir büyük endüstriyel kazanın bir yıl içinde meydana gelme ihtimaline / seviyesine ne ad verilir?", options: ["A) Büyük endüstriyel kaza frekansı", "B) Büyük endüstriyel kaza", "C) Büyük kaza ortalaması", "D) Kaza istatistiği", "E) Kaza normal dağılımı"], answer: 0, solution: "Bir olayın belirli bir zaman diliminde tekrarlanma sıklığına istatistikte 'Frekans' denir." },
+            { meta: "2022 Yaz Okulu", q: "6331 sayılı Kanun’da belirtilen işveren tanımı kapsamında, bir tehlikeli tesisin işletilmesinden sorumlu ve teknik işletme hakkında karar verme yetkisine sahip gerçek/tüzel kişiye ne ad verilir?", options: ["A) İşletmeci", "B) Kurum", "C) Kuruluş", "D) Tesis", "E) Üst seviyeli kuruluş"], answer: 0, solution: "BEKRA mevzuatında, tesisi yöneten ve karar yetkisini elinde tutan baş aktöre hukuki olarak 'İşletmeci' adı verilir." },
+            { meta: "2023 Final", q: "Aşağıdakilerden hangisi ‘Büyük Endüstriyel Kazaların Önlenmesi ve Etkilerinin Azaltılması Hakkında Yönetmelik’ mevzuatına karşılık dünyada yaygın olarak kullanılan kısaltmadır?", options: ["A) BEKRA", "B) SEVESO", "C) SEVESO I", "D) BAKRA", "E) REACH"], answer: 1, solution: "Türkiye'deki adı BEKRA, uluslararası karşılığı ise İtalya'daki faciadan adını alan SEVESO direktifidir." },
+            { meta: "2024 Bahar", q: "Binaların Yangından Korunması Hakkında Yönetmelik’te 'afet olarak değerlendirilen olaylar ile dikkatsizlik, tedbirsizlik ve ihmal sonucu meydana getirilen olayların yol açtığı hâllere' ne ad verilir?", options: ["A) Acil durum", "B) Eylem", "C) Afet", "D) Teknolojik afet", "E) Katastrofik hâl"], answer: 0, solution: "İhmal veya doğa olayları sonucunda aniden gelişen ve müdahale gerektiren duruma mevzuatta 'Acil Durum' denir." },
+            { meta: "2025 Yaz Okulu", q: "Tehdit edici koşula (örneğin kriz anında) müdahale edebilme yetersizliğine ne ad verilir?", options: ["A) Kriz", "B) Zayıflık", "C) Dirençsizlik", "D) Yanlış planlama", "E) Risk"], answer: 0, solution: "Tehdide karşı kapasitenin yetersiz kalması ve sistemin çökme noktasına gelmesi durumu yönetim biliminde 'Kriz' olarak tanımlanır." },
+            { meta: "2022 Final", q: "“İşyerlerinde Acil Durumlar Hakkında Yönetmelik”e göre iş yerinde acil durum planı hazırlanırken dikkate alınacak hususlardan biri DEĞİLDİR?", options: ["A) Finansal Stratejik planlama", "B) Risk değerlendirmesi sonuçları", "C) Tehlikeli kimyasallardan kaynaklanan patlama ihtimali", "D) İlk yardım ve tahliye olayları", "E) Sabotaj ihtimali"], answer: 0, solution: "Acil durum planları can güvenliği ve İSG risklerini baz alır. Finansal 'Stratejik Planlama' işletme yönetiminin ticari konusudur." },
+            { meta: "2023 Yaz Okulu", q: "Tehlikeli sınıfta yer alan iş yerlerinde kaç çalışana kadar en az 1 arama kurtarma ve tahliye destek elemanı görevlendirilmelidir?", options: ["A) 10", "B) 30", "C) 40", "D) 50", "E) 100"], answer: 2, solution: "Destek elemanı kuralı: Çok Tehlikeli=30, Tehlikeli=40, Az Tehlikeli=50 çalışana 1 kişidir." },
+            { meta: "2024 Final", q: "Az tehlikeli iş yerlerinde acil durum planı en geç kaç yılda bir yenilenir?", options: ["A) 6", "B) 5", "C) 4", "D) 3", "E) 2"], answer: 0, solution: "Acil durum planı yenileme süreleri 2-4-6 kuralına tabidir. Az tehlikeli iş yerlerinde bu süre 6 yıldır." },
+            { meta: "2025 Deneme", q: "Aşağıdakilerden hangisi doğrudan ilk yardım gerektirecek acil durumlardan biridir?", options: ["A) Personelin makinaya elini kaptırması (İş kazası/Yaralanma)", "B) Tehlikeli madde taşınması prosedürü", "C) Tehlikeli atık depolama", "D) Teknik bilgisayar arızası", "E) Finansal kriz durumu"], answer: 0, solution: "İlk yardım, doğrudan insanın fiziksel bütünlüğüne zarar veren (yaralanma, bayılma) durumlarda uygulanır." },
+            { meta: "2022 Yaz Okulu", q: "Bir yangın acil durumunda itfaiyeye yangının cinsi ve adresi bildirilmelidir. Eski numaralandırma sistemine göre itfaiye numarası hangisidir? (Günümüzde 112'de birleşmiştir)", options: ["A) 110", "B) 184", "C) 150", "D) 170", "E) 112"], answer: 0, solution: "Klasik bir soru tipidir. Eskiden İtfaiye 110 numarası ile aranıyordu (Şu an tüm aciller 112)." },
+            { meta: "2023 Final", q: "Bir iş yeri acil durum senaryosunda, 'bomba ihbarı' veya sabotaj alındığında öncelikle hangi kurum aranır?", options: ["A) Polis / Güvenlik Güçleri", "B) İtfaiye", "C) Ambulans", "D) SGK", "E) Çevre Bakanlığı"], answer: 0, solution: "Bomba ve sabotaj doğrudan asayiş (güvenlik) sorunudur. Kolluk kuvvetlerine (Polis/Jandarma) haber verilir." },
+            { meta: "2024 Bahar", q: "Biyoterörizm risk sınıflamasında, halk sağlığı ve ulusal güvenlik için 'en yüksek riski taşıyan' ve kolay bulaşan toksinler hangi kategoride yer alır?", options: ["A) Kategori A", "B) Kategori B", "C) Kategori C", "D) Kategori D", "E) Kategori E"], answer: 0, solution: "En ölümcül, en kolay yayılan ve halkta en büyük paniği yaratan biyolojik ajanlar (Şarbon, Çiçek) 'Kategori A' sınıfındadır." },
+            { meta: "2025 Yaz Okulu", q: "Latincedeki 'taç (crown)' anlamından yola çıkılarak isimlendirilen, pandemiye yol açan virüs ailesine ne ad verilir?", options: ["A) Koronavirüs", "B) SARS", "C) MERS-CoV", "D) HIV", "E) Ebola"], answer: 0, solution: "Korona (Corona), Latince'de 'taç' demektir. Virüsün çıkıntılı yapısı taca benzediği için bu ismi almıştır." },
+            { meta: "2022 Final", q: "Salgın hastalıklar (Pandemi) gibi tarafların kontrolü dışında gerçekleşen, önlenemez durumlar İş Hukukunda hangi kavrama dayanak oluşturur?", options: ["A) Mücbir Sebep (Zorlayıcı Neden)", "B) Kusursuz Sorumluluk", "C) Sebepsiz Zenginleşme", "D) İyi Niyet", "E) Haksız Fesih"], answer: 0, solution: "Kişinin veya kurumun iradesi dışında gelişen devasa krizler (salgın, deprem) borçlar ve iş hukukunda 'Mücbir Sebep (Force Majeure)' sayılır." },
+            { meta: "2023 Yaz Okulu", q: "Aşağıdaki olaylardan hangisinin sonucunda B-tipi (ikincil) acil durumlar görülür?", options: ["A) Şiddetli deprem sonrası çıkan yangınlar ve salgın hastalıklar", "B) Tsunami", "C) Volkan patlaması", "D) Meteor düşmesi", "E) Kasırga"], answer: 0, solution: "Doğal afetlerin (A-tipi) altyapıyı bozması sonucu sonradan ortaya çıkan yangın, kimyasal sızıntı veya salgın hastalıklar B-Tipi acil durumdur." },
+            
+            // KARIŞIK SİMÜLASYON SORULARI (Tüm Ünitelerden Harmanlanmış ÖSYM Tarzı)
+            { meta: "2024 Final", q: "Afet ve acil durum çalışanlarında görülen, olaylara ve mağdurlara karşı hissizleşme ile karakterize tükenmişlik evresi hangisidir?", options: ["A) Benlik yitimi (Depersonalizasyon)", "B) Akut stres", "C) Otonomi kaybı", "D) Kronik yorgunluk", "E) Bilişsel bozukluk"], answer: 0, solution: "Hissizleşme, işe karşı alaycı tavır ve anlam kaybı, tükenmişlik sendromunun en tehlikeli aşaması olan 'Depersonalizasyon (Benlik Yitimi)'dir." },
+            { meta: "2025 Deneme", q: "İş sağlığı ve güvenliği kapsamında 'KKD' seçiminde uyulması gereken Hiyerarşik Kural nedir?", options: ["A) İlk çare olarak KKD alınmalıdır", "B) Toplu koruma önlemleri uygulanamadığında veya yetersiz kaldığında KKD kullanılır", "C) KKD sadece işyeri hekimi kararıyla alınır", "D) Risk kaynağında yok edilse bile KKD zorunludur", "E) Sadece idari denetimlerde KKD giyilir"], answer: 1, solution: "İSG felsefesinde 'Toplu koruma (veya kaynağında yok etme), kişisel korumadan önce gelir'. KKD her zaman en son başvurulacak bariyerdir." },
+            { meta: "2022 Yaz Okulu", q: "Bir kimyasal fabrikanın işletmecisi, tesisin tehlike seviyesini (Alt veya Üst Seviye) belirlemek için Bakanlığa bildirim yapacaktır. Bu seviyeyi belirleyen temel kriter nedir?", options: ["A) Çalışan işçi sayısı", "B) Fabrikanın metrekaresi", "C) Tesiste bulundurulan tehlikeli maddelerin cinsi ve miktarı (tonajı)", "D) Fabrikanın cirosu", "E) İtfaiyeye olan uzaklığı"], answer: 2, solution: "BEKRA/Seveso direktifinde bir tesisin tehlike seviyesini, içeride tanklarda bulundurduğu tehlikeli maddelerin kapasitesi (tonaj limitleri) belirler." },
+            { meta: "2023 Final", q: "Pandemi sürecinde işverenin zorunlu nedenlerle üretimi durdurması sonrası, normalleşme başladığında işçilere yaptırabileceği 'Telafi Çalışması'nın yasal süresi ne kadardır?", options: ["A) Durum bittikten sonra 2 ay içinde", "B) Sadece ilk 1 hafta", "C) Durum bittikten sonra 6 ay içinde", "D) 1 yıl içinde", "E) Süresizdir"], answer: 0, solution: "İş Kanunu'na göre; zorunlu nedenlerle duran işler için işveren, durum ortadan kalktıktan sonraki '2 ay içinde' telafi çalışması yaptırabilir." },
+            { meta: "2024 Bahar", q: "Arama kurtarma ekiplerinin çökme tehlikesi olan binaya girmeden önce, 'dışarıdan içeriye doğru' kurdukları kereste veya mekanik destek sistemine ne ad verilir?", options: ["A) Tahkimat (Dayanak/Destek)", "B) Dekontaminasyon", "C) İzolasyon", "D) Ventilasyon", "E) Triyaj"], answer: 0, solution: "Çökmeyi engellemek veya geciktirmek için kurulan yük taşıyıcı destek sistemlerine İSG ve maden literatüründe 'Tahkimat' denir." },
+            { meta: "2025 Yaz Okulu", q: "Bir iş kazasının araştırılmasında, sorunun köküne inmek için ardı ardına 5 kez 'Neden bu kaza oldu?' sorusunun sorulduğu kök sebep analizi tekniği hangisidir?", options: ["A) Balık Kılçığı", "B) 5 Neden (5 Whys) Analizi", "C) Pareto", "D) Hata Ağacı", "E) Papyon Analizi"], answer: 1, solution: "Problem tespit edildikten sonra en derindeki (kök) sebebe inene kadar ortalama 5 defa 'Neden?' sorusunun sorulduğu tekniğe '5 Neden Analizi' denir." },
+            { meta: "2022 Final", q: "Aşağıdakilerden hangisi bir 'İkincil (Natech)' afettir?", options: ["A) 7.4 şiddetinde deprem olması", "B) Deprem sonrası rafineride çıkan büyük yangın", "C) Okyanustaki fırtına", "D) Kar yağışı", "E) Kuraklık"], answer: 1, solution: "Doğa olaylarının (Deprem vb.) tetiklediği teknolojik facialara (Rafineri patlaması, boru sızıntısı) Natech denir." },
+            { meta: "2023 Yaz Okulu", q: "Kısa sürede yüksek dozda radyasyon alındığında hücrelerin hızla ölmesiyle seyreden sendroma ne denir?", options: ["A) Akut Radyasyon Sendromu", "B) Kronik lösemi", "C) Biyolojik şok", "D) Kimyasal yanık", "E) Toksik şok"], answer: 0, solution: "Aniden ve yüksek dozda alınan radyasyon 'Akut (Ani) Radyasyon Sendromu' yaratır. Uzun sürede alınan düşük doz ise kronik etki (kanser vb.) yaratır." },
+            { meta: "2024 Final", q: "Tamamen çökmüş (yamyassı/pancake) bir binada arama kurtarma faaliyeti yürütülürken, 'ikincil çökme' riskinin durumu nedir?", options: ["A) İkincil çökme riski çok düşüktür/azdır.", "B) İkincil çökme riski en üst seviyededir.", "C) Bina ahşap olmadığı sürece sürekli çöker.", "D) Yassı çöken binalar asla sabit kalmaz.", "E) Sadece yangın çıkarsa çöker."], answer: 0, solution: "Bina zaten gidebileceği en alt noktaya (yere) kadar yığıldığı için, ayakta kalan hasarlı bir binaya kıyasla 'ikincil çökme' riski çok daha azdır." },
+            { meta: "2025 Deneme", q: "İtfaiyecilerin yangın sahasındaki gürültüye (siren, pompa, basınçlı su, patlama) korumasız olarak yıllarca maruz kalması sonucunda ortaya çıkan en yaygın duyusal kayıp hangisidir?", options: ["A) Görme kaybı", "B) Tat alma kaybı", "C) Dokunma hassasiyeti kaybı", "D) İşitme kaybı", "E) Koku kaybı"], answer: 3, solution: "Kronik gürültüye (85 desibelin üzerinde) uzun süre maruz kalmak, kulaktaki hücreleri tahrip ederek mesleki 'İşitme Kaybına' yol açar." },
+            { meta: "2022 Yaz Okulu", q: "SEA Yönetmeliği kapsamında kimyasalların tehlikesini gösteren kırmızı çerçeveli uyarıcı şekillere (sembollere) ne ad verilir?", options: ["A) Karekod", "B) Piktogram", "C) Barkod", "D) Hologram", "E) Flama"], answer: 1, solution: "Kimyasal ambalajlarındaki alev, kurukafa gibi görsel tehlike uyarı sembollerinin uluslararası teknik adı 'Piktogram'dır." },
+            { meta: "2023 Final", q: "İş Sağlığı ve Güvenliği Kanununa (6331) göre sağlık gözetiminden (muayenelerden) doğan maliyetleri kim karşılar?", options: ["A) Çalışan kendi maaşından", "B) Sadece SGK", "C) İşveren", "D) Sendika", "E) Devlet Hastanesi"], answer: 2, solution: "Kanunun 15. maddesi çok nettir: Sağlık gözetiminden doğan maliyetlerin tamamı İŞVERENCE karşılanır, çalışana yansıtılamaz." },
+            { meta: "2024 Yaz Okulu", q: "Arama kurtarma personelinin KBRN olaylarında kullandığı KKD'lerden 'Kategori 3' ekipmanların en belirgin yasal/fiziksel özelliği nedir?", options: ["A) Ölümcül ve geriye dönüşü olmayan risklere karşı koruması", "B) Sadece güneşten koruması", "C) CE işaretine sahip olmaması", "D) Tüm marketlerde satılabilmesi", "E) Spor yaparken giyilmesi"], answer: 0, solution: "Ölümcül, kalıcı hasar veren riskler (zehirli gaz, radyasyon, yüksekten düşme) karşısında kullanılan donanımlar Kategori 3'tür." },
+            { meta: "2025 Final", q: "Yangına yaklaşım elbisesinde (itfaiyeci elbisesi) ısıyı yalıtan katman hangisidir?", options: ["A) Nem bariyeri", "B) Dış astar", "C) Isı bariyeri", "D) İç astar", "E) Çelik burun"], answer: 2, solution: "İtfaiyeci elbisesinde 'Isı bariyeri' doğrudan yüksek sıcaklığın vücuda ulaşmasını (yalıtım) engeller." },
+            { meta: "2022 Bahar", q: "Bir kimse işverenin talimatıyla uzaktan (evden) çalışırken elektrik çarpması sonucu yaralanırsa hukuki olarak bu durum nedir?", options: ["A) Ev kazasıdır", "B) Özel hayat kazasıdır", "C) İş Kazasıdır", "D) Taksirli suçtur", "E) Doğal afettir"], answer: 2, solution: "İşçi, işverenin verdiği işi yaparken (mekan neresi olursa olsun) kaza geçirirse, bu hukuken tam bir 'İş Kazası'dır." },
+            { meta: "2023 Yaz Okulu", q: "Yangın alanında hangi maddeler su ile söndürüldüğünde kimyasal reaksiyona girerek patlayıcı gaz üretir?", options: ["A) Sodyum ve Karpit", "B) Ahşap ve Odun", "C) Kağıt ve Karton", "D) Kumaş ve Pamuk", "E) Demir ve Çelik"], answer: 0, solution: "Sodyum, kalsiyum, potasyum ve karpit su ile temas ettiğinde şiddetli reaksiyona girerek patlayıcı hidrojen/asetilen gazı üretir." },
+            { meta: "2024 Final", q: "Büyük kaza senaryosunda olayın bir yıl içinde meydana gelme sıklığına ne denir?", options: ["A) Risk şiddeti", "B) Kaza Frekansı", "C) Hata payı", "D) Standart sapma", "E) Varyans"], answer: 1, solution: "Bir olayın belirli bir zaman diliminde (genelde 1 yıl) tekrarlanma sıklığına istatistikte 'Frekans' denir." },
+            { meta: "2025 Yaz Okulu", q: "Çalışanların davranışlarının psikolojik altyapısını inceleyerek güvenli kültür oluşturan kuram hangisidir?", options: ["A) Davranışsal Güvenlik", "B) Kuantum Teorisi", "C) Reaktif Güvenlik", "D) Makine Odaklı Güvenlik", "E) Geleneksel Denetim"], answer: 0, solution: "İnsanların neden hatalı (güvensiz davranış) yaptığını psikolojik olarak inceleyen proaktif sisteme 'Davranışsal Güvenlik' denir." },
+            { meta: "2022 Final", q: "Acil durum planlamasında tehlikeyi kaynağında yok ederek (Örn: zehirli maddeyi zararsız olanla değiştirmek) riski sıfırlayan tedbirlere ne denir?", options: ["A) Sınırlandırıcı tedbir", "B) Önleyici tedbir", "C) İkincil tedbir", "D) Reaktif tedbir", "E) Organizasyonel tedbir"], answer: 1, solution: "Tehlikeyi daha doğmadan engellemek veya kaynağında kurutmak 'Önleyici (Proaktif) Tedbir' olarak tanımlanır." },
+            { meta: "2023 Final", q: "İş kazalarının %88'inin temel nedeni (kök sebebi) nedir?", options: ["A) Güvensiz durumlar (makine hatası)", "B) Güvensiz davranışlar (insan hatası)", "C) Doğal afetler", "D) Hayvan saldırıları", "E) Meteorolojik olaylar"], answer: 1, solution: "İş kazalarının büyük çoğunluğu (%88) doğrudan 'Güvensiz Davranışlar' yani insan hataları ve ihmalleri kaynaklıdır." },
+            // SORU 41-60 ARASI EKLENTİ (MASTER VERİ TABANI DEVAMI)
+            { meta: "2024 Bahar", q: "Afet anında personelin 'benlik yitimi' ve hissizleşme yaşadığı durum hangisidir?", options: ["A) Tükenmişlik", "B) Mutluluk", "C) Otonomi", "D) Ergonomi", "E) Fiziksel zindelik"], answer: 0, solution: "Hissizleşme, işe karşı alaycı tavır ve anlam kaybı, 'Tükenmişlik (Burnout)' sendromunun en tehlikeli aşamasıdır." },
+            { meta: "2025 Deneme", q: "İtfaiyecilik mesleği NACE kodlarına göre hangi tehlike sınıfındadır?", options: ["A) Az tehlikeli", "B) Orta tehlikeli", "C) Tehlikeli", "D) Çok Tehlikeli", "E) Risksiz"], answer: 3, solution: "İtfaiyecilik, madencilik, inşaat gibi işler mevzuatta en üst risk grubu olan 'Çok Tehlikeli' sınıftadır." },
+            { meta: "2022 Yaz Okulu", q: "Çok tehlikeli sınıfta yer alan bir iş yerinde acil durum planı kaç yılda bir yenilenir?", options: ["A) 2", "B) 4", "C) 6", "D) 1", "E) 5"], answer: 0, solution: "Acil durum planı yenileme süreleri kuralı: Çok Tehlikeli=2, Tehlikeli=4, Az Tehlikeli=6 yıldır." },
+            { meta: "2023 Yaz Okulu", q: "İtfaiyecilerin yangın alanında en çok ölümcül risk taşıdığı hastalık grubu hangisidir?", options: ["A) Kalp hastalıkları", "B) Göz rahatsızlıkları", "C) Ortopedik sorunlar", "D) İşitme kayıpları", "E) Cilt hastalıkları"], answer: 0, solution: "Ağır stres, ani efor ve adrenalin nedeniyle itfaiyecilerde ani 'Kalp krizleri ve kalp hastalıkları' ölümlerde 1. sıradadır." },
+            { meta: "2024 Final", q: "Olay komuta yerinde farklı kurumların (Polis, AFAD, İtfaiye) tek elden yönetilmesine ne ad verilir?", options: ["A) Birleşik Komuta", "B) Ayrık Komuta", "C) Dağınık Yönetim", "D) Otonom Yönetim", "E) Lojistik Komuta"], answer: 0, solution: "Farklı kurumların çatışmadan, eşgüdüm içinde tek bir merkezden yönetilmesine 'Birleşik Komuta Sistemi' denir." },
+            { meta: "2025 Yaz Okulu", q: "B-Tipi acil durum örneği aşağıdakilerden hangisidir?", options: ["A) Deprem", "B) Volkanik patlama", "C) Salgın hastalıklar", "D) Kasırga", "E) Sel"], answer: 2, solution: "Doğal afetlerden (A-Tipi) sonra ortaya çıkan yangın, kimyasal sızıntı veya 'Salgın Hastalıklar' B-Tipi acil durumdur." },
+            { meta: "2022 Final", q: "6331 sayılı İSG Kanunu itfaiyecilere hangi durumda uygulanmaz?", options: ["A) İstasyon temizliğinde", "B) Rutin nöbetlerinde", "C) Araç bakımlarında", "D) Olay anındaki müdahale faaliyetlerinde", "E) Spor eğitimlerinde"], answer: 3, solution: "Kanun, 'Afet ve acil durum birimlerinin olay anındaki MÜDAHALE faaliyetlerine' uygulanmaz. Çünkü müdahale anında riskler tamamen kontrol dışıdır." },
+            { meta: "2023 Final", q: "TSSB teşhisi için belirtilerin en az ne kadar sürmesi gerekir?", options: ["A) 1 gün", "B) 3 gün", "C) 1 hafta", "D) 1 ay", "E) 1 yıl"], answer: 3, solution: "Akut stres tepkisinden ayrılabilmesi için, travmatik belirtilerin üzerinden en az '1 AY' geçmesi ve devam etmesi gerekir." },
+            { meta: "2024 Yaz Okulu", q: "Kaçış rotalarıyla ilgili hangisi yanlıştır?", options: ["A) Önceden belirlenir", "B) Fosforlu boyayla çizilir", "C) Herkes tarafından bilinir", "D) En kısa yol olmak ZORUNDADIR", "E) Ani afetlerde kullanılır"], answer: 3, solution: "Kaçış rotası en kısa yol olmak ZORUNDA DEĞİLDİR. Önemli olan en 'güvenli' ve engelsiz yoldur." },
+            { meta: "2025 Deneme", q: "Arama kurtarmada 'yatay ilerleme'nin dezavantajı nedir?", options: ["A) Afetzedeye zarar verme ihtimalinin yüksek olması", "B) Döşemeyi delmenin kolay olması", "C) Dar, tozlu ve klostrofobik bir alanda uzun rota izlenmesi", "D) Çok ferah olması", "E) Tavanın hemen delinebilmesi"], answer: 2, solution: "Yatay ilerleme dar, karanlık ve uzundur (klostrofobiktir). İkincil çökmede kurtarmacının sıkışma ihtimali yüksektir." },
+            { meta: "2022 Bahar", q: "İş kazasını öğrenen işveren bunu SGK'ya kaç günde bildirmelidir?", options: ["A) 1 gün", "B) 2 gün", "C) 3 iş günü", "D) 5 iş günü", "E) 7 gün"], answer: 2, solution: "İş kazası ve meslek hastalığı bildirim süresi ZORUNLU OLARAK '3 iş günü'dür." },
+            { meta: "2023 Yaz Okulu", q: "Su ile bulaşan hastalık hangisidir?", options: ["A) Sıtma", "B) Hepatit B", "C) HIV", "D) Tifo / Kolera", "E) Tüberküloz"], answer: 3, solution: "Kolera, Tifo, Hepatit A ve ishaller su ile bulaşır. Sıtma sinekle, HIV/Hepatit B kanla, Tüberküloz havayla bulaşır." },
+            { meta: "2024 Final", q: "Birikimli çökme şekli binalarda sık görülür mü?", options: ["A) Evet, en çok görülendir", "B) Hayır, böyle bir çökme şekli literatürde yoktur", "C) Sadece ahşap evlerde görülür", "D) Sadece köprülerde görülür", "E) Her depremde kesin görülür"], answer: 1, solution: "'Birikimli çökme' diye bir kavram ASLA yoktur, AÖF'ün klasik şaşırtmacasıdır. Çökme tipleri: Yamyassı, V, A ve Desteksiz çökmelerdir." },
+            { meta: "2025 Yaz Okulu", q: "PASS cihazı ne işe yarar?", options: ["A) Radyasyon ölçer", "B) Zehirli gaz ölçer", "C) İtfaiyeci hareketsiz kalınca alarm çalar", "D) Maskeye oksijen basar", "E) Isıyı ölçer"], answer: 2, solution: "PASS cihazı, itfaiyeci düştüğünde veya 30 sn hareketsiz kaldığında yüksek desibelde alarm vererek ekibin onu bulmasını sağlar." },
+            { meta: "2022 Final", q: "KBRN'nin B'si neyi ifade eder?", options: ["A) Basit", "B) Bölgesel", "C) Biyolojik", "D) Bilimsel", "E) Basınçlı"], answer: 2, solution: "KBRN; Kimyasal, Biyolojik, Radyolojik ve Nükleer kelimelerinin baş harflerinden oluşur." },
+            { meta: "2023 Final", q: "Hangi aşı HIV virüsünden korur?", options: ["A) Tetanos", "B) Grip", "C) Kuduz", "D) Hepatit B", "E) Henüz HIV için onaylı bir aşı yoktur"], answer: 4, solution: "Günümüz tıp teknolojisinde Tetanos, Hepatit, Kuduz aşıları mevcuttur ancak HIV/AIDS virüsüne karşı koruyucu bir aşı henüz yoktur." },
+            { meta: "2024 Bahar", q: "Büyük kaza senaryosunda Domino Etkisi nedir?", options: ["A) Kazanın kendiliğinden sönmesi", "B) Kazanın yakındaki diğer tesisleri/tankları patlatıp faciayı büyütmesi", "C) Sadece küçük bir alanda kalması", "D) İşçilerin sırayla istifa etmesi", "E) Üretimin artması"], answer: 1, solution: "Bir kazanın yarattığı etkinin yakındaki tesisleri tetikleyerek zincirleme bir reaksiyona yol açmasına 'Domino Etkisi' denir." },
+            { meta: "2025 Deneme", q: "Epidemiyoloji kuramı hangi ilişkiyi kaza analizine uyarlar?", options: ["A) Matematik ve Fizik", "B) İnsan ve Psikoloji", "C) Çevre faktörleri ve Hastalık", "D) Para ve Ekonomi", "E) Şans ve Kader"], answer: 2, solution: "Epidemiyoloji normalde hastalık-çevre ilişkisini inceler. Bu teorinin kazalar için uyarlanmasına Epidemiyoloji Kuramı denir." },
+            { meta: "2022 Yaz Okulu", q: "K-A-V-E hiyerarşisinde 'V' neyi temsil eder?", options: ["A) Vali", "B) Vadi", "C) Vektör", "D) Vatandaş", "E) Veri"], answer: 3, solution: "Güvenlik Sıralaması: Kurtarmacı, Afetzede, Vatandaş, Ekipman." },
+            { meta: "2023 Yaz Okulu", q: "Koronavirüs'ün adı nereden gelir?", options: ["A) Şehrin adından", "B) Latince taç (crown) kelimesinden", "C) Bilim adamının soyadından", "D) Hayvan isminden", "E) Bilgisayar programından"], answer: 1, solution: "Korona (Corona), Latince'de 'taç' demektir. Virüsün çıkıntılı yapısı taca benzediği için bu ismi almıştır." }
+        ];
+
+        let quizState = {}; 
+        const STORAGE_KEY = "isg_master_80_exam_state"; 
+        let isStudyMode = false;
+
+        function stateYukle() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if(saved) {
+                    quizState = JSON.parse(saved);
+                    document.getElementById("memory-badge").innerHTML = `<i class="fa-solid fa-cloud-arrow-down"></i> Önceki çözümleriniz yüklendi.`;
+                    document.getElementById("memory-badge").style.backgroundColor = "#dcfce7";
+                    document.getElementById("memory-badge").style.color = "#166534";
+                    document.getElementById("memory-badge").style.borderColor = "#bbf7d0";
+                }
+            } catch(e) { console.log("State yüklenemedi."); }
+        }
+
+        function stateKaydet() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(quizState));
+        }
+
+        function toggleStudyMode() {
+            isStudyMode = !isStudyMode;
+            const btn = document.getElementById("study-mode-btn");
+            if(isStudyMode) {
+                btn.innerHTML = `<i class="fa-solid fa-eye-slash"></i> Çalışma Modunu Kapat`;
+                btn.style.background = "#ef4444";
+                document.querySelectorAll('.solution-box').forEach(box => box.classList.add('visible'));
+            } else {
+                btn.innerHTML = `<i class="fa-solid fa-book-open-reader"></i> Tüm Çözümleri Göster (Çalışma Modu)`;
+                btn.style.background = "#f59e0b";
+                document.querySelectorAll('.solution-box').forEach((box, index) => {
+                    if(!quizState.hasOwnProperty(index)) {
+                        box.classList.remove('visible');
+                    }
+                });
+            }
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById("quiz-container");
+            container.innerHTML = "";
+
+            questions.forEach((q, index) => {
+                const isAnswered = quizState.hasOwnProperty(index);
+                const savedData = isAnswered ? quizState[index] : null;
+
+                let questionHTML = `
+                    <div class="question-card" id="q-card-${index}">
+                        <div class="question-meta"><i class="fa-solid fa-thumbtack" style="color:var(--accent)"></i> ÇIKMIŞ SORU: ${q.meta}</div>
+                        <div class="question-text">
+                            <div class="q-number">${index + 1}</div>
+                            <div>${q.q}</div>
+                        </div>
+                        <div class="options-list">
+                `;
+
+                q.options.forEach((opt, optIndex) => {
+                    let classes = "option-btn";
+                    let icon = "";
+                    
+                    if(isAnswered) {
+                        classes += " disabled";
+                        if(optIndex === q.answer) {
+                            classes += " correct";
+                            icon = ' <i class="fa-solid fa-check" style="margin-left:auto;"></i>';
+                        }
+                        if(optIndex === savedData.selected && savedData.selected !== q.answer) {
+                            classes += " wrong";
+                            icon = ' <i class="fa-solid fa-xmark" style="margin-left:auto;"></i>';
+                        }
+                    }
+
+                    questionHTML += `
+                        <div class="${classes}" id="opt-${index}-${optIndex}" onclick="selectOption(${index}, ${optIndex}, ${q.answer})">
+                            ${opt} ${icon}
+                        </div>
+                    `;
+                });
+
+                // Çözüm Kutusu
+                let solClass = (isAnswered || isStudyMode) ? "solution-box visible" : "solution-box";
+                questionHTML += `
+                        </div>
+                        <div id="sol-${index}" class="${solClass}">
+                            <h4><i class="fa-solid fa-lightbulb"></i> Uzman Analizi ve Püf Noktası</h4>
+                            <p>${q.solution}</p>
+                        </div>
+                    </div>`;
+                    
+                container.innerHTML += questionHTML;
+            });
+        }
+
+        function selectOption(qIndex, selectedOptIndex, correctOptIndex) {
+            if(quizState.hasOwnProperty(qIndex)) return;
+
+            for(let i=0; i<5; i++) {
+                const optElement = document.getElementById(`opt-${qIndex}-${i}`);
+                optElement.classList.add("disabled");
+                
+                if(i === correctOptIndex) {
+                    optElement.classList.add("correct");
+                    optElement.innerHTML += ' <i class="fa-solid fa-check" style="margin-left:auto;"></i>';
+                }
+            }
+
+            if(selectedOptIndex !== correctOptIndex) {
+                const selectedElement = document.getElementById(`opt-${qIndex}-${selectedOptIndex}`);
+                selectedElement.classList.add("wrong");
+                selectedElement.innerHTML += ' <i class="fa-solid fa-xmark" style="margin-left:auto;"></i>';
+            }
+
+            // Çözümü Göster
+            document.getElementById(`sol-${qIndex}`).classList.add("visible");
+
+            quizState[qIndex] = { selected: selectedOptIndex, correct: correctOptIndex };
+            stateKaydet();
+        }
+
+        function testiBitir() {
+            const answeredCount = Object.keys(quizState).length;
+            
+            if(answeredCount < questions.length) {
+                if(!confirm(`Dikkat: Henüz ${questions.length - answeredCount} soruyu boş bıraktınız. Boşlar yanlış sayılacaktır. Denemeyi bitirmek istiyor musunuz?`)) return;
+            }
+
+            let correctCount = 0;
+            for(let key in quizState) {
+                if(quizState[key].selected === quizState[key].correct) correctCount++;
+            }
+            
+            let percent = Math.round((correctCount / questions.length) * 100);
+
+            document.getElementById("finish-btn").style.display = "none";
+            document.getElementById("results-section").style.display = "block";
+            
+            document.getElementById("score-text").innerText = percent;
+            let message = "";
+            if(percent >= 90) message = "Efsanevi Bir Başarı! Geçmiş yılların tüm hilelerini deşifre etmişsiniz. Finalden A ile geçmeye hazırsınız.";
+            else if(percent >= 70) message = "Çok iyi! AÖF ve ÖSYM mantığını kavramışsınız. Çıkan birkaç pürüzü püf noktalarından halledebilirsiniz.";
+            else message = "Tehlike çanları! Sınavda şıklar çok benzeşir. Lütfen yukarıdaki 'Çalışma Modunu' açarak tüm çözümleri ezberleyin.";
+            document.getElementById("score-message").innerText = message;
+
+            document.getElementById("results-section").scrollIntoView({ behavior: 'smooth' });
+        }
+
+        window.onload = () => {
+            stateYukle();
+            renderQuestions();
+        };
+    </script>
+</body>
+</html>

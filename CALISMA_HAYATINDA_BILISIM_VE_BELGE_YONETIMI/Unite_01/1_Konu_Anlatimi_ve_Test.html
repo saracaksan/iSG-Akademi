@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilişim ve Belge Yönetimi | Ünite 1 - İSG Akademi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4c1d95; 
+            --primary-light: #7c3aed; 
+            --secondary: #1e1b4b; 
+            --accent: #f59e0b;
+            --bg-color: #f8fafc;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --card-bg: #ffffff;
+            --gemini-gradient: linear-gradient(135deg, #8b5cf6, #c026d3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-dark); line-height: 1.6; overflow-x: hidden; }
+
+        /* Navbar */
+        nav { background: var(--card-bg); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; border-bottom: 3px solid var(--accent);}
+        .logo { font-size: 1.3rem; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+        .back-btn { text-decoration: none; color: var(--primary); font-weight: 600; font-size: 0.9rem; border: 2px solid var(--primary); padding: 6px 15px; border-radius: 8px; transition: all 0.3s;}
+        .back-btn:hover { background: var(--primary); color: white; }
+
+        .container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
+        
+        /* Konu Anlatımı Bölümü */
+        .content-section { background: var(--card-bg); padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); margin-bottom: 2rem; border-top: 5px solid var(--primary-light); }
+        .content-section h1 { color: var(--secondary); margin-bottom: 1rem; font-size: 1.8rem; text-align: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;}
+        .content-section h2 { color: var(--primary); margin-top: 1.5rem; margin-bottom: 1rem; font-size: 1.3rem; display: flex; align-items: center; gap: 10px;}
+        .content-section p, .content-section li { font-size: 0.95rem; margin-bottom: 0.8rem; text-align: justify; }
+        
+        .highlight-box { background: #fef3c7; border-left: 5px solid #f59e0b; padding: 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .highlight-box h4 { color: #b45309; margin-bottom: 10px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+        
+        .mind-map { background: #eff6ff; border: 1px dashed #3b82f6; padding: 1.5rem; border-radius: 8px; margin: 1rem 0; }
+
+        /* Test Bölümü */
+        .quiz-section { background: var(--card-bg); padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); }
+        .quiz-header { text-align: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid #e2e8f0; }
+        
+        .controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 10px; }
+        .memory-badge { background: #ecfccb; color: #166534; padding: 6px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; border: 1px solid #bbf7d0; display: inline-flex; align-items: center; gap: 5px;}
+        
+        .question-card { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px dashed #cbd5e1; transition: opacity 0.3s;}
+        .question-text { font-weight: 600; font-size: 1.05rem; margin-bottom: 1.5rem; color: var(--secondary); display: flex; gap: 12px; text-align: justify;}
+        .q-number { background: var(--primary); color: white; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 0.95rem; flex-shrink: 0;}
+        
+        .options-list { display: flex; flex-direction: column; gap: 8px; padding-left: 44px;}
+        .option-btn { background: var(--bg-color); border: 2px solid #e2e8f0; padding: 12px 18px; border-radius: 8px; text-align: left; font-size: 0.95rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 10px; font-weight: 500; color: var(--text-dark);}
+        .option-btn:hover:not(.locked) { border-color: var(--primary-light); background: #f5f3ff; transform: translateX(5px); }
+        .option-btn.selected { background: #dbeafe; border-color: var(--primary-light); }
+        
+        /* Değerlendirme Sonrası Renkler */
+        .option-btn.locked { pointer-events: none; }
+        .option-btn.correct { background: #ecfdf5 !important; border-color: var(--success) !important; color: #065f46; font-weight: 700; }
+        .option-btn.wrong { background: #fef2f2 !important; border-color: var(--danger) !important; color: #991b1b; text-decoration: line-through; }
+        
+        .solution-box { display: none; background: #fffbeb; padding: 1.2rem; border-left: 4px solid var(--accent); margin-top: 15px; margin-left: 44px; border-radius: 0 8px 8px 0; font-size: 0.9rem; color: #78350f; text-align: justify;}
+        .solution-box.visible { display: block; animation: fadeIn 0.5s; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Gemini AI Button & Response Styles */
+        .ai-explain-btn {
+            background: var(--gemini-gradient); color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer; margin-top: 15px; transition: opacity 0.3s, transform 0.2s; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 6px rgba(139, 92, 246, 0.25);
+        }
+        .ai-explain-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+        .ai-explain-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .ai-response-box { margin-top: 15px; padding: 15px; background: #fdf4ff; border-left: 4px solid #c026d3; border-radius: 8px; font-size: 0.9rem; color: #4a044e; line-height: 1.6; animation: fadeIn 0.5s; }
+
+        .finish-container { text-align: center; margin: 3rem 0; display: flex; gap: 15px; justify-content: center;}
+        .btn-finish { background: var(--success); color: white; border: none; padding: 15px 40px; font-size: 1.1rem; border-radius: 10px; cursor: pointer; font-weight: 700; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3); transition: background 0.3s; }
+        .btn-finish:hover { background: #059669; }
+        .btn-reset { background: var(--text-light); color: white; border: none; padding: 15px 30px; font-size: 1.1rem; border-radius: 10px; cursor: pointer; font-weight: 700; transition: background 0.3s; }
+        .btn-reset:hover { background: #475569; }
+
+        /* Sonuç Paneli */
+        #results-panel { display: none; background: #f0fdf4; padding: 2.5rem; border-radius: 15px; border: 2px solid var(--success); text-align: center; margin-bottom: 2rem;}
+        .score-display { font-size: 3.5rem; font-weight: 800; color: var(--success); line-height: 1; margin-bottom: 0.5rem;}
+        .stats-row { display: flex; justify-content: center; gap: 2rem; margin-top: 1.5rem; font-size: 1.1rem; font-weight: 600; flex-wrap: wrap;}
+        .stat-item { padding: 10px 20px; border-radius: 8px; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.05);}
+        .s-correct { color: var(--success); } .s-wrong { color: var(--danger); } .s-net { color: var(--primary); }
+
+        footer { text-align: center; padding: 2rem; color: var(--text-light); font-size: 0.9rem; background: var(--card-bg); border-top: 1px solid #e2e8f0; margin-top: 2rem;}
+
+        /* --- PDF PRINT AYARLARI (SIKIŞIK FORMAT) --- */
+        @media print {
+            @page { margin: 1cm; }
+            body { background: white; color: black; font-size: 9pt; }
+            nav, .finish-container, #results-panel, .ai-explain-btn, .memory-badge { display: none !important; }
+            .container { max-width: 100%; margin: 0; padding: 0; }
+            .content-section { padding: 10px; margin-bottom: 10px; box-shadow: none; border-top: 2px solid black; border-radius: 0; }
+            .quiz-section { box-shadow: none; border: none; padding: 0; }
+            .question-card { padding: 5px 0; margin-bottom: 10px; box-shadow: none; border-bottom: 1px solid #ccc; page-break-inside: avoid; border-radius: 0; }
+            .question-text { font-size: 10pt; margin-bottom: 5px; color: black;}
+            .q-number { width: 20px; height: 20px; font-size: 8pt; background: #ddd; color: black; }
+            .options-list { padding-left: 25px; gap: 2px; }
+            .option-btn { padding: 4px 8px; border: none; font-size: 9pt; color: black; background: none; border: 1px solid #ccc;}
+            .option-btn.correct { font-weight: bold; background: none !important; border: 1px solid black !important; color: black;}
+            .option-btn.wrong { text-decoration: none; color: black; }
+            .solution-box { display: block !important; padding: 5px; margin-top: 5px; margin-left: 25px; border: 1px solid #999; font-size: 8pt; background: #f9f9f9; color: black; page-break-inside: avoid;}
+            .ai-response-box { display: block !important; border-left: 2px solid #666; font-size: 8pt; background: none; color: black; page-break-inside: avoid; }
+            #questions-container { column-count: 2; column-gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo"><i class="fa-solid fa-server"></i> Bilişim ve Belge Yönetimi</div>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-light);">Hazırlayan: Sıraç Aksan</span>
+            <a href="../../index.html" class="back-btn"><i class="fa-solid fa-house"></i> Ana Sayfa</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        
+        <section class="content-section">
+            <h1>Ünite 1: İşletme Bilgi Sistemleri ve İnsan Kaynakları Bilgi Sistemi</h1>
+            
+            <h2><i class="fa-solid fa-diagram-project"></i> 1. Sistem ve Bilgi Sistemleri Kavramı</h2>
+            <p>Bir eylemi gerçekleştirmek veya bir amaca ulaşmak için bir araya getirilmiş, birbirine bağımlı ögeler bütününe <strong>Sistem</strong> denir. Sistemler; <strong>Girdi, Süreçleme (İşleme), Çıktı ve Geribildirim</strong> unsurlarından oluşur. Hiçbir sistem, onu oluşturan öğelerden bağımsız faaliyet gösteremez.</p>
+            <ul>
+                <li><strong>Sınır ve Etkileşim:</strong> Sistemin yetki ve sorumluluklarının başladığı ve bittiği yer <em>sistem sınırını</em> belirler. Ancak sistemler dış çevreyle ve diğer alt sistemlerle sürekli iletişim ve etkileşim hâlindedir.</li>
+                <li><strong>Bilgi İşleme (Süreçleme):</strong> Elde edilen ham <strong>verilerin (data)</strong> işlenerek anlamlı bir <strong>bilgiye (information)</strong> dönüştürülmesi sürecidir.</li>
+                <li><strong>Geribildirim (Feedback):</strong> Sistemin çıktıları kontrol edildikten sonra hataların düzeltilmesi için başlangıca dönülmesidir.</li>
+            </ul>
+
+            <h2><i class="fa-solid fa-database"></i> 2. Bütünleşik Bilgi Sistemleri ve ERP</h2>
+            <p>Eskiden her departmanın (İnsan Kaynakları, Pazarlama, Muhasebe vb.) kendi veritabanı vardı. Bu durum "veri tekrarına" ve "hatalara" yol açıyordu. Teknolojik gelişmelerle <strong>Bütünleşik Bilgi Sistemleri (Ortak Veritabanı)</strong> kurulmuştur.</p>
+            <p>Bu yapıda, bir veri (örneğin satış veya puantaj verisi) sisteme <strong>sadece bir kez girilir</strong>. Muhasebe maaşı hesaplarken, Üretim departmanı ise maliyeti hesaplarken bu aynı veriyi ortak havuzdan çeker. Bu sistem Kurumsal Kaynak Planlaması (ERP) altyapısını oluşturur.</p>
+
+            <h2><i class="fa-solid fa-users-gear"></i> 3. İnsan Kaynakları Bilgi Sistemi (İKBS)</h2>
+            <p>İşletmeler yaşayan organizmalardır; her şey insanlarla yürütülür. İKBS, personelin işe alınmasından, eğitimine, bordro (maaş) hesaplamasından emekliliğine kadar tüm süreçleri yönetir. İKBS, sadece kendi içinde çalışmaz;</p>
+            <ul>
+                <li><strong>Muhasebe Bilgi Sistemiyle:</strong> İşçi maaş (bordro) ödemeleri için entegre çalışır.</li>
+                <li><strong>Üretim Bilgi Sistemiyle:</strong> Ürünlere yüklenecek "işçilik maliyetlerini" belirlemek için entegre çalışır.</li>
+                <li><strong>Pazarlama Bilgi Sistemiyle:</strong> Satış elemanlarının satış primlerini (komisyonlarını) hesaplamak için veri alır.</li>
+            </ul>
+
+            <div class="highlight-box">
+                <h4><i class="fa-solid fa-triangle-exclamation"></i> Sınavlarda Çıkma Mantığı ve Önemli Tuzaklar</h4>
+                <p><strong>Tuzak 1 (Yönetim Kademeleri ve Bilgi İhtiyacı):</strong> Sınavda en çok bu karıştırılır. <br>
+                - <strong>Alt Düzey Yöneticiler:</strong> Günlük, rutin, anlık ve ÇOK DETAYLI bilgilere ihtiyaç duyar. (Şıklarda alt düzey yöneticilere 'özet' bilgi gerekir derse YANLIŞTIR).<br>
+                - <strong>Üst Düzey Yöneticiler:</strong> Şirketin geleceğiyle ilgili, yapısal olmayan (rutin dışı), uzun vadeli (stratejik) ve ÖZET bilgilere ihtiyaç duyar.</p>
+                <p><strong>Tuzak 2 (Veri ve Bilgi Ayrımı):</strong> Veri hamdır (Örn: 20, 30). Bilgi işlenmiştir (Örn: Sınıfın yaş ortalaması 25'tir). Verilerin bilgi durumuna gelmesini sağlayan işlemler dizisine <strong>'Bilgi İşleme'</strong> denir.</p>
+                <p><strong>Tuzak 3 (Bütünleşik Sistem):</strong> Bütünleşik bilgi sistemlerinde "Aynı işlem için verilerin tekrar tekrar sisteme girilmesi GEREKMEZ." Sınavda bu madde çeldirici olarak olumsuz kökle verilir.</p>
+            </div>
+
+            <div class="mind-map">
+                <h4><i class="fa-solid fa-brain"></i> Zihin Haritası & Kodlamalar</h4>
+                <p><strong>Bilgi Güvenliği 3 Temel Unsur Kodu: "B-G-K"</strong><br>
+                <strong>B</strong>ütünlük (Bilginin değiştirilmemesi), <strong>G</strong>izlilik (Sadece yetkili kişilerin görmesi), <strong>K</strong>ullanılabilirlik (İhtiyaç anında erişilebilir olması).</p>
+                <p style="margin-top: 10px;"><strong>Faaliyet Sistemi Sınırı:</strong> Bir işletmenin faaliyet sisteminin sınırını <strong>GİRDİLER</strong> değil, o sistemin <strong>Yetki ve Sorumluluklarının başladığı ve bittiği noktalar</strong> belirler.</p>
+            </div>
+        </section>
+
+        <section class="quiz-section">
+            <div class="quiz-header">
+                <h2 style="color: var(--secondary); font-size: 1.8rem;"><i class="fa-solid fa-star"></i> Ünite 1 Final Provası (25 Özgün Soru)</h2>
+                <p style="color: var(--text-light);">Sorular analiz yeteneğinizi ölçecek şekilde (4 Yanlış 1 Doğruyu Götürür) kurgulanmıştır.</p>
+            </div>
+            
+            <div class="controls">
+                <div class="memory-badge" id="memory-badge">
+                    <i class="fa-solid fa-floppy-disk"></i> Sistem Devrede: İşaretlenen sorular kaydediliyor...
+                </div>
+            </div>
+            
+            <div id="questions-container">
+                </div>
+
+            <div class="finish-container" id="finish-container">
+                <button class="btn-finish" onclick="finishExam()"><i class="fa-solid fa-flag-checkered"></i> Denemeyi Bitir ve Değerlendir</button>
+                <button class="btn-reset" onclick="resetExam()"><i class="fa-solid fa-rotate-right"></i> Sıfırla</button>
+            </div>
+
+            <div id="results-panel">
+                <h2 style="color: var(--secondary); margin-bottom: 10px;">Final Simülasyonu Sonucu</h2>
+                <div class="score-display"><span id="score-text">0</span> Puan</div>
+                <div class="stats-row">
+                    <div class="stat-item s-correct">Doğru: <span id="count-correct">0</span></div>
+                    <div class="stat-item s-wrong">Yanlış: <span id="count-wrong">0</span></div>
+                    <div class="stat-item">Boş: <span id="count-empty">0</span></div>
+                    <div class="stat-item s-net">Net: <span id="count-net">0</span></div>
+                </div>
+                <button class="back-btn" style="margin-top: 25px; display: inline-block; background: var(--primary); color: white;" onclick="window.print()">
+                    <i class="fa-solid fa-file-pdf"></i> Arşiv İçin Sıkışık PDF Al
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>Anadolu Üniversitesi Açıköğretim (AÖF) Hazırlık Sistemi &copy; 2026 | Tasarım ve İçerik: Sıraç Aksan</p>
+    </footer>
+
+    <script>
+        // API KEY MUST BE EMPTY AS PER INSTRUCTIONS
+        const apiKey = ""; 
+
+        /* --- 25 ÖZGÜN, ZOR VE ANALİTİK SORU VERİTABANI --- */
+        // q: Soru, o: Şıklar, a: Doğru şık indexi, s: Çözüm/Analiz
+        const examData = [
+            // İlk 10 soru kitaptan orijinal/uyarlanmış
+            {q: "Aşağıdakilerden hangisi bir sistemin 'sınırlarını' teknik olarak ifade etmektedir?", o: ["Sistem elemanları arasındaki bilgi akışı ve iletişim", "Sistemin işlem yapabilme kapasitesi", "Sistemin geleceğe dönük stratejik amaçları", "Sistemin yetki ve sorumluluklarının başlangıç ve bitiş noktaları", "Geribildirimin (feedback) planlama alt sistemi ile olan ilişkisi"], a: 3, s: "Sistem sınırı fiziksel duvarlar değil; o sistemin nerede yetkili olup nerede sorumluluğunun bittiği noktadır."},
+            {q: "Bir bilgi sistemi ve işletme hiyerarşisi düşünüldüğünde, sistemin temel çalışma prensipleriyle ilgili aşağıdaki ifadelerden hangisi YANLIŞTIR?", o: ["Her sistemde girdi, süreçleme, çıktı ve geribildirim unsurları bulunmalıdır.", "Sistemi oluşturan öğeler arasında mutlaka bir ilişki ve iletişim olmalıdır.", "Geribildirim (feedback), kontrol aşaması sonrasında elde edilen hatalı/doğru bilgilere göre yapılır.", "Sistem, kendisini oluşturan öğelerden bağımsız ve otonom olarak faaliyet gösterir.", "Alt sistemlerin çıktıları, diğer bir alt sistemin girdisini oluşturabilir."], a: 3, s: "Hiçbir sistem kendisini oluşturan alt parçalardan (öğelerden) bağımsız çalışamaz. Öğeler bozulursa sistem de çöker."},
+            {q: "Aşağıdakilerden hangisi bir işletmenin 'faaliyet sistemiyle' ilgili olarak doğru bir ifade olarak kabul edilir?", o: ["Faaliyet sisteminin temel amacı sadece dış çevreden gelen girdilerin kontrol edilmesidir.", "Faaliyet sisteminin fiziki sınırını sadece elde edilen girdiler belirler.", "Faaliyet sisteminin sınırını o şirketin kullandığı bilgisayar/bilgi sistemleri belirler.", "Faaliyet sistemi her işletme için standarttır ve tamamen aynıdır.", "Faaliyet sistemi işletmenin 'iş yapış biçimini' (operasyonel tarzını) göstermektedir."], a: 4, s: "İşletmenin üretim, paketleme, satış gibi günlük operasyonel süreçlerinin tamamı (iş yapış biçimi) faaliyet sistemini tanımlar."},
+            {q: "Bir bilginin işlenmesi sürecinde (Girdi -> Süreçleme -> Çıktı), aşağıdakilerden hangisi bilgi işleme sisteminin 'Çıktı (Output)' evresinde yer alan nihai işlemlerden birisidir?", o: ["Verilerin bilgisayara girilmesi (Veri derleme)", "Verilerin büyükten küçüğe sıralanması (Özetleme)", "Ham verilerin işlenmesi algoritmaları", "Veri sınıflandırma ve gruplama", "Yöneticiler için karar almayı sağlayacak 'Rapor Üretme'"], a: 4, s: "Veri derleme ve sınıflandırma girdi/süreçleme kısımlarıdır. İşlenmiş verinin en son ekrana veya kağıda yansıtılması (Rapor) çıktı evresidir."},
+            {q: "Ham verilerin (Data) anlamlı ve kullanılabilir bir 'bilgi (Information)' durumuna gelmesini sağlayan analitik işlemler dizisine ne ad verilir?", o: ["Üretim yönetim sistemi", "Bilgi işleme süreci", "Karar destek sistemi", "Faaliyet kontrol sistemi", "Tedarik zinciri sistemi"], a: 1, s: "Veri ile bilgi arasındaki köprü 'işleme' aşamasıdır. Rakamların veya kelimelerin anlamlandırılmasına Bilgi İşleme (Data Processing) denir."},
+            {q: "İşletmelerdeki günlük rutin faaliyetlere ilişkin ortaya çıkan yığınsal verileri toplayan ve bu verileri yönetimin kullanabileceği anlamlı bilgilere dönüştüren ana mekanizma aşağıdakilerden hangisidir?", o: ["Bilgi sistemi", "Uzman ve yapay zeka sistemi", "Mekanik faaliyet sistemi", "Genel işletme sistemi", "Tedarik zinciri otomasyon sistemi"], a: 0, s: "Tanım sorusudur. Faaliyetten doğan veriyi toplayıp, yöneticilere sunulacak bilgi üreten mekanizmaya 'Bilgi Sistemi (IS)' denir."},
+            {q: "Bilgi sistemlerinin kapsamı ve işleyişi ile ilgili olarak aşağıdaki yargılardan hangisi Kesinlikle YANLIŞTIR?", o: ["Bilgi sistemleri hem finansal (para) hem de finansal olmayan (personel izinleri vb.) veriler üzerinde işlem yapar.", "Bilgi sistemleri niteliksel (kalite) ve niceliksel (sayısal) veriler üzerinde işlem yapabilir.", "Gelişmiş bilgi sistemleri işletmelerin iş yapış ve rekabet etme biçimlerini kökten değiştirmiştir.", "Güvenlik gereği bilgi sistemleri sadece işletme içi kapalı verileri esas alır, dış çevreden veri alamaz.", "Bilgi sistemleri döviz kurları, piyasa faizleri gibi işletme dışı (çevresel) verileri de dikkate alır."], a: 3, s: "Bilgi sistemleri kapalı kutu değildir. Pazar araştırması, döviz kuru, müşteri şikayetleri gibi 'işletme dışı (çevresel)' verileri de sisteme dahil eder."},
+            {q: "Modern işletmelerin milyonlarca liralık donanım ve yazılım alarak 'bilgi sistemlerine yatırım yapmalarındaki' temel itici güç (etken) aşağıdakilerden hangisidir?", o: ["Vergi dairesine daha düşük maliyetli beyanname vermek", "Rakiplerine karşı pazar payını ve 'rekabet gücünü' artıracak stratejik avantaj yaratmak", "Sadece fabrika üretim faaliyetleri hakkında basit bilgiler elde etmek", "Ambar ve stok yönetiminde çalışan işçi sayısını azaltmak", "Geçmişe dönük finansal analizlerin sağlıklı yapılmasını sağlamak"], a: 1, s: "İşletmelerin amacı hayatta kalmak ve büyümektir. Bilgi sistemlerine yapılan yatırımların asıl hedefi rakiplere fark atmak (rekabet avantajı / rekabet gücü artışı) sağlamaktır."},
+            {q: "Geleneksel bağımsız departman yapıları yerine kurulan 'Bütünleşik (Entegre) Bilgi Sistemleri' (ERP gibi) ile ilgili olarak aşağıdakilerden hangisi YANLIŞTIR?", o: ["Departmanlar (İK, Muhasebe, Üretim) ortak bir veritabanı (havuz) kullanmaktadır.", "Departmanlar arası yatay ve dikey etkileşim oldukça yüksektir.", "Departmanlar birbirlerinin ilgili faaliyetleri ve kapasiteleri hakkında bilgi sahibidir.", "Sistem, işletmeyi birbirinden kopuk parçalar yerine 'tek bir sistem (bütün)' olarak ele alır.", "Aynı işlem için (örneğin müşteri siparişi) verilerin her departman tarafından tekrar tekrar kendi sistemine girilmesi gerekir."], a: 4, s: "Bütünleşik sistemin (Ortak Veritabanı) icat edilme sebebi zaten 'veri tekrarını' önlemektir. Veri bir kez girilir, tüm departmanlar o veriyi kullanır."},
+            {q: "İşletmelerdeki yönetim düzeyleri (Alt, Orta, Üst) ve bu düzeylerdeki yöneticilerin ihtiyaç duyduğu bilginin niteliği ile ilgili yanlış eşleştirme hangisidir?", o: ["Alt düzey yöneticiler (ustabaşı vb.) üretim bandındaki anlık ve çok detaylı bilgilere ihtiyaç duyarlar.", "Üst düzey yöneticiler (CEO vb.) geleceğe dönük, uzun vadeli (stratejik) bilgi ihtiyacı içindedir.", "Üst düzey yöneticiler genellikle daha önce karşılaşılmamış, yapısal olmayan kararlar için bilgiye ihtiyaç duyar.", "Orta düzey yöneticiler (Şube müdürleri) hem işletme içi hem de işletme dışı (taktiksel) bilgilere ihtiyaç duyarlar.", "Alt düzey yöneticiler, şirketin genel gidişatını gösteren oldukça 'özet ve makro' bilgilere ihtiyaç duyarlar."], a: 4, s: "Sınavların klasik tuzağıdır. 'Özet' bilgiye üst yöneticiler ihtiyaç duyar (CEO vaktini detayla harcamaz). Alt düzey yöneticiler ise işi yönetmek için 'aşırı detaylı ve anlık' bilgiye ihtiyaç duyar."},
+            
+            // 15 Özgün / İleri Düzey Soru
+            {q: "Bir işletmenin İnsan Kaynakları Bilgi Sistemi (İKBS), işçilerin puantaj (mesai saati) verilerini hesapladıktan sonra, bu işçilere ödenecek net maaşların hesaplanması ve banka hesaplarına aktarılması için bu veriyi hangi alt bilgi sistemiyle 'entegre (ortak)' olarak paylaşmak zorundadır?", o: ["Üretim Bilgi Sistemi", "Pazarlama Bilgi Sistemi", "Muhasebe Bilgi Sistemi", "Maddi Duran Varlıklar Bilgi Sistemi", "Halkla İlişkiler Sistemi"], a: 2, s: "Maaş (bordro), vergi ve SGK kesintileri gibi finansal ödeme süreçleri doğrudan 'Muhasebe Bilgi Sistemi'nin görevidir. İKBS mesaiyi hesaplar, Muhasebe ödemeyi yapar."},
+            {q: "Üst düzey bir yöneticinin (Genel Müdür), 5 yıl sonra şirketin hangi ülkelere yeni fabrikalar açacağına karar verirken kullandığı ve 'Strateji, Politika, Planlama' basamaklarını içeren sistem türü Temel Yönetim Bilgi Sistemleri Piramidi'nde hangisidir?", o: ["Alt (Operasyonel) Yönetim Bilgi Sistemi", "Orta (Taktiksel) Yönetim Bilgi Sistemi", "Üst (Stratejik) Yönetim Bilgi Sistemi", "İşlem Kontrol Sistemi", "Rutin Karar Destek Sistemi"], a: 2, s: "Planlama, politika belirleme ve strateji kavramları piramidin en tepesinde yer alan 'Üst Yönetim Bilgi Sistemleri (EIS/ESS)'ne aittir."},
+            {q: "Bilgi güvenliğinin 3 temel sacayağı (unsuru) bulunmaktadır. Şirkete ait özel maliyet analiz raporlarının, 'sadece yetkisi olan yöneticiler tarafından görülebilmesi ve yanlış/yetkisiz kişilerin eline geçmesinin engellenmesi' durumu bu 3 temel unsurdan hangisini tanımlar?", o: ["Bütünlük (Integrity)", "Kullanılabilirlik (Availability)", "Gizlilik / Mahremiyet (Confidentiality)", "Silinmezlik", "Anlık doğrulama"], a: 2, s: "Bilginin başkalarının eline geçmemesi (mahremiyet) 'Gizlilik'tir. Bilginin bozulmaması/değiştirilmemesi 'Bütünlük'tür. İhtiyaç anında sisteme erişilebilmesi ise 'Kullanılabilirlik'tir."},
+            {q: "Dizüstü bilgisayarlarda veya şirket kapılarında bulunan 'parmak izi okuyucu' veya 'retina tarayıcı' gibi, kişilerin kimliklerinin fiziksel vücut özellikleri vasıtasıyla tespit edilmesini sağlayan teknolojik güvenlik sistemine ne ad verilir?", o: ["Veri şifreleme (Kriptografi)", "Biyometrik kimlik doğrulama", "Algoritmik kalkan (Firewall)", "Çok faktörlü SMS doğrulama", "Geleneksel aidiyet doğrulaması"], a: 1, s: "Parmak izi, yüz tanıma, ses, retina gibi insanın biyo-fiziksel yapısını kullanarak yapılan giriş işlemlerine 'Biyometrik' doğrulama denir."},
+            {q: "Kötü amaçlı yazılımlar arasında yer alan ve Truva atı (Trojan) ya da virüslerden farklı olarak; bir kez ağa girdikten sonra kendisini diğer bilgisayarlara yaymak için 'insan müdahalesine veya bir dosyaya eklenti olmaya ihtiyaç duymadan kendi başına çoğalan', ağ kaynaklarını tüketerek sistemi yavaşlatan zararlı yazılım türü nedir?", o: ["Casus yazılım (Spyware)", "Tuş kaydedici (Keylogger)", "Solucan (Worm)", "Fidye yazılımı (Ransomware)", "Reklam yazılımı (Adware)"], a: 2, s: "Virüsler bir dosyaya (Örn: word belgesi) yapışarak bulaşır. Solucanlar (Worms) ise bir dosyaya ihtiyaç duymadan ağ kabloları üzerinden kendi kendine çoğalan ve ağı tıkayan yazılımlardır."},
+            {q: "Bilgi sistemleri departmanlarının giderek 'Web Tabanlı (Bulut)' teknolojilere geçmesi, kurumlara fiziksel mekandan bağımsız erişim gibi devasa avantajlar sağlamıştır. Ancak bu mimari değişimin işletmeler açısından yarattığı en büyük 'endişe veya dezavantaj' aşağıdakilerden hangisidir?", o: ["Yazılım güncelleme maliyetlerinin sıfıra inmesi", "Çalışanların sisteme çok daha hızlı girmesi", "İnternet üzerinden dışarıdan erişim imkânı nedeniyle 'güvenlik (siber saldırı/veri çalınma)' kaygılarının çok yüksek seviyede olması", "Kurumsal kaynak planlamasının tek veritabanında birleşmesi", "Belgelere evrensel erişim sağlanması"], a: 2, s: "Her yerden erişilebilen web tabanlı sistemlerin en büyük sorunu, hackerların da dünyanın her yerinden bu sisteme saldırma ihtimalidir (Yüksek Güvenlik Endişesi)."},
+            {q: "İşletmelerdeki toplantı yönetimi ilkeleri göz önüne alındığında, bir toplantının verimsiz geçmesine neden olan ve yöneticiler tarafından yapılan 'en temel ve en önemli idari hata' aşağıdakilerden hangisidir?", o: ["Toplantı salonunun ışıklandırmasının kötü olması", "Toplantı tutanaklarının renkli kağıda basılmaması", "Katılımcılara toplantı öncesinde ne konuşulacağını belirten 'gündem (agenda)' maddelerinin gönderilmemesi", "Toplantı masasının U-Düzeni yerine Daire düzeninde olması", "Toplantıya ikramlık yiyecek getirilmemesi"], a: 2, s: "İnsanların ne konuşulacağını bilmeden (gündemsiz) toplantıya gelmesi hazırlıksız olmalarına, konunun dağılmasına ve zaman israfına yol açar."},
+            {q: "Bir projenin, yeni bir dönemin veya büyük bir faaliyetin başlatılacağı ilk gün; tüm proje ekibinin, hedeflerin ve kuralların tanıtıldığı, heyecanı ve motivasyonu artırmayı hedefleyen toplantı türü yabancı literatürde ve modern işletmelerde hangi isimle anılır?", o: ["Acil durum beyin fırtınası (Brainstorming)", "Kick-off Meeting (Başlangıç Toplantısı)", "Koordinasyon Toplantısı", "Disiplin Kurulu Toplantısı", "Olağan Kapanış Toplantısı"], a: 1, s: "Futbolda maçın ilk vuruşuna kick-off dendiği gibi, şirketlerde de büyük projelerin başlama fişeğinin ateşlendiği tanışma/başlangıç toplantılarına 'Kick-Off Meeting' denir."},
+            {q: "İnsan Kaynakları (İK) departmanı ile Üretim departmanının 'bütünleşik bilgi sistemi' üzerinden etkileşimini gösteren aşağıdaki senaryolardan hangisi doğru ve gerçekçi bir entegrasyon örneğidir?", o: ["İK sisteminin, fabrikada üretilen malların piyasadaki satış fiyatını belirlemesi", "Üretim sistemindeki ürün tasarımlarının İK tarafından çizilmesi", "Üretim bandında çalışan işçilerin sisteme girdiği puantaj ve mesai saatlerinin, İK sistemine aktarılarak üretim ürünlerine düşen 'işçilik maliyetlerinin' (birim maliyetin) hesaplanmasında kullanılması", "İK departmanının, kullanılacak çelik hammaddesinin kalitesini test etmesi", "Üretim müdürünün personelin yıllık iznini muhasebeye sorması"], a: 2, s: "Bütünleşik sistemde veri ortaktır. İşçi fabrikada 10 saat çalışırsa, İKBS bu veriyle o işçinin maaşını hesaplarken, Üretim Bilgi Sistemi bu veriyle o gün üretilen mallara ne kadar 'işçilik maliyeti' bindiğini hesaplar."},
+            {q: "Büyük veri (Data) yığınları bilgi işleme evresine girerken çeşitli süreçlerden geçer. Aşağıdakilerden hangisi verilerin bilgiye dönüşmesi aşamasında bir işletmenin yapacağı 'Veri Sınıflandırma' (Taslim / Classification) işlemine örnek gösterilebilir?", o: ["Müşterilerden gelen binlerce şikayet formunu bilgisayara kaydetmek", "Satış rakamlarını toplamak ve genel bir rapor bastırmak", "İşletmeye başvuran 5.000 adet CV'yi (özgeçmişi); mühendisler, teknikerler ve yöneticiler olarak alt gruplara (kategorilere) ayırmak", "Elde edilen bilginin üst yönetime sunumu için grafik çizmek", "Yanlış girilen bir veriyi silmek"], a: 2, s: "Karmaşık ve kalabalık verilerin ortak özelliklerine göre (yaş, meslek, cinsiyet, departman) gruplara ayrılması işlemine 'Veri Sınıflandırma' denir."},
+            {q: "Bir işletmenin sistem yaklaşımı ile incelenmesinde; dışarıdan alınan hammadde, işgücü ve sermayenin 'Girdi' olduğu, üretilen ürünlerin ise 'Çıktı' olduğu bilinmektedir. Bu süreçte ortaya çıkan hatalı (defolu) ürün sayısının artması üzerine, fabrika müdürünün üretim bandındaki hızı yavaşlatma kararı alması sistemin hangi unsuru sayesinde gerçekleşir?", o: ["Sınır dışı etki", "Girdi genişlemesi", "Geribildirim (Feedback)", "Açık sistem reddi", "Bilgi entropisi (çöküş)"], a: 2, s: "Çıktılarda (hatalı ürünler) bir sorun görüldüğünde, sistemin başlangıcına dönülüp ayarların düzeltilmesini sağlayan (kontrol ve düzeltme) mekanizmaya 'Geribildirim' denir."},
+            {q: "Kurumsal Kaynak Planlaması (ERP) yazılımları (SAP, Oracle vb.), modern işletmelerin vazgeçilmezidir. Bir işletmenin ERP sistemine geçebilmesi için sahip olması gereken en temel ve ön koşul niteliğindeki teknolojik altyapı aşağıdakilerden hangisidir?", o: ["Tüm bilgisayarların aynı marka donanıma sahip olması", "İşletmenin tüm departmanlarının tamamen aynı fiziksel binada (ofiste) bulunması", "Departmanların birbirinden yalıtılmış, kapalı (lokal) veritabanları kullanması", "Tüm faaliyet verilerinin toplandığı ve paylaşıldığı, veri tekrarını önleyen 'Bütünleşik Ortak Veritabanı' yapısının bulunması", "Şirketin en az 500 personele sahip olması"], a: 3, s: "ERP (Kurumsal Kaynak Planlaması) sistemlerinin çalışabilmesi için şirketin kalbinde 'Ortak bir Veritabanı (Bütünleşik Bilgi Sistemi)' atması gerekir. Veriler ortaklaşmadan planlama yapılamaz."},
+            {q: "Bir insan kaynakları yöneticisinin işletmede 'Yetenek Yönetimi' ve 'Yedekleme Planlaması' faaliyetlerini yapabilmesi, İKBS'nin hangi düzeydeki fonksiyonuna hizmet eder?", o: ["Gündelik operasyonel düzey", "Alt kademe kayıt (veri) düzeyi", "Üst düzey stratejik (gelecek odaklı) planlama düzeyi", "Sadece muhasebe transferi düzeyi", "Donanım bakım düzeyi"], a: 2, s: "Şirketin 5 yıl sonraki yöneticisinin kim olacağını belirlemek (Yedekleme) ve yetenekleri elde tutmak sıradan günlük bir işlem değil, şirketin geleceğini etkileyen 'Stratejik Düzey' bir İK fonksiyonudur."},
+            {q: "Çalışma hayatında 'Zaman Yönetimi' konusunda yöneticilerin sıklıkla uyguladığı ve 'sonuçların %80'inin, faaliyetlerin (nedenlerin) %20'sinden kaynaklandığını' savunan; bu nedenle yöneticilerin sadece en önemli %20'lik kısma odaklanmasını öngören zaman/verimlilik kuralı hangisidir?", o: ["Parkinson Yasası", "80/20 Kuralı (Pareto İlkesi)", "Zaman-Değerlendirme Yöntemi", "Eşgüdüm (Koordinasyon) Analizi", "Etkinlik Mekanizması Analizi"], a: 1, s: "Az çabayla çok iş yapmanın formülü olan 80/20 kuralı (Pareto), çabalarınızın %20'sinin şirketin kârının %80'ini getirdiğini savunur ve zamanı bu %20'ye harcamayı öğütler."},
+            {q: "Sistem yaklaşımında bir sistemin 'amacına/hedeflerine' ne derece ulaştığını (Örn: Hedeflenen 10.000 satışa ulaşıldı mı?) gösteren kavrama 'Etkililik' denir. Peki, bu amaca ulaşırken kaynakların (para, zaman, insan) ne kadar az ve doğru kullanıldığını (Örn: Bu satış minimum maliyetle yapıldı mı?) ifade eden ve yönetimde etkililiği destekleyen kardeş kavram aşağıdakilerden hangisidir?", o: ["Etkinlik", "Otonomi", "Verimlilik (Efficiency)", "Sinerji", "Entropi"], a: 2, s: "Amaca ulaşmak 'Etkililik/Etkinlik' (Effectiveness); amaca ulaşırken minimum kaynak/maliyet harcamak ise 'Verimlilik' (Efficiency) olarak tanımlanır. Yönetimin iki altın kuralıdır."}
+        ];
+
+        let currentExam = 1;
+        let quizState = {}; // { qIndex: { selected: oIndex, correct: cIndex } }
+        let isExamFinished = false;
+
+        function initApp() {
+            try {
+                const saved = localStorage.getItem('isg_bilisim_u1_state');
+                if(saved) {
+                    const parsed = JSON.parse(saved);
+                    quizState = parsed.quizState || {};
+                    isExamFinished = parsed.isExamFinished || false;
+                    if(Object.keys(quizState).length > 0) {
+                        document.getElementById("memory-badge").innerHTML = `<i class="fa-solid fa-cloud-arrow-down"></i> Önceki çözümleriniz yüklendi.`;
+                        document.getElementById("memory-badge").style.backgroundColor = "#dcfce7";
+                        document.getElementById("memory-badge").style.color = "#166534";
+                        document.getElementById("memory-badge").style.borderColor = "#bbf7d0";
+                    }
+                }
+            } catch(e) {}
+            
+            renderQuestions();
+            if(isExamFinished) showResults();
+        }
+
+        function stateKaydet() {
+            localStorage.setItem('isg_bilisim_u1_state', JSON.stringify({
+                quizState: quizState,
+                isExamFinished: isExamFinished
+            }));
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById("questions-container");
+            container.innerHTML = "";
+
+            examData.forEach((q, index) => {
+                const state = quizState[index];
+                let questionHTML = `
+                    <div class="question-card" id="q-card-${index}">
+                        <div class="question-text">
+                            <div class="q-number">${index + 1}</div>
+                            <div>${q.q}</div>
+                        </div>
+                        <div class="options-list">
+                `;
+
+                q.o.forEach((opt, optIndex) => {
+                    let classes = "option-btn";
+                    let icon = "";
+                    
+                    if (isExamFinished) {
+                        classes += " locked";
+                        if (optIndex === q.a) {
+                            classes += " correct";
+                            icon = ' <i class="fa-solid fa-check" style="margin-left:auto;"></i>';
+                        }
+                        if (state && state.selected === optIndex && optIndex !== q.a) {
+                            classes += " wrong";
+                            icon = ' <i class="fa-solid fa-xmark" style="margin-left:auto;"></i>';
+                        }
+                    } else {
+                        if (state && state.selected === optIndex) {
+                            classes += " selected";
+                        }
+                    }
+
+                    questionHTML += `
+                        <div class="${classes}" id="opt-${index}-${optIndex}" onclick="selectOption(${index}, ${optIndex}, ${q.a})">
+                            ${String.fromCharCode(65 + optIndex)}) ${opt} ${icon}
+                        </div>
+                    `;
+                });
+
+                let solClass = isExamFinished ? "solution-box visible" : "solution-box";
+                questionHTML += `
+                        </div>
+                        <div id="sol-${index}" class="${solClass}">
+                            <h4><i class="fa-solid fa-lightbulb"></i> Çözüm ve Püf Noktası:</h4>
+                            <p>${q.s}</p>
+                            <button class="ai-explain-btn" onclick="askGemini(${index})">✨ Gemini ile Detaylı Analiz İste</button>
+                            <div id="ai-response-${index}" class="ai-response-box" style="display:none;"></div>
+                        </div>
+                    </div>`;
+                    
+                container.innerHTML += questionHTML;
+            });
+        }
+
+        function selectOption(qIndex, selectedOptIndex, correctOptIndex) {
+            if (isExamFinished) return; // Locked
+
+            quizState[qIndex] = { selected: selectedOptIndex, correct: correctOptIndex };
+            
+            // Visual Update
+            const options = document.querySelectorAll(`[id^="opt-${qIndex}-"]`);
+            options.forEach(opt => opt.classList.remove('selected'));
+            document.getElementById(`opt-${qIndex}-${selectedOptIndex}`).classList.add('selected');
+            
+            stateKaydet();
+        }
+
+        function finishExam() {
+            if (isExamFinished) return;
+            
+            const answeredCount = Object.keys(quizState).length;
+            if (answeredCount < 25) {
+                if (!confirm(`Dikkat: Henüz ${25 - answeredCount} soruyu boş bıraktınız. Boşlar yanlış SAYILMAZ ancak netinizi etkilemez. Yine de denemeyi bitirmek istiyor musunuz?`)) {
+                    return;
+                }
+            }
+
+            isExamFinished = true;
+            stateKaydet();
+            showResults();
+        }
+        
+        function showResults() {
+            let correctCount = 0;
+            let wrongCount = 0;
+
+            for (let i = 0; i < 25; i++) {
+                if (quizState[i]) {
+                    if (quizState[i].selected === quizState[i].correct) correctCount++;
+                    else wrongCount++;
+                }
+            }
+
+            let emptyCount = 25 - (correctCount + wrongCount);
+            
+            // 4 Yanlış 1 Doğruyu Götürür Kuralı (AÖF standardı)
+            let net = correctCount - (wrongCount / 4);
+            if (net < 0) net = 0;
+            
+            // 25 Soru, Net başına 4 Puan = 100 Puan
+            let score = Math.round(net * 4);
+
+            document.getElementById('count-correct').innerText = correctCount;
+            document.getElementById('count-wrong').innerText = wrongCount;
+            document.getElementById('count-empty').innerText = emptyCount;
+            document.getElementById('count-net').innerText = net.toFixed(2);
+            document.getElementById('score-text').innerText = score;
+
+            document.getElementById('finish-container').style.display = 'none';
+            document.getElementById('results-panel').style.display = 'block';
+
+            renderQuestions(); // Re-render to show colors and solutions
+            document.getElementById('results-panel').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetExam() {
+            if(confirm("Tüm cevaplarınız silinecek ve teste baştan başlayacaksınız. Emin misiniz?")) {
+                localStorage.removeItem('isg_bilisim_u1_state');
+                window.location.reload();
+            }
+        }
+
+        /* --- YAPAY ZEKA (GEMINI API) BAĞLANTISI --- */
+        async function askGemini(qIndex) {
+            const qData = examData[qIndex];
+            const responseBox = document.getElementById(`ai-response-${qIndex}`);
+            const btn = document.querySelector(`#sol-${qIndex} .ai-explain-btn`);
+
+            if(!apiKey) {
+                responseBox.style.display = "block";
+                responseBox.innerHTML = "<em>⚠️ API anahtarı ayarlanmamış. Sistem ortamı bu özelliği şu an desteklemiyor.</em>";
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ✨ Yapay Zeka Analiz Ediyor...';
+            responseBox.style.display = "block";
+            responseBox.innerHTML = "<em>✨ Gemini soruyu, şıkları ve Bilişim Yönetimi mantığını tarıyor... Lütfen bekleyin.</em>";
+
+            const optionsText = qData.o.map((opt, i) => String.fromCharCode(65 + i) + ") " + opt).join(', ');
+            const correctAnswerText = String.fromCharCode(65 + qData.a) + ") " + qData.o[qData.a];
+
+            const prompt = `Aşağıdaki "Çalışma Hayatında Bilişim ve Belge Yönetimi" sorusunu, şıklarını ve doğru cevabını incele. Öğrenci bu sorunun çözümünü tam anlayamadı. 
+            Doğru cevabın neden doğru olduğunu ve diğer şıkların neden yanlış olduğunu İSG/Bilişim mantığına uygun, akılda kalıcı ve eğitici bir dille açıkla.
+
+Soru: ${qData.q}
+Şıklar: ${optionsText}
+Doğru Cevap: ${correctAnswerText}
+
+Lütfen sadece açıklama kısmını ver, soruyu tekrar yazma. Gerekirse akılda kalıcı kodlamalar ekleyebilirsin.`;
+
+            let retries = 3;
+            let success = false;
+            let resultText = "";
+
+            while (retries > 0 && !success) {
+                try {
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                    });
+
+                    if (!response.ok) throw new Error("HTTP Error");
+                    const data = await response.json();
+                    resultText = data.candidates[0].content.parts[0].text;
+                    success = true;
+                } catch (error) {
+                    retries--;
+                    await new Promise(r => setTimeout(r, 2000));
+                }
+            }
+
+            if (success) {
+                const formattedText = resultText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+                responseBox.innerHTML = `<strong><i class="fa-solid fa-robot"></i> ✨ Gemini AI Asistanı:</strong><br><br>${formattedText}`;
+                btn.style.display = 'none'; 
+            } else {
+                responseBox.innerHTML = "<em>⚠️ Gemini ağına şu an ulaşılamıyor. Lütfen daha sonra tekrar deneyin.</em>";
+                btn.disabled = false;
+                btn.innerHTML = '✨ Tekrar Gemini Analizi İste';
+            }
+        }
+
+        // Uygulamayı Başlat
+        window.onload = initApp;
+
+    </script>
+</body>
+</html>

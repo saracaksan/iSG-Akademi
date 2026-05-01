@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ünite 6 - Konu Anlatımı ve Test | İSG Akademi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4c1d95; 
+            --primary-light: #7c3aed; 
+            --secondary: #1e1b4b; 
+            --bg-color: #f3f4f6;
+            --text-dark: #1f2937;
+            --success: #10b981;
+            --danger: #ef4444;
+            --card-bg: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-dark); line-height: 1.6; }
+
+        /* Navbar */
+        nav { background: var(--card-bg); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
+        .logo { font-size: 1.2rem; font-weight: 700; color: var(--primary); }
+        .back-btn { text-decoration: none; color: var(--primary); font-weight: 500; font-size: 0.9rem; border: 1px solid var(--primary); padding: 5px 15px; border-radius: 5px; transition: all 0.3s;}
+        .back-btn:hover { background: var(--primary); color: white; }
+
+        .container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
+        
+        /* Konu Anlatımı Bölümü */
+        .content-section { background: var(--card-bg); padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); margin-bottom: 2rem; }
+        .content-section h1 { color: var(--secondary); margin-bottom: 1rem; font-size: 1.8rem; text-align: center; border-bottom: 2px solid var(--primary-light); padding-bottom: 10px;}
+        .content-section h2 { color: var(--primary); margin-top: 1.5rem; margin-bottom: 1rem; font-size: 1.3rem; display: flex; align-items: center; gap: 10px;}
+        .content-section h3 { color: var(--secondary); margin-top: 1.2rem; margin-bottom: 0.5rem; font-size: 1.1rem; }
+        .content-section p, .content-section li { font-size: 0.95rem; margin-bottom: 0.8rem; text-align: justify; }
+        .highlight-box { background: #fef3c7; border-left: 5px solid #f59e0b; padding: 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .mind-map { background: #eff6ff; border: 1px dashed #3b82f6; padding: 1.5rem; border-radius: 8px; margin: 1rem 0; }
+
+        /* Test Bölümü */
+        .quiz-section { background: var(--card-bg); padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); }
+        .quiz-title { text-align: center; color: var(--secondary); margin-bottom: 1rem; }
+        
+        .memory-badge { display: inline-block; background: #e0e7ff; color: #4338ca; padding: 5px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-bottom: 2rem; border: 1px solid #c7d2fe; }
+
+        .question-card { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e7eb; transition: opacity 0.3s; }
+        .question-text { font-weight: 600; font-size: 1.05rem; margin-bottom: 1rem; }
+        
+        .options-list { display: flex; flex-direction: column; gap: 8px; }
+        .option-btn { 
+            background: #f8fafc; border: 2px solid #e2e8f0; padding: 12px 15px; 
+            border-radius: 8px; text-align: left; font-size: 0.95rem; cursor: pointer; 
+            transition: all 0.2s; display: flex; align-items: center; width: 100%; position: relative;
+        }
+        .option-btn:hover:not(.disabled) { border-color: var(--primary-light); background: #f5f3ff; }
+        
+        /* Şık Durumları */
+        .option-btn.disabled { pointer-events: none; opacity: 0.8; }
+        .option-btn.correct { background: #ecfdf5 !important; border-color: var(--success) !important; color: #065f46; font-weight: 600; }
+        .option-btn.wrong { background: #fef2f2 !important; border-color: var(--danger) !important; color: #991b1b; text-decoration: line-through; }
+        
+        .btn-finish { background: var(--primary); color: white; border: none; padding: 15px 30px; font-size: 1.1rem; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 1rem; transition: background 0.3s;}
+        .btn-finish:hover { background: var(--secondary); }
+        .btn-reset { background: #6b7280; color: white; border: none; padding: 10px 20px; font-size: 0.9rem; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px; width: 100%; transition: background 0.3s;}
+        .btn-reset:hover { background: #4b5563; }
+
+        /* Sonuç ve Çözümler Bölümü */
+        #results-section { display: none; margin-top: 2rem; background: #f0fdf4; padding: 2rem; border-radius: 15px; border: 2px solid var(--success); }
+        .score-display { text-align: center; font-size: 2.5rem; font-weight: bold; color: var(--success); margin-bottom: 1rem; }
+        
+        .solution-box { background: white; padding: 15px; border-left: 4px solid var(--primary-light); margin-bottom: 15px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .solution-box h4 { margin-bottom: 5px; color: var(--secondary); font-size: 1rem;}
+
+        .btn-pdf { background: #dc2626; color: white; border: none; padding: 12px 25px; font-size: 1rem; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 20px; display: inline-flex; align-items: center; gap: 10px; }
+        .btn-pdf:hover { background: #991b1b; }
+
+        footer { text-align: center; padding: 2rem; color: var(--text-light); font-size: 0.9rem; }
+
+        @media print {
+            body { background: white; color: black; font-size: 10pt; line-height: 1.3; }
+            nav, .btn-finish, .btn-reset, .btn-pdf, .back-btn, .memory-badge { display: none !important; }
+            .container { max-width: 100%; margin: 0; padding: 0; }
+            .content-section, .quiz-section { box-shadow: none; border: none; padding: 0; margin-bottom: 10px; }
+            h1 { font-size: 14pt; } h2 { font-size: 12pt; } h3 { font-size: 11pt; }
+            .question-card { margin-bottom: 10px; padding-bottom: 10px; page-break-inside: avoid; border-bottom: 1px solid #ccc;}
+            .option-btn { padding: 4px 8px; border: 1px solid #ccc; margin-bottom: 2px; font-size: 9pt; }
+            .quiz-container-print { column-count: 2; column-gap: 20px; }
+            #results-section { display: block !important; border: none; padding: 0; }
+            .solution-box { border: 1px solid #ddd; padding: 8px; margin-bottom: 5px; page-break-inside: avoid; font-size: 9pt;}
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo"><i class="fa-solid fa-person-falling-burst"></i> Ünite 6: Kentsel Arama Kurtarma</div>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-light);">Hazırlayan: Sıraç Aksan</span>
+            <a href="../../index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Ana Sayfaya Dön</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section class="content-section">
+            <h1>Kentsel Arama Kurtarma Çalışmalarında İş Sağlığı ve Güvenliği</h1>
+            
+            <h2><i class="fa-solid fa-magnifying-glass-chart"></i> 1. Stratejik Olay Yeri Değerlendirmesi ve Güvenlik</h2>
+            <p>Hasarlı bir binada çalışmanın ilk şartı olay değerlendirmesini doğru yapmaktır. Binanın çökme nedeni, yapısı, hava şartları ve içerdeki insan sayısı analiz edilmelidir. Olay yerinde 4 temel güvenlik unsuru <strong>asla</strong> ihmal edilemez:</p>
+            <ul>
+                <li><strong>Hasar / Hareket Gözetlenmesi:</strong> Binadaki oynamalar anlık takip edilir.</li>
+                <li><strong>Haberleşme:</strong> Ekipler arası iletişim asla kopmamalıdır.</li>
+                <li><strong>Kaçış Rotaları:</strong> Ani çökme/patlamalara karşı belirlenir. Fosforlu boyalarla işaretlenir. <em>En kısa yol olmak zorunda değildir, en güvenli ve hızlı yol olmalıdır.</em></li>
+                <li><strong>Güvenli Bölgeler:</strong> Tüm personelin acil durumda toplanacağı alanlar netleşmelidir.</li>
+            </ul>
+
+            <h2><i class="fa-solid fa-building-circle-exclamation"></i> 2. Bina Yapıları ve İkincil Çökme Riski</h2>
+            <p>Tamamen çökmüş (yassı kadayıf olmuş) bir binada ikincil çökme ihtimali azdır. Asıl tehlike, <strong>hasar görmesine rağmen ayakta kalmış (veya kısmen çökmüş) binalardır.</strong></p>
+            <ul>
+                <li><strong>Betonarme Karkas Yapılar:</strong> Taşıyıcı sistem kolon, kiriş ve perdelerdir. Yıkıldığında büyük yaşam boşlukları (hayat üçgenleri) oluşma ihtimali yüksektir.</li>
+                <li><strong>Yığma Yapılar:</strong> Kolon ve kiriş yoktur, taşıyıcı bizzat duvarlardır (tuğlalar). Yıkıldığında tuğlalar ufalanır, bu nedenle büyük yaşam boşlukları oluşma ihtimali düşüktür.</li>
+            </ul>
+
+            <h2><i class="fa-solid fa-arrows-up-down-left-right"></i> 3. Destek/Sabitleme ve İlerleme Teknikleri</h2>
+            <p>Çökme tehlikesine karşı dışarıdan içeriye doğru destekler (kereste, kriko vb.) yerleştirilir. Bu işlem mutlaka <strong>inşaat veya maden mühendisi / teknik eleman gözetiminde</strong> yapılmalıdır.</p>
+            <p><strong>Dikey İlerleme (Yukarıdan Aşağı):</strong></p>
+            <p><em>Avantaj:</em> Kolon/kiriş yerine sadece ince döşeme delinir. Ortam daha tozsuz ve havadardır. İkincil çökmede sıkışma riski azdır.</p>
+            <p><em>Dezavantaj:</em> Delinen yerin altında ne olduğu (kimyasal, tüp veya afetzede) tam bilinemez.</p>
+            <p><strong>Yatay İlerleme (Yandan İçe Doğru):</strong></p>
+            <p><em>Avantaj:</em> İki kat arasındaki boşluktan ilerlenir. Afetzedeye ilave zarar verme ihtimali düşüktür.</p>
+            <p><em>Dezavantaj:</em> Dar, tozlu ve karanlıktır (klostrofobik). Rotası uzundur ve ikincil bir çökmede personelin sıkışma (ölüm) ihtimali çok daha yüksektir.</p>
+            
+            <div class="highlight-box">
+                <h3 style="color: #b45309; margin-bottom: 10px;"><i class="fa-solid fa-triangle-exclamation"></i> Sınavlarda Çıkma Mantığı ve Önemli Tuzaklar</h3>
+                <p><strong>Tuzak 1 (Güvenlik Önceliği):</strong> Sınavlarda duygusal davranıp "Önce Afetzedenin Güvenliği" şıkkını işaretlemeyin! Evrensel kuraldır: Güvenlik önceliği her zaman <strong>1. Kurtarmacı Personel (Kendiniz), 2. Afetzede, 3. Vatandaş, 4. Ekipman</strong> şeklindedir.</p>
+                <p><strong>Tuzak 2 (Kaçış Rotası Kuralı):</strong> Şıklarda genellikle "Kaçış rotası en kısa yoldur" der. Yanlıştır! Kaçış rotası <strong>en kısa değil, EN GÜVENLİ ve HIZLI</strong> uzaklaşılabilecek yoldur.</p>
+                <p><strong>Tuzak 3 (İlerleme Dezavantajları):</strong> Dikey ve yatay ilerlemenin avantaj/dezavantajlarını ters verirler. "Altında ne olduğu bilinemez" diyorsa kesinlikle DİKEY (yukarıdan delme) ilerlemedir.</p>
+            </div>
+
+            <div class="mind-map">
+                <h3 style="color: #1d4ed8; margin-bottom: 10px;"><i class="fa-solid fa-brain"></i> Zihin Haritası & Kodlamalar</h3>
+                <p><strong>Güvenlik Önceliği Kodu: "K-A-V-E"</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li><strong>K</strong>urtarmacı</li>
+                    <li><strong>A</strong>fetzede</li>
+                    <li><strong>V</strong>atandaş</li>
+                    <li><strong>E</strong>kipman</li>
+                </ul>
+                <p style="margin-top: 10px;"><strong>Temel Güvenlik Unsuru Kodu: "3H - 1K"</strong><br>
+                <strong>H</strong>asar gözetleme, <strong>H</strong>aberleşme, <strong>H</strong>at (Güvenli Bölge), <strong>K</strong>açış Rotası.</p>
+            </div>
+        </section>
+
+        <section class="quiz-section">
+            <h2 class="quiz-title"><i class="fa-solid fa-list-check"></i> Ünite 6 Final Provası (20 Soru)</h2>
+            <div style="text-align: center;">
+                <div class="memory-badge" id="memory-badge">
+                    <i class="fa-solid fa-floppy-disk"></i> Sistem Devrede: İşaretlenen sorular hafızaya kaydediliyor...
+                </div>
+            </div>
+            
+            <div id="quiz-container" class="quiz-container-print">
+                </div>
+
+            <button class="btn-finish" id="finish-btn" onclick="testiBitir()">
+                <i class="fa-solid fa-flag-checkered"></i> Testi Bitir ve Değerlendir
+            </button>
+            <button class="btn-reset" id="reset-btn" onclick="testiSifirla()">
+                <i class="fa-solid fa-rotate-right"></i> Çözümlerimi Sıfırla ve Baştan Başla
+            </button>
+
+            <div id="results-section">
+                <h2 style="text-align: center; color: var(--secondary);">Sınav Sonucunuz</h2>
+                <div class="score-display">Puan: <span id="score-text">0</span> / 100</div>
+                <p style="text-align: center; margin-bottom: 2rem; font-weight: 500;" id="score-message"></p>
+
+                <h3 style="margin-bottom: 15px; border-bottom: 2px solid #ccc; padding-bottom: 5px;">Detaylı Soru Analizi ve Çözümler</h3>
+                <div id="solutions-container">
+                    </div>
+
+                <div style="text-align: center;">
+                    <button class="btn-pdf" onclick="window.print()">
+                        <i class="fa-solid fa-file-pdf"></i> Konuyu ve Çözümleri Sıkışık PDF Olarak Kaydet
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>Anadolu Üniversitesi İş Sağlığı ve Güvenliği Hazırlık Sistemi &copy; 2026 | Tasarım: Sıraç Aksan</p>
+    </footer>
+
+    <script>
+        // Soru Veritabanı (20 Analitik Soru)
+        const questions = [
+            { q: "Kentsel arama kurtarma çalışmalarında (örneğin depremde yıkılmış bir bina), olay yeri güvenlik hiyerarşisinde 'birinci' sırada kimin veya neyin güvenliği yer alır?", options: ["A) Göçük altındaki afetzedelerin güvenliği", "B) Çevredeki meraklı vatandaşların güvenliği", "C) Kullanılan hassas ve pahalı alet-ekipmanın güvenliği", "D) Arama kurtarma köpeğinin güvenliği", "E) Kurtarmacı personelin kendi güvenliği"], answer: 4, solution: "Arama kurtarmanın altın kuralı: Kendi güvenliğini sağlayamayan başkasını kurtaramaz. Sıralama K-A-V-E şeklindedir (Kurtarmacı, Afetzede, Vatandaş, Ekipman)." },
+            { q: "İkincil çökmeler ile ilgili aşağıdaki ifadelerden hangisi teknik olarak Yanlıştır?", options: ["A) Artçı depremler veya ikinci bir patlama sonucu oluşabilirler.", "B) Tamamen yassı kadayıf olmuş (çökmüş) bir yapıda ikincil çökme ihtimali oldukça azdır.", "C) Dayanak ve destek çalışmaları yapılmadan hasarlı binaya girilmesi ölümcül derecede tehlikelidir.", "D) Ayakta kalmış ancak hasar görmüş bir binada ikincil çökme riskini tespit etmek çok basit ve sıradan bir iştir.", "E) Hasar görmüş bir bina en ufak bir sarsıntıda aniden çökebilir."], answer: 3, solution: "Ayakta kalmış hasarlı bir binanın ne zaman ve nasıl çökeceğini tespit etmek, uzman inşaat mühendisleri için bile oldukça zor ve karmaşık bir iştir." },
+            { q: "Olay yerine ulaşan ekiplerin vakit kaybetmeden yapması gereken 'Stratejik Olay Yeri Değerlendirmesi' aşamasında, toksik ve kimyasal maddelere maruz kalma tehlikesi açısından öncelikle hangisi araştırılmalıdır?", options: ["A) Binanın kat sayısı", "B) Binanın kullanım amacı (fabrika, laboratuvar, hastane, konut vb.)", "C) Binanın taşıyıcı sisteminin betonarme olup olmadığı", "D) Hava sıcaklığının kaç derece olduğu", "E) Çevredeki binaların dış cephe boyaları"], answer: 1, solution: "Binanın kimyasal tehlike barındırıp barındırmadığı, binanın 'kullanım amacına' (Örn: Kimya laboratuvarı, boya atölyesi, tekstil fabrikası) bakılarak anlaşılır." },
+            { q: "Bir arama kurtarma çalışması yapılan hasarlı binada, güvenli çalışma için belirlenen '4 temel unsur' arasında aşağıdakilerden hangisi yer Almaz?", options: ["A) Binadaki hasar hareketinin optik cihazlarla gözetlenmesi", "B) Ekipler arası haberleşmenin asla kopmaması", "C) Her koşulda iletişimi koparıp bireysel inisiyatif alınması", "D) Ani çökmelere karşı Kaçış Rotalarının belirlenmesi", "E) Tüm personelin bildiği Güvenli Bölgelerin oluşturulması"], answer: 2, solution: "Arama kurtarmada bireysel inisiyatif (kafasına göre hareket etme) kesinlikle yasaktır; haberleşme asla kopmamalıdır." },
+            { q: "Olay yerinde belirlenen 'Kaçış Rotaları' ile ilgili aşağıdaki bilgilerden hangisi Kesinlikle Yanlıştır?", options: ["A) Operasyon başlamadan önce mutlaka belirlenmelidir.", "B) Fosforlu sprey boya, emniyet şeridi vb. ile açıkça işaretlenmelidir.", "C) Tüm ekipler birinci ve alternatif kaçış rotalarını ezbere bilmelidir.", "D) Kaçış rotası, personeli güvenli bölgeye en kısa mesafeden ulaştıran doğrusal yol olmak zorundadır.", "E) İkinci bir patlama veya sel anında çökme alanından uzaklaşmayı sağlar."], answer: 3, solution: "Kaçış rotası en kısa yol olmak ZORUNDA DEĞİLDİR. Belki en kısa yolda devasa bir asılı beton blok vardır. Önemli olan en 'güvenli' ve 'hızlı' yoldur." },
+            { q: "Enkaz alanında dayanak, destek ve sabitleme çalışmaları (tahkimat) kimin teknik gözetiminde ve yönlendirmesinde yapılmalıdır?", options: ["A) Mahalle muhtarı", "B) Sağlık personeli (Paramedik)", "C) İnşaat veya maden mühendisi gibi özel eğitim almış teknik eleman", "D) Polis veya Jandarma", "E) En kıdemli lojistik personeli"], answer: 2, solution: "Binanın yük aktarım sistemini ve kolon/kiriş mekaniğini en iyi analiz edecek kişiler inşaat veya maden mühendisleri gibi yapısal uzmanlardır." },
+            { q: "Afetzedeye ulaşmak için 'Dikey Yönde (Yukarıdan Aşağı)' ilerlemenin en büyük dezavantajı aşağıdakilerden hangisidir?", options: ["A) Delinen noktanın tam altında ne olduğunun (kimyasal, patlayıcı veya afetzede) kesin olarak bilinememesi", "B) Kurtarmacının çok karanlık ve klostrofobik bir ortamda çalışmak zorunda kalması", "C) Afetzedeye ulaşmak için rotanın çok uzun olması", "D) Döşemenin, kolonlara göre çok daha kalın ve zor delinmesi", "E) İkincil çökmede kurtarmacının sıkışma ihtimalinin en yüksek olması"], answer: 0, solution: "Dikey ilerlemenin en büyük riski kör noktaya işlem yapmaktır. Tavanı deldiğinizde matkabın ucu hemen alttaki bir tüpe veya afetzedenin vücuduna denk gelebilir." },
+            { q: "Aşağıdakilerden hangisi enkazda 'Yatay Yönde (Yandan İçe Doğru)' ilerlemenin avantajlarından biri olarak kabul edilir?", options: ["A) Kurtarma personelinin çok ferah, tozsuz ve aydınlık bir ortamda çalışması", "B) İki kat arasında kalan boşluktan ilerlendiği için afetzedeye ilave zarar verme ihtimalinin daha düşük olması", "C) İkincil bir çökme durumunda kurtarmacının üzerine yük binme ihtimalinin sıfır olması", "D) Afetzedeye en kısa mesafeden anında ulaşılması", "E) Hiçbir destek (tahkimat) çalışmasına ihtiyaç duyulmaması"], answer: 1, solution: "Yatay ilerleme dar, karanlık ve uzundur (dezavantajları). Ancak yukarıdan taş düşürmediğiniz için afetzedeye ekstra zarar verme ihtimaliniz düşüktür (avantajı)." },
+            { q: "Türkiye'nin yapı stoku göz önüne alındığında; tuğlaların un ufak olması nedeniyle 'yaşam boşluğu (hayat üçgeni)' oluşma ihtimalinin en düşük olduğu ve genellikle kolon-kiriş sisteminin bulunmadığı bina tipi hangisidir?", options: ["A) Çelik konstrüksiyon yapılar", "B) Betonarme karkas yapılar", "C) Yığma yapılar", "D) Ahşap iskeletli yapılar", "E) Prefabrik yapılar"], answer: 2, solution: "Yığma yapılarda yükü tuğla duvarlar taşır. Yıkıldığında tuğlalar ufalandığı için kolon-kiriş sistemindeki gibi büyük boşluklar kalmaz." },
+            { q: "Dayanak ve sabitleme çalışmaları (Tahkimat) enkazın neresinden başlayarak, hangi yöne doğru ilerletilerek inşa edilmelidir?", options: ["A) Enkazın tam merkezinden dışarıya doğru", "B) Güvenli dışarıdan başlayarak, kademe kademe tehlikeli içeriye doğru", "C) Sadece en üst kattan aşağıya doğru", "D) Önce afetzedenin bulunduğu odadan dışarıya doğru", "E) Gelişigüzel, malzemenin en bol olduğu yerden başlayarak"], answer: 1, solution: "Güvenlik her zaman güvenli olandan güvensiz olana doğru inşa edilir. Personel kendi arkasını sağlama alarak (dışarıdan içeriye doğru) destek kurmalıdır." },
+            { q: "Kentsel arama kurtarma çalışmalarında karşılaşılan tehlikelerden hangisi, çalışma sahasındaki hijyen eksikliği ve kirlenmiş içme sularıyla doğrudan ilişkilidir?", options: ["A) Psikolojik travma", "B) Elektrik çarpması", "C) İkincil çökme", "D) Toksik ve bulaşıcı hastalık (Biyolojik) tehlikesi", "E) Uçan nesne tehlikesi"], answer: 3, solution: "Altyapının çökmesiyle kanalizasyon suları içme suyuna karışır. Bu durum ortamdaki kirlenmiş su ve hava kaynaklı biyolojik/toksik hastalıklara davetiye çıkarır." },
+            { q: "Çöken bir binaya müdahale eden ekiplerin, enkazı kaldırırken oksijen kaynak makinesi kullanmaları ortamda öncelikle hangi yeni (ikincil) tehlikeyi tetikleyebilir?", options: ["A) Tsunami", "B) Yangın ve Gaz Patlamaları", "C) Radyasyon sızıntısı", "D) Sel baskını", "E) Salgın hastalık"], answer: 1, solution: "Oksijen kaynak makineleri (kesici-yakıcı aletler) yüksek ısı ve kıvılcım çıkarır. Enkazdaki doğalgaz kaçağıyla veya yanıcı maddelerle birleştiğinde anında yangın ve patlamaya sebep olur." },
+            { q: "Tamamen çökmüş bir betonarme binada arama kurtarma ekiplerinin 'Dikey Yönde' (yukarıdan aşağıya doğru) çalışmayı tercih etmesinin en büyük fiziksel avantajı nedir?", options: ["A) Kat döşemelerinin (tabliye), taşıyıcı kolon ve kirişlere göre daha ince/zayıf olması ve daha kolay delinmesi", "B) Dikey inişin klostrofobik bir his yaratması", "C) Dikeyde haberleşme cihazlarının daha iyi çekmesi", "D) Oksijen tüpü kullanmaya gerek kalmaması", "E) Yukarıdan su vermenin daha kolay olması"], answer: 0, solution: "Betonarme sistemde kolon ve kirişleri (kalın ve içi demir donatılı) delmek hem çok zor hem de binanın kalan dengesini bozacağı için tehlikelidir. Döşeme (zemin) ise nispeten daha incedir." },
+            { q: "Arama kurtarma personelinin yoğun toz, asbest ve zararlı kimyasal zerreciklerine maruz kaldığı enkaz ortamında kullanması gereken en öncelikli kişisel koruyucu donanım (KKD) grubu hangisidir?", options: ["A) Çelik burunlu bot", "B) Elektrik yalıtımlı eldiven", "C) Solunum sistemi koruyucuları (Gaz/Toz Maskeleri)", "D) Tam vücut emniyet kemeri", "E) Kulak tıkacı"], answer: 2, solution: "Toz, asbest ve kalkan zehirli kimyasalların insan vücuduna en hızlı ve ölümcül giriş yolu solunum (akciğerler) sistemidir. Solunum maskesi ilk ve en hayati savunma hattıdır." },
+            { q: "Olay komuta yeri (kriz masası) kurulurken 'Birleşik Komuta Uygulaması'nın temel amacı nedir?", options: ["A) Medyaya daha güzel bir görüntü vermek", "B) Operasyonda çalışan itfaiye, AFAD, UMKE, polis gibi farklı birimlerin birbirlerinden bağımsız değil, organize ve tek elden yönetilmesini sağlamak", "C) Sadece uluslararası ekiplere görev dağıtmak", "D) Olay yerini tamamen askeriyeye devretmek", "E) Bütçe harcamalarını kısıtlamak"], answer: 1, solution: "Birleşik komuta sistemi, farklı kurum ve disiplinlerin (sağlık, güvenlik, arama-kurtarma) çatışmadan, eşgüdüm içinde tek bir stratejik merkezden yönetilmesini sağlar." },
+            { q: "Çöken binanın yapısına ilişkin yapılan değerlendirmede 'betonarme karkas yapı' olduğu tespit edilmiştir. Bu bilgi kurtarma ekiplerine operasyon stratejisinde nasıl bir ipucu verir?", options: ["A) Tuğlalar ezildiği için kesinlikle canlı yoktur", "B) Bina ahşap olduğu için testere kullanılmalıdır", "C) Kolon, kiriş veya perdelerin ayakta kalması sayesinde içerde büyük 'yaşam boşlukları' oluşmuş olabilir", "D) Binada elektrik tesisatı yoktur", "E) Çökme nedeni kesinlikle yangındır"], answer: 2, solution: "Betonarme sistemin ana iskeleti olan kolon ve kirişler üst üste bindiğinde, aralarında insanların hayatta kalabileceği üçgen boşluklar (hayat üçgenleri) oluşturur." },
+            { q: "Enkaz alanında çalışan bir kurtarmacıda, kapalı ve dar alanda uzun süre yatarak/sürünerek çalışmaktan ötürü (örneğin yatay ilerlemede) anksiyete, nefes darlığı ve panik atak belirtileri görülmüştür. Bu durum hangi psikolojik risk faktörü ile açıklanır?", options: ["A) Yükseklik korkusu (Akrofobi)", "B) Kapalı ve dar alan fobisi (Klostrofobi) kaynaklı stres", "C) İşitme kaybı travması", "D) Toksik şok sendromu", "E) Kimyasal zehirlenme sendromu"], answer: 1, solution: "Yatay ilerlemenin en büyük dezavantajı olan dar, sıkışık ve karanlık mekanda çalışma zorunluluğu, insanda doğal olarak gelişen klostrofobik (kapalı alan korkusu) psikolojik krizleri tetikleyebilir." },
+            { q: "Enkaz kaldırma faaliyetleri sırasında kullanılan iş makinelerinin (ekskavatör vb.) dikkatsiz ve koordinasyonsuz kullanımı, aşağıdaki olay yeri tehlikelerinden en çok hangisini doğrudan tetikler?", options: ["A) Meteorolojik olaylar", "B) Bulaşıcı hastalıkların yayılması", "C) Denge halindeki hasarlı parçaların hareket etmesiyle oluşan 'İkincil Çökmeler'", "D) Radyasyon sızıntısı", "E) Beslenme yetersizliği"], answer: 2, solution: "İş makinelerinin yarattığı titreşim ve yanlış bir kolona vurması, bıçak sırtında dengede duran enkazın tamamen çökmesine (ikincil çökme) ve alttakilerin ezilmesine neden olur." },
+            { q: "Bir destek ve sabitleme işlemi (tahkimat) sırasında, kullanılacak kereste veya krikonun seçilmesinde dikkat edilmesi gereken en hayati fiziksel kural nedir?", options: ["A) Renginin molozla uyumlu olması", "B) Hafif malzemeden yapılmış olması", "C) Kullanılacak dayanağın altına gireceği yükün ağırlığını ve basıncını taşıyabilecek (uygun) kapasitede seçilmesi", "D) Sadece metal malzemeden üretilmiş olması", "E) Estetik bir görünüme sahip olması"], answer: 2, solution: "Tonlarca ağırlıktaki beton bir tabliyeyi desteklemek için zayıf bir kereste kullanılamaz. Destek elemanı mutlaka taşıyacağı yüke (tonaja) uygun mühendislik hesabıyla seçilmelidir." },
+            { q: "Arama kurtarma ekiplerinin görev bölgesine intikal etmeden önce kişisel koruyucu donanımlarını eksiksiz giymesi ve aşılarını tamamlamış olması, aşağıdaki olay yeri tehlikelerinden sırasıyla hangilerini önlemeye (veya riskini azaltmaya) yöneliktir?", options: ["A) Fiziksel travma ve Biyolojik/Bulaşıcı hastalıklar", "B) Sadece psikolojik çöküntü", "C) İkincil çökmeler ve hava şartları", "D) Gaz patlamaları ve Su baskınları", "E) Elektrik çarpması ve Gürültü kirliliği"], answer: 0, solution: "KKD (Baret, çelik burunlu bot vb.) doğrudan fiziksel travmaları (düşen nesneler, ezilmeler) önler. Aşılar ise tetanos, hepatit gibi biyolojik bulaşıcı hastalıklara karşı koruma sağlar." }
+        ];
+
+        // Sınav Durumu Yönetimi (Local Storage)
+        let quizState = {}; 
+        const STORAGE_KEY = "isg_u6_state"; 
+
+        function stateYukle() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if(saved) {
+                    quizState = JSON.parse(saved);
+                    document.getElementById("memory-badge").innerHTML = `<i class="fa-solid fa-cloud-arrow-down"></i> Önceki oturumunuz başarıyla geri yüklendi. Kaldığınız yerden devam edebilirsiniz.`;
+                    document.getElementById("memory-badge").style.backgroundColor = "#dcfce7";
+                    document.getElementById("memory-badge").style.color = "#166534";
+                    document.getElementById("memory-badge").style.borderColor = "#bbf7d0";
+                }
+            } catch(e) { console.log("State yüklenemedi."); }
+        }
+
+        function stateKaydet() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(quizState));
+        }
+
+        // Soruları Ekrana Çizdirme
+        function renderQuestions() {
+            const container = document.getElementById("quiz-container");
+            const solutionsContainer = document.getElementById("solutions-container");
+            container.innerHTML = "";
+            solutionsContainer.innerHTML = "";
+
+            questions.forEach((q, index) => {
+                const isAnswered = quizState.hasOwnProperty(index);
+                const savedData = isAnswered ? quizState[index] : null;
+
+                let questionHTML = `
+                    <div class="question-card" id="q-card-${index}">
+                        <div class="question-text">${index + 1}. ${q.q}</div>
+                        <div class="options-list">
+                `;
+
+                q.options.forEach((opt, optIndex) => {
+                    let classes = "option-btn";
+                    let icon = "";
+                    
+                    if(isAnswered) {
+                        classes += " disabled";
+                        if(optIndex === q.answer) {
+                            classes += " correct";
+                            icon = ' <i class="fa-solid fa-check" style="margin-left:auto;"></i>';
+                        }
+                        if(optIndex === savedData.selected && savedData.selected !== q.answer) {
+                            classes += " wrong";
+                            icon = ' <i class="fa-solid fa-xmark" style="margin-left:auto;"></i>';
+                        }
+                    }
+
+                    questionHTML += `
+                        <div class="${classes}" id="opt-${index}-${optIndex}" onclick="selectOption(${index}, ${optIndex}, ${q.answer})">
+                            ${opt} ${icon}
+                        </div>
+                    `;
+                });
+
+                questionHTML += `</div></div>`;
+                container.innerHTML += questionHTML;
+
+                // Çözüm Kartı
+                const solutionHTML = `
+                    <div class="solution-box">
+                        <h4>Soru ${index + 1} Çözümü:</h4>
+                        <p><strong>Doğru Cevap:</strong> ${q.options[q.answer]}</p>
+                        <p style="color: var(--text-light); font-size: 0.9rem; margin-top: 5px; text-align:justify;"><i class="fa-solid fa-lightbulb" style="color: var(--primary-light);"></i> <strong>Analiz:</strong> ${q.solution}</p>
+                    </div>
+                `;
+                solutionsContainer.innerHTML += solutionHTML;
+            });
+        }
+
+        // Şık Tıklama
+        function selectOption(qIndex, selectedOptIndex, correctOptIndex) {
+            if(quizState.hasOwnProperty(qIndex)) return;
+
+            for(let i=0; i<5; i++) {
+                const optElement = document.getElementById(`opt-${qIndex}-${i}`);
+                optElement.classList.add("disabled");
+                
+                if(i === correctOptIndex) {
+                    optElement.classList.add("correct");
+                    optElement.innerHTML += ' <i class="fa-solid fa-check" style="margin-left:auto;"></i>';
+                }
+            }
+
+            if(selectedOptIndex !== correctOptIndex) {
+                const selectedElement = document.getElementById(`opt-${qIndex}-${selectedOptIndex}`);
+                selectedElement.classList.add("wrong");
+                selectedElement.innerHTML += ' <i class="fa-solid fa-xmark" style="margin-left:auto;"></i>';
+            }
+
+            quizState[qIndex] = { selected: selectedOptIndex, correct: correctOptIndex };
+            stateKaydet();
+        }
+
+        // Testi Bitir ve Değerlendir
+        function testiBitir() {
+            const answeredCount = Object.keys(quizState).length;
+            
+            if(answeredCount < questions.length) {
+                if(!confirm(`Dikkat: Henüz ${questions.length - answeredCount} soruyu boş bıraktınız. Boşlar yanlış sayılacaktır. Yine de bitirmek istiyor musunuz?`)) return;
+            }
+
+            let score = 0;
+            for(let key in quizState) {
+                if(quizState[key].selected === quizState[key].correct) score += 5;
+            }
+
+            document.getElementById("finish-btn").style.display = "none";
+            document.getElementById("results-section").style.display = "block";
+            
+            document.getElementById("score-text").innerText = score;
+            let message = "";
+            if(score >= 90) message = "Tebrikler! Kentsel arama kurtarmanın stratejisini ve mekaniğini tam olarak çözmüşsünüz.";
+            else if(score >= 70) message = "Başarılı. Ancak dikey ve yatay ilerleme stratejilerindeki avantaj/dezavantajları tekrar inceleyin.";
+            else message = "Bu ünitede teknik terimler ağırdır. Lütfen soru çözümlerindeki mantıksal analizleri okuyun.";
+            document.getElementById("score-message").innerText = message;
+
+            try {
+                let progress = JSON.parse(localStorage.getItem("isg_progress") || "[]");
+                if(!progress.includes("afet_unite_6")) {
+                    progress.push("afet_unite_6");
+                    localStorage.setItem("isg_progress", JSON.stringify(progress));
+                }
+            } catch(e) {}
+
+            document.getElementById("results-section").scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Sistemi Sıfırla
+        function testiSifirla() {
+            if(confirm("Tüm cevaplarınız kalıcı olarak silinecek ve teste baştan başlayacaksınız. Emin misiniz?")) {
+                localStorage.removeItem(STORAGE_KEY);
+                window.location.reload();
+            }
+        }
+
+        window.onload = () => {
+            stateYukle();
+            renderQuestions();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ünite 2 - Konu Anlatımı ve Test | İSG Akademi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4c1d95; 
+            --primary-light: #7c3aed; 
+            --secondary: #1e1b4b; 
+            --bg-color: #f3f4f6;
+            --text-dark: #1f2937;
+            --success: #10b981;
+            --danger: #ef4444;
+            --card-bg: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-dark); line-height: 1.6; }
+
+        /* Navbar */
+        nav { background: var(--card-bg); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
+        .logo { font-size: 1.2rem; font-weight: 700; color: var(--primary); }
+        .back-btn { text-decoration: none; color: var(--primary); font-weight: 500; font-size: 0.9rem; border: 1px solid var(--primary); padding: 5px 15px; border-radius: 5px; transition: all 0.3s;}
+        .back-btn:hover { background: var(--primary); color: white; }
+
+        .container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
+        
+        /* Konu Anlatımı Bölümü */
+        .content-section { background: var(--card-bg); padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); margin-bottom: 2rem; }
+        .content-section h1 { color: var(--secondary); margin-bottom: 1rem; font-size: 1.8rem; text-align: center; border-bottom: 2px solid var(--primary-light); padding-bottom: 10px;}
+        .content-section h2 { color: var(--primary); margin-top: 1.5rem; margin-bottom: 1rem; font-size: 1.3rem; display: flex; align-items: center; gap: 10px;}
+        .content-section p, .content-section li { font-size: 0.95rem; margin-bottom: 0.8rem; }
+        .highlight-box { background: #fef3c7; border-left: 5px solid #f59e0b; padding: 1rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .mind-map { background: #eff6ff; border: 1px dashed #3b82f6; padding: 1.5rem; border-radius: 8px; margin: 1rem 0; }
+
+        /* Test Bölümü */
+        .quiz-section { background: var(--card-bg); padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); }
+        .quiz-title { text-align: center; color: var(--secondary); margin-bottom: 1rem; }
+        
+        .memory-badge { display: inline-block; background: #e0e7ff; color: #4338ca; padding: 5px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-bottom: 2rem; border: 1px solid #c7d2fe; }
+
+        .question-card { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e7eb; transition: opacity 0.3s; }
+        .question-text { font-weight: 600; font-size: 1.05rem; margin-bottom: 1rem; }
+        
+        .options-list { display: flex; flex-direction: column; gap: 8px; }
+        .option-btn { 
+            background: #f8fafc; border: 2px solid #e2e8f0; padding: 12px 15px; 
+            border-radius: 8px; text-align: left; font-size: 0.95rem; cursor: pointer; 
+            transition: all 0.2s; display: flex; align-items: center; width: 100%; position: relative;
+        }
+        .option-btn:hover:not(.disabled) { border-color: var(--primary-light); background: #f5f3ff; }
+        
+        /* Şık Durumları */
+        .option-btn.disabled { pointer-events: none; opacity: 0.8; }
+        .option-btn.correct { background: #ecfdf5 !important; border-color: var(--success) !important; color: #065f46; font-weight: 600; }
+        .option-btn.wrong { background: #fef2f2 !important; border-color: var(--danger) !important; color: #991b1b; text-decoration: line-through; }
+        
+        .btn-finish { background: var(--primary); color: white; border: none; padding: 15px 30px; font-size: 1.1rem; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 1rem; transition: background 0.3s;}
+        .btn-finish:hover { background: var(--secondary); }
+        .btn-reset { background: #6b7280; color: white; border: none; padding: 10px 20px; font-size: 0.9rem; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px; width: 100%; transition: background 0.3s;}
+        .btn-reset:hover { background: #4b5563; }
+
+        /* Sonuç ve Çözümler Bölümü */
+        #results-section { display: none; margin-top: 2rem; background: #f0fdf4; padding: 2rem; border-radius: 15px; border: 2px solid var(--success); }
+        .score-display { text-align: center; font-size: 2.5rem; font-weight: bold; color: var(--success); margin-bottom: 1rem; }
+        
+        .solution-box { background: white; padding: 15px; border-left: 4px solid var(--primary-light); margin-bottom: 15px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .solution-box h4 { margin-bottom: 5px; color: var(--secondary); font-size: 1rem;}
+
+        .btn-pdf { background: #dc2626; color: white; border: none; padding: 12px 25px; font-size: 1rem; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 20px; display: inline-flex; align-items: center; gap: 10px; }
+        .btn-pdf:hover { background: #991b1b; }
+
+        footer { text-align: center; padding: 2rem; color: var(--text-light); font-size: 0.9rem; }
+
+        /* PDF Çıktı Ayarları (Sıkışık PDF) */
+        @media print {
+            body { background: white; color: black; font-size: 10pt; line-height: 1.3; }
+            nav, .btn-finish, .btn-reset, .btn-pdf, .back-btn, .memory-badge { display: none !important; }
+            .container { max-width: 100%; margin: 0; padding: 0; }
+            .content-section, .quiz-section { box-shadow: none; border: none; padding: 0; margin-bottom: 10px; }
+            h1 { font-size: 14pt; } h2 { font-size: 12pt; }
+            .question-card { margin-bottom: 10px; padding-bottom: 10px; page-break-inside: avoid; border-bottom: 1px solid #ccc;}
+            .option-btn { padding: 4px 8px; border: 1px solid #ccc; margin-bottom: 2px; font-size: 9pt; }
+            .quiz-container-print { column-count: 2; column-gap: 20px; }
+            #results-section { display: block !important; border: none; padding: 0; }
+            .solution-box { border: 1px solid #ddd; padding: 8px; margin-bottom: 5px; page-break-inside: avoid; font-size: 9pt;}
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo"><i class="fa-solid fa-book-open"></i> Ünite 2: Mesleki Yeterlilik Sistemi</div>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-light);">Hazırlayan: Sıraç Aksan</span>
+            <a href="../../index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Ana Sayfaya Dön</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section class="content-section">
+            <h1>Mesleki Yeterlilik Sistemi ve Mevzuat</h1>
+            
+            <h2><i class="fa-solid fa-layer-group"></i> 1. Kavramsal Çerçeve ve MYK</h2>
+            <p>İş kazaları ve meslek hastalıklarının en önemli sebeplerinden biri <strong>mesleki yetersizlik ve ehliyetsizliktir</strong>. Afet ve acil durum sahasında görev alanların mutlak surette belgelendirilmesi gerekir.</p>
+            <ul>
+                <li><strong>MYK (Mesleki Yeterlilik Kurumu):</strong> 5544 sayılı kanunla kurulmuştur. Yetkilendirilmiş kuruluşlarca yapılan sınavlarda başarılı olamayanların "Tehlikeli ve Çok Tehlikeli" sınıfta çalışması yasaklanmıştır.</li>
+                <li><strong>Belge Zorunluluğu Süresi:</strong> Bakanlıkça yayımlanan tebliğden itibaren <strong>12 ay</strong> sonra mesleki yeterlilik belgesi olmayan kişiler kesinlikle çalıştırılamaz.</li>
+                <li><strong>Kapsam Dışı Meslekler:</strong> Tabiplik, Diş Hekimliği, Eczacılık, Veterinerlik, Mühendislik ve Mimarlık gibi kendi kanunları olan meslekler MYK kapsamı dışındadır.</li>
+            </ul>
+
+            <h2><i class="fa-solid fa-user-shield"></i> 2. Arama Kurtarma Personeli Mevzuatı</h2>
+            <p>Arama kurtarma teknisyenleri AFAD kadrolarında görev yapar. Kentsel ve doğada arama kurtarma ile <strong>KBRN (Kimyasal, Biyolojik, Radyolojik ve Nükleer)</strong> olaylarında çalışırlar. Görev ortamları son derece stresli; kapalı, dar, yanıcı ve parlayıcı ortamlardır.</p>
+            
+            <div class="highlight-box">
+                <h3 style="color: #b45309; margin-bottom: 5px;"><i class="fa-solid fa-triangle-exclamation"></i> Sınavlarda Çıkma Mantığı ve Önemli Tuzaklar</h3>
+                <p><strong>Tuzak 1 (Sağlık Raporu Maliyeti):</strong> 6331 sayılı İSG Kanunu Madde 15'e göre sağlık gözetiminden doğan tüm maliyetler <strong>İŞVEREN</strong> tarafından karşılanır, çalışana asla yansıtılamaz. Şıklarda SGK veya çalışanın maaşından kesinti derse yanlıştır.</p>
+                <p><strong>Tuzak 2 (Tıbbi Müdahale):</strong> Arama kurtarma personeli olay yerinde ilk yardım uygulayabilir ancak <strong>tıbbi müdahalede bulunamaz</strong>. Tıbbi müdahale hekimlerin ve sağlık personelinin işidir.</p>
+                <p><strong>Tuzak 3 (Yaş Sınırı):</strong> Kamu sektörüne arama kurtarma teknisyeni alımlarında yaş sınırı genel olarak <strong>30</strong>'dur. 35 veya 40 olarak verilen şıklara dikkat edin.</p>
+            </div>
+
+            <div class="mind-map">
+                <h3 style="color: #1d4ed8; margin-bottom: 10px;"><i class="fa-solid fa-brain"></i> Zihin Haritası & Kodlamalar</h3>
+                <p><strong>Sağlık Muayenesi Şartları Kodu: "G-D-K-P"</strong></p>
+                <ul>
+                    <li><strong>G</strong>irişte (İşe ilk girişlerde)</li>
+                    <li><strong>D</strong>eğişiklikte (İş veya görev değişikliğinde)</li>
+                    <li><strong>K</strong>azadan Sonra (İş kazası/meslek hastalığı sonrası işe dönüşte - <em>çalışan talep ederse</em>)</li>
+                    <li><strong>P</strong>eriyodik (Tehlike sınıfına göre düzenli aralıklarla)</li>
+                </ul>
+                <p style="margin-top: 10px;"><strong>MYK Standartlarını Kim Hazırlar?</strong> Arama kurtarma uzmanı ulusal meslek standardını doğrudan <strong>AFAD</strong> hazırlar, MYK onaylar.</p>
+            </div>
+        </section>
+
+        <section class="quiz-section">
+            <h2 class="quiz-title"><i class="fa-solid fa-list-check"></i> Ünite 2 Final Provası (20 Soru)</h2>
+            <div style="text-align: center;">
+                <div class="memory-badge" id="memory-badge">
+                    <i class="fa-solid fa-floppy-disk"></i> Sistem Devrede: İşaretlenen sorular hafızaya kaydediliyor...
+                </div>
+            </div>
+            
+            <div id="quiz-container" class="quiz-container-print">
+                </div>
+
+            <button class="btn-finish" id="finish-btn" onclick="testiBitir()">
+                <i class="fa-solid fa-flag-checkered"></i> Testi Bitir ve Değerlendir
+            </button>
+            <button class="btn-reset" id="reset-btn" onclick="testiSifirla()">
+                <i class="fa-solid fa-rotate-right"></i> Çözümlerimi Sıfırla ve Baştan Başla
+            </button>
+
+            <div id="results-section">
+                <h2 style="text-align: center; color: var(--secondary);">Sınav Sonucunuz</h2>
+                <div class="score-display">Puan: <span id="score-text">0</span> / 100</div>
+                <p style="text-align: center; margin-bottom: 2rem; font-weight: 500;" id="score-message"></p>
+
+                <h3 style="margin-bottom: 15px; border-bottom: 2px solid #ccc; padding-bottom: 5px;">Detaylı Soru Analizi ve Çözümler</h3>
+                <div id="solutions-container">
+                    </div>
+
+                <div style="text-align: center;">
+                    <button class="btn-pdf" onclick="window.print()">
+                        <i class="fa-solid fa-file-pdf"></i> Konuyu ve Çözümleri Sıkışık PDF Olarak Kaydet
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>Anadolu Üniversitesi İş Sağlığı ve Güvenliği Hazırlık Sistemi &copy; 2026 | Tasarım: Sıraç Aksan</p>
+    </footer>
+
+    <script>
+        // Soru Veritabanı
+        const questions = [
+            { q: "TDK'ya göre kuralları toplum tarafından belirlenmiş, belli bir eğitimle kazanılan bilgi ve becerilere dayalı faaliyetler bütününe ne ad verilir?", options: ["A) Çırak", "B) Meslek", "C) Teknik personel", "D) İşçi", "E) Usta"], answer: 1, solution: "Hayat kazanmak için yapılan, kurallı ve eğitime dayalı bu kavrama 'Meslek' adı verilir." },
+            { q: "Bir mesleğin başarı ile icra edilebilmesi için MYK tarafından kabul edilen gerekli bilgi, beceri ve tutumların gösterildiği asgari norma ne denir?", options: ["A) Ulusal Meslek Standardı", "B) Meslek Profili", "C) Avrupa Yeterlilik Çerçevesi", "D) Ulusal Mesleki Yeterlilik Sistemi", "E) Mesleki Yeterlilik Belgesi"], answer: 0, solution: "MYK tarafından onaylanan ve mesleğin asgari şartlarını belirleyen belgeye 'Ulusal Meslek Standardı' denir." },
+            { q: "Aşağıdaki mesleklerden hangisi 5544 Sayılı MYK Kanunu kapsamında yer alır?", options: ["A) Eczacılık", "B) Veterinerlik", "C) Arama kurtarma uzmanı", "D) Mimarlık", "E) Mühendislik"], answer: 2, solution: "Eczacılık, veterinerlik, mimarlık ve mühendislik gibi mesleklerin kendi özel kanunları vardır ve MYK kapsamı dışındadır. Arama kurtarma uzmanı ise kapsama dâhildir." },
+            { q: "Sanat, ticaret ve mesleğin; olgun kişilik, ahlak ve doğruluğun iç içe girmiş alaşımına ne ad verilir?", options: ["A) Sanatkâr", "B) Tüccar", "C) Zanaatkâr", "D) Ahilik", "E) Dülger"], answer: 3, solution: "Ahlak, doğruluk, sanat ve mesleğin bir arada yoğrulduğu geleneksel yapı 'Ahilik' teşkilatıdır." },
+            { q: "AFAD kadrolarında görevli olarak afetlerde profesyonel arama kurtarma hizmeti veren personele ne ad verilir?", options: ["A) Acil yardım ekibi", "B) Tıbbi personel", "C) Arama ve kurtarma teknisyeni", "D) Kurtarmacı", "E) Kurtarıcı"], answer: 2, solution: "AFAD kadrolarında profesyonel olarak görev yapan bu kişilerin resmi unvanı 'Arama ve kurtarma teknisyeni'dir." },
+            { q: "Aşağıdakilerden hangisi arama ve kurtarma teknisyenlerinin yasal görevlerinden biri değildir?", options: ["A) Araç ve gereçleri kullanmak", "B) Tıbbi müdahalede bulunmak", "C) Beden sağlığını korumak", "D) İnsani yardım faaliyetlerine katılmak", "E) Belge ve rapor hazırlamak"], answer: 1, solution: "Tıbbi müdahalede bulunmak tıp hekimlerinin (doktorların) ve sağlık profesyonellerinin görevidir." },
+            { q: "Aşağıdakilerden hangisi arama kurtarma personeliyle ilgili genel mevzuatlardan biri değildir?", options: ["A) 4857 sayılı İş Kanunu", "B) 6331 sayılı İSG Kanunu", "C) 5902 sayılı AFAD Kanunu", "D) 4721 sayılı Türk Medeni Kanunu", "E) 7126 sayılı Sivil Savunma Kanunu"], answer: 3, solution: "Medeni Kanun, kişiler arası aile, miras gibi özel hukuk ilişkilerini düzenler; arama kurtarma operasyonel mevzuatı değildir." },
+            { q: "Kamu sektörüne arama kurtarma teknisyeni alımlarında genel yaş şartı (sınırı) kaçtır?", options: ["A) 40", "B) 30", "C) 38", "D) 25", "E) 45"], answer: 1, solution: "Operasyonel zorluklar nedeniyle kamu arama kurtarma teknisyeni alımlarında genel yaş sınırı 30 olarak uygulanmaktadır." },
+            { q: "Aşağıdakilerden hangisi arama kurtarma personeli için istenen yetkinliklerden biri değildir?", options: ["A) Güç", "B) Dayanıklılık", "C) Esneklik", "D) Liderlik", "E) Bireysellik"], answer: 4, solution: "Afet yönetimi tamamen bir ekip işidir. Bireysellik istenmeyen, aksine ekip uyumu istenen bir özelliktir." },
+            { q: "Arama kurtarma uzmanı ulusal meslek standardını hazırlayan kurum/kuruluş hangisidir?", options: ["A) AFAD", "B) ÇSGB Bakanlığı", "C) Çevre Bakanlığı", "D) TOBB", "E) TİSK"], answer: 0, solution: "Arama kurtarma meslek standartlarını ilgili başkanlık olan AFAD hazırlar ve MYK'ya sunarak onaylatır." },
+            { q: "Bakanlıkça yayımlanan tebliğlerde yer alan bir meslek için MYK Mesleki Yeterlilik Belgesi zorunluluğu tebliğ yayımından kaç ay sonra başlar?", options: ["A) 3 ay", "B) 6 ay", "C) 12 ay", "D) 18 ay", "E) 24 ay"], answer: 2, solution: "Yasaya göre tebliğin yayım tarihinden itibaren tam 12 ay geçtikten sonra belgesiz personel çalıştırılması yasaklanır." },
+            { q: "Çalışma ortamında KBRN olaylarına müdahale eden bir teknisyen için KBRN'nin açılımı nedir?", options: ["A) Kimyasal, Biyolojik, Radyolojik, Nükleer", "B) Klasik, Bölgesel, Riskli, Normal", "C) Kentsel, Biyolojik, Riskli, Nitelikli", "D) Katı, Basınçlı, Radyasyonlu, Nemli", "E) Kontrollü, Bölgesel, Resmi, Nükleer"], answer: 0, solution: "KBRN; Kimyasal, Biyolojik, Radyolojik ve Nükleer kelimelerinin baş harflerinden oluşan uluslararası bir tehlike kodlamasıdır." },
+            { q: "6331 Sayılı İSG Kanunu Madde 15'e göre sağlık muayenesi ve gözetim maliyetleri kim tarafından karşılanır?", options: ["A) Doğrudan SGK bütçesinden", "B) Çalışanın aylık net maaşından", "C) İşçi ve İşveren tarafından yarı yarıya", "D) Tamamı İşveren tarafından", "E) İşsizlik Sigortası Fonundan"], answer: 3, solution: "Kanunun 15. maddesi çok nettir: Sağlık gözetiminden doğan maliyetlerin tamamı işverence karşılanır, çalışana yansıtılamaz." },
+            { q: "Tehlikeli ve Çok Tehlikeli sınıfta yer alan iş yerlerinde çalışacaklar, işe giriş sağlık raporunu nereden almalıdır?", options: ["A) Herhangi bir aile hekiminden", "B) Sadece devlet hastanelerinden", "C) İş yeri hekiminden (OSGB)", "D) Sosyal Güvenlik Kurumundan", "E) Özel sigorta şirketlerinden"], answer: 2, solution: "Kanun kapsamında bu raporlar doğrudan işyerinin kendi 'İş Yeri Hekiminden' veya hizmet alınan OSGB hekiminden alınır." },
+            { q: "Arama ve kurtarma teknisyenleri hafta sonu ve resmî tatillerde şehir dışına çıkışlarında nasıl bir yol izlemelidir?", options: ["A) Sadece sözlü olarak arkadaşlarına iletirler", "B) Herhangi bir kuruma bilgi vermezler", "C) CİMER üzerinden başvuru yaparlar", "D) Amirlerine yazılı olarak bilgi verirler", "E) Valilikten resmi izin belgesi alırlar"], answer: 3, solution: "Yönetmelik gereği acil bir afet anında çağrılabilmeleri için şehir dışına çıkışlarda amirlerine yazılı bilgi vermek zorundadırlar." },
+            { q: "İş kazası veya meslek hastalığı nedeniyle tekrarlanan işten uzaklaşmalardan sonra, işe dönüş sağlık muayenesi hangi şarta bağlanmıştır?", options: ["A) Her durumda zorunludur", "B) İşverenin keyfi kararına bağlıdır", "C) Bakanlığın özel denetimine tabidir", "D) Çalışanın bizzat talep etmesi hâlinde yapılır", "E) Sendika temsilcisinin onayına bağlıdır"], answer: 3, solution: "İSG Kanunu Madde 15 b-3 bendine göre, iş kazası sonrası dönüşlerde muayene 'çalışanın talep etmesi hâlinde' sağlanır." },
+            { q: "Arama kurtarma personelinin tehlikelerle dolu çalışma ortamı göz önüne alındığında Kişisel Koruyucu Donanım (KKD) ne zaman kullanılır?", options: ["A) İlk tercih edilecek önlem olarak", "B) Sadece denetmenler sahaya geldiğinde", "C) Riskler tamamen ortadan kaldırılamadığı durumlarda", "D) Sadece gece mesaisi çalışmalarında", "E) İşveren donanımları satın almak istediğinde"], answer: 2, solution: "Risk kontrol hiyerarşisinde KKD en son çaredir. Riskler yok edilemiyor ve başka bir şeyle ikame edilemiyorsa KKD kullanılır." },
+            { q: "MYK mesleki yeterlilik belgesi alacak olan bir adayın ölçme ve değerlendirme sınavı hangi kurumlarca yapılır?", options: ["A) ÖSYM Merkezi", "B) MEB Açıköğretim", "C) Üniversitelerin ilgili bölümleri", "D) MYK tarafından yetkilendirilmiş kuruluşlar", "E) İş ve İşçi Bulma Kurumu (İŞKUR)"], answer: 3, solution: "Belgelendirme sınavları, MYK kurumu tarafından denetlenmiş ve akredite edilerek 'Yetkilendirilmiş Belgelendirme Kuruluşları' tarafından yapılır." },
+            { q: "Aşağıdakilerden hangisi bir afet esnasında karşılaşılabilecek olan ikincil (tetiklenen) risk grubunda değerlendirilmez?", options: ["A) Kimyasal sızıntılar", "B) Gaz kaçakları", "C) Elektrik kontağı yangınları", "D) Yer kabuğundaki fay kırılması", "E) Salgın hastalıklar"], answer: 3, solution: "Fay kırılması ana (birincil) afetin bizzat kendisidir. Sızıntı, yangın ve salgın hastalıklar afetin tetiklediği ikincil durumlardır." },
+            { q: "Arama kurtarma personelinin olay yerinde sergilemesi beklenen tavırlardan biri hangisi olamaz?", options: ["A) Kendi can güvenliğini de hesaba katması", "B) Afetzede yakınlarının psikolojisini gözetmesi", "C) Ekip çalışması kurallarına uyması", "D) Disiplin ve titizlikle görev yapması", "E) Yetkisiz inisiyatif alarak tek başına binaya girmesi"], answer: 4, solution: "Kahramanlık psikolojisiyle kendi veya ekibin canını tehlikeye atacak kontrolsüz bireysel eylemler (yetkisiz inisiyatif) kesinlikle yasaktır." }
+        ];
+
+        // Sınav Durumunu Yönetimi
+        let quizState = {}; // Format: { 0: {selected: 1, correct: 1}, 1: {selected: 3, correct: 1} ... }
+
+        function stateYukle() {
+            try {
+                const saved = localStorage.getItem("isg_u2_state");
+                if(saved) {
+                    quizState = JSON.parse(saved);
+                    document.getElementById("memory-badge").innerHTML = `<i class="fa-solid fa-cloud-arrow-down"></i> Önceki oturumunuz başarıyla geri yüklendi. Kaldığınız yerden devam edebilirsiniz.`;
+                    document.getElementById("memory-badge").style.backgroundColor = "#dcfce7";
+                    document.getElementById("memory-badge").style.color = "#166534";
+                    document.getElementById("memory-badge").style.borderColor = "#bbf7d0";
+                }
+            } catch(e) { console.log("State yüklenemedi."); }
+        }
+
+        function stateKaydet() {
+            localStorage.setItem("isg_u2_state", JSON.stringify(quizState));
+        }
+
+        // Soruları Ekrana Çizdirme
+        function renderQuestions() {
+            const container = document.getElementById("quiz-container");
+            const solutionsContainer = document.getElementById("solutions-container");
+            container.innerHTML = "";
+            solutionsContainer.innerHTML = "";
+
+            questions.forEach((q, index) => {
+                // Önceden çözülmüş mü?
+                const isAnswered = quizState.hasOwnProperty(index);
+                const savedData = isAnswered ? quizState[index] : null;
+
+                // Soru Kartı
+                let questionHTML = `
+                    <div class="question-card" id="q-card-${index}">
+                        <div class="question-text">${index + 1}. ${q.q}</div>
+                        <div class="options-list">
+                `;
+
+                q.options.forEach((opt, optIndex) => {
+                    let classes = "option-btn";
+                    let icon = "";
+                    
+                    if(isAnswered) {
+                        classes += " disabled"; // Kilitli
+                        if(optIndex === q.answer) {
+                            classes += " correct";
+                            icon = ' <i class="fa-solid fa-check" style="margin-left:auto;"></i>';
+                        }
+                        if(optIndex === savedData.selected && savedData.selected !== q.answer) {
+                            classes += " wrong";
+                            icon = ' <i class="fa-solid fa-xmark" style="margin-left:auto;"></i>';
+                        }
+                    }
+
+                    questionHTML += `
+                        <div class="${classes}" id="opt-${index}-${optIndex}" onclick="selectOption(${index}, ${optIndex}, ${q.answer})">
+                            ${opt} ${icon}
+                        </div>
+                    `;
+                });
+
+                questionHTML += `</div></div>`;
+                container.innerHTML += questionHTML;
+
+                // Çözüm Kartı (Gizli durur, sonuçlarda görünür)
+                const solutionHTML = `
+                    <div class="solution-box">
+                        <h4>Soru ${index + 1}: ${q.q}</h4>
+                        <p><strong>Doğru Cevap:</strong> ${q.options[q.answer]}</p>
+                        <p style="color: var(--text-light); font-size: 0.9rem; margin-top: 5px;"><i class="fa-solid fa-lightbulb" style="color: var(--primary-light);"></i> ${q.solution}</p>
+                    </div>
+                `;
+                solutionsContainer.innerHTML += solutionHTML;
+            });
+        }
+
+        // Şık Tıklama
+        function selectOption(qIndex, selectedOptIndex, correctOptIndex) {
+            // Eğer daha önce cevaplanmışsa işlem yapma
+            if(quizState.hasOwnProperty(qIndex)) return;
+
+            // Şıkları kilitle ve renklendir
+            for(let i=0; i<5; i++) {
+                const optElement = document.getElementById(`opt-${qIndex}-${i}`);
+                optElement.classList.add("disabled");
+                
+                if(i === correctOptIndex) {
+                    optElement.classList.add("correct");
+                    optElement.innerHTML += ' <i class="fa-solid fa-check" style="margin-left:auto;"></i>';
+                }
+            }
+
+            if(selectedOptIndex !== correctOptIndex) {
+                const selectedElement = document.getElementById(`opt-${qIndex}-${selectedOptIndex}`);
+                selectedElement.classList.add("wrong");
+                selectedElement.innerHTML += ' <i class="fa-solid fa-xmark" style="margin-left:auto;"></i>';
+            }
+
+            // Hafızaya Kaydet
+            quizState[qIndex] = {
+                selected: selectedOptIndex,
+                correct: correctOptIndex
+            };
+            stateKaydet();
+        }
+
+        // Testi Bitir ve Değerlendir
+        function testiBitir() {
+            const answeredCount = Object.keys(quizState).length;
+            
+            if(answeredCount < questions.length) {
+                if(!confirm(`Henüz ${questions.length - answeredCount} soruyu boş bıraktınız. Boşlar yanlış sayılacaktır. Yine de bitirmek istiyor musunuz?`)) {
+                    return;
+                }
+            }
+
+            // Puan Hesapla (Sadece doğru bilinenler, formül: doğruSayısı * 5)
+            let score = 0;
+            for(let key in quizState) {
+                if(quizState[key].selected === quizState[key].correct) {
+                    score += 5;
+                }
+            }
+
+            // Görünümleri Ayarla
+            document.getElementById("finish-btn").style.display = "none";
+            document.getElementById("results-section").style.display = "block";
+            
+            // Sonuç Metni
+            document.getElementById("score-text").innerText = score;
+            let message = "";
+            if(score >= 90) message = "Harika! Mevzuat konusuna tam hakimsiniz.";
+            else if(score >= 70) message = "Güzel bir sonuç ancak eksiklerinizi aşağıdan inceleyin.";
+            else message = "Mevzuat ezber gerektirir. Soru çözümlerindeki notlara dikkat edin.";
+            document.getElementById("score-message").innerText = message;
+
+            // Ana sayfa genel ilerleme tikini aktifleştirme (Opsiyonel Entegrasyon)
+            try {
+                let progress = JSON.parse(localStorage.getItem("isg_progress") || "[]");
+                if(!progress.includes("afet_unite_2")) {
+                    progress.push("afet_unite_2");
+                    localStorage.setItem("isg_progress", JSON.stringify(progress));
+                }
+            } catch(e) {}
+
+            document.getElementById("results-section").scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Sistemi Sıfırla
+        function testiSifirla() {
+            if(confirm("Tüm cevaplarınız silinecek ve teste baştan başlayacaksınız. Emin misiniz?")) {
+                localStorage.removeItem("isg_u2_state");
+                window.location.reload();
+            }
+        }
+
+        // Sayfa Başlangıcı
+        window.onload = () => {
+            stateYukle();
+            renderQuestions();
+        };
+
+    </script>
+</body>
+</html>

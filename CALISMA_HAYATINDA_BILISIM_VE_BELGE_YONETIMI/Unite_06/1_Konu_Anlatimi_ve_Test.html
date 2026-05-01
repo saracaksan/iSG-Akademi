@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilişim ve Belge Yönetimi | Ünite 6 - İSG Akademi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4c1d95; 
+            --primary-light: #7c3aed; 
+            --secondary: #1e1b4b; 
+            --accent: #f59e0b;
+            --bg-color: #f8fafc;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --card-bg: #ffffff;
+            --gemini-gradient: linear-gradient(135deg, #8b5cf6, #c026d3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-dark); line-height: 1.6; overflow-x: hidden; }
+
+        /* Navbar */
+        nav { background: var(--card-bg); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; border-bottom: 3px solid var(--accent);}
+        .logo { font-size: 1.3rem; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+        .back-btn { text-decoration: none; color: var(--primary); font-weight: 600; font-size: 0.9rem; border: 2px solid var(--primary); padding: 6px 15px; border-radius: 8px; transition: all 0.3s;}
+        .back-btn:hover { background: var(--primary); color: white; }
+
+        .container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
+        
+        /* Konu Anlatımı Bölümü */
+        .content-section { background: var(--card-bg); padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); margin-bottom: 2rem; border-top: 5px solid var(--primary-light); }
+        .content-section h1 { color: var(--secondary); margin-bottom: 1rem; font-size: 1.8rem; text-align: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;}
+        .content-section h2 { color: var(--primary); margin-top: 1.5rem; margin-bottom: 1rem; font-size: 1.3rem; display: flex; align-items: center; gap: 10px;}
+        .content-section p, .content-section li { font-size: 0.95rem; margin-bottom: 0.8rem; text-align: justify; }
+        
+        .highlight-box { background: #fef3c7; border-left: 5px solid #f59e0b; padding: 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .highlight-box h4 { color: #b45309; margin-bottom: 10px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+        
+        .mind-map { background: #eff6ff; border: 1px dashed #3b82f6; padding: 1.5rem; border-radius: 8px; margin: 1rem 0; }
+        .mind-map h4 { color: #1d4ed8; margin-bottom: 10px;}
+
+        /* Test Bölümü */
+        .quiz-section { background: var(--card-bg); padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); }
+        .quiz-header { text-align: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid #e2e8f0; }
+        
+        .controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 10px; }
+        .memory-badge { background: #ecfccb; color: #166534; padding: 6px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; border: 1px solid #bbf7d0; display: inline-flex; align-items: center; gap: 5px;}
+        
+        .question-card { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px dashed #cbd5e1; transition: opacity 0.3s;}
+        .question-meta { font-size: 0.8rem; color: var(--primary-light); font-weight: 700; margin-bottom: 5px; text-transform: uppercase;}
+        .question-text { font-weight: 600; font-size: 1.05rem; margin-bottom: 1.5rem; color: var(--secondary); display: flex; gap: 12px; text-align: justify;}
+        .q-number { background: var(--primary); color: white; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 0.95rem; flex-shrink: 0;}
+        
+        .options-list { display: flex; flex-direction: column; gap: 8px; padding-left: 44px;}
+        .option-btn { background: var(--bg-color); border: 2px solid #e2e8f0; padding: 12px 18px; border-radius: 8px; text-align: left; font-size: 0.95rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 10px; font-weight: 500; color: var(--text-dark);}
+        .option-btn:hover:not(.locked) { border-color: var(--primary-light); background: #f5f3ff; transform: translateX(5px); }
+        .option-btn.selected { background: #dbeafe; border-color: var(--primary-light); }
+        
+        /* Değerlendirme Sonrası Renkler */
+        .option-btn.locked { pointer-events: none; }
+        .option-btn.correct { background: #ecfdf5 !important; border-color: var(--success) !important; color: #065f46; font-weight: 700; }
+        .option-btn.wrong { background: #fef2f2 !important; border-color: var(--danger) !important; color: #991b1b; text-decoration: line-through; }
+        
+        .solution-box { display: none; background: #fffbeb; padding: 1.2rem; border-left: 4px solid var(--accent); margin-top: 15px; margin-left: 44px; border-radius: 0 8px 8px 0; font-size: 0.9rem; color: #78350f; text-align: justify;}
+        .solution-box.visible { display: block; animation: fadeIn 0.5s; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Gemini AI Button & Response Styles */
+        .ai-explain-btn { background: var(--gemini-gradient); color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer; margin-top: 15px; transition: opacity 0.3s, transform 0.2s; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 6px rgba(139, 92, 246, 0.25); }
+        .ai-explain-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+        .ai-explain-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .ai-response-box { margin-top: 15px; padding: 15px; background: #fdf4ff; border-left: 4px solid #c026d3; border-radius: 8px; font-size: 0.9rem; color: #4a044e; line-height: 1.6; animation: fadeIn 0.5s; }
+
+        .finish-container { text-align: center; margin: 3rem 0; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;}
+        .btn-finish { background: var(--success); color: white; border: none; padding: 15px 40px; font-size: 1.1rem; border-radius: 10px; cursor: pointer; font-weight: 700; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3); transition: background 0.3s; }
+        .btn-finish:hover { background: #059669; }
+        .btn-reset { background: var(--text-light); color: white; border: none; padding: 15px 30px; font-size: 1.1rem; border-radius: 10px; cursor: pointer; font-weight: 700; transition: background 0.3s; }
+        .btn-reset:hover { background: #475569; }
+
+        /* Sonuç Paneli */
+        #results-panel { display: none; background: #f0fdf4; padding: 2.5rem; border-radius: 15px; border: 2px solid var(--success); text-align: center; margin-bottom: 2rem;}
+        .score-display { font-size: 3.5rem; font-weight: 800; color: var(--success); line-height: 1; margin-bottom: 0.5rem;}
+        .stats-row { display: flex; justify-content: center; gap: 2rem; margin-top: 1.5rem; font-size: 1.1rem; font-weight: 600; flex-wrap: wrap;}
+        .stat-item { padding: 10px 20px; border-radius: 8px; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.05);}
+        .s-correct { color: var(--success); } .s-wrong { color: var(--danger); } .s-net { color: var(--primary); }
+
+        footer { text-align: center; padding: 2rem; color: var(--text-light); font-size: 0.9rem; background: var(--card-bg); border-top: 1px solid #e2e8f0; margin-top: 2rem;}
+
+        /* --- PDF PRINT AYARLARI --- */
+        @media print {
+            @page { margin: 1cm; }
+            body { background: white; color: black; font-size: 9pt; }
+            nav, .finish-container, #results-panel, .ai-explain-btn, .memory-badge { display: none !important; }
+            .container { max-width: 100%; margin: 0; padding: 0; }
+            .content-section { padding: 10px; margin-bottom: 10px; box-shadow: none; border-top: 2px solid black; border-radius: 0; }
+            .quiz-section { box-shadow: none; border: none; padding: 0; }
+            .question-card { padding: 5px 0; margin-bottom: 10px; box-shadow: none; border-bottom: 1px solid #ccc; page-break-inside: avoid; border-radius: 0; }
+            .question-meta { font-size: 8pt; color: #555; margin-bottom: 2px;}
+            .question-text { font-size: 10pt; margin-bottom: 5px; color: black;}
+            .q-number { width: 20px; height: 20px; font-size: 8pt; background: #ddd; color: black; }
+            .options-list { padding-left: 25px; gap: 2px; }
+            .option-btn { padding: 4px 8px; border: none; font-size: 9pt; color: black; background: none; border: 1px solid #ccc;}
+            .option-btn.correct { font-weight: bold; background: none !important; border: 1px solid black !important; color: black;}
+            .option-btn.wrong { text-decoration: none; color: black; }
+            .solution-box { display: block !important; padding: 5px; margin-top: 5px; margin-left: 25px; border: 1px solid #999; font-size: 8pt; background: #f9f9f9; color: black; page-break-inside: avoid;}
+            .ai-response-box { display: none !important; }
+            #questions-container { column-count: 2; column-gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo"><i class="fa-solid fa-file-word"></i> Sözcük İşlemciler</div>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-light);">Hazırlayan: Sıraç Aksan</span>
+            <a href="../../index.html" class="back-btn"><i class="fa-solid fa-house"></i> Ana Sayfa</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        
+        <section class="content-section">
+            <h1>Ünite 6: Sözcük İşlemcilerin Gelişimi ve Özellikleri</h1>
+            
+            <h2><i class="fa-solid fa-timeline"></i> 1. Sözcük İşlemcilerin Tarihsel Gelişimi</h2>
+            <p>Sözcük işlemci kavramı ilk kez 1960'larda <strong>elektrikli daktilolar</strong> döneminde ortaya atılmıştır. Daha sonra;</p>
+            <ul>
+                <li><strong>1970'ler ve 80'ler:</strong> Düşük kapasiteli ve kişisel bilgisayarlar sayesinde yazılımlar gelişti.</li>
+                <li><strong>1990'lar:</strong> Grafik kullanıcı arayüzlerinin yaygınlaşması kullanımı çok kolaylaştırdı.</li>
+                <li><strong>2000'ler ve sonrası:</strong> Web 2.0 uygulamaları, bloglar, Google Docs ve Word Online gibi <strong>Çevrim İçi (Bulut Tabanlı)</strong> sistemler doğdu. <em>Bu sistemler sayesinde aynı belge üzerinde birden fazla kişinin eşzamanlı çalışabilmesi sağlandı.</em></li>
+            </ul>
+
+            <h2><i class="fa-solid fa-align-left"></i> 2. Karakter, Paragraf ve Sayfa Düzenleme İşlemleri</h2>
+            <p>Sözcük işlemcilerde işlemler 3 temel seviyede yapılır:</p>
+            <ul>
+                <li><strong>Karakter/Sözcük Seviyesi:</strong> Yazı tipi, kalınlık, renk, alt/üst simge ve zemin rengi gibi işlemlerdir.</li>
+                <li><strong>Paragraf Seviyesi:</strong> Hizalama (sağ-sol), satır aralığı, girintileme ve madde/numaralama işlemleridir.</li>
+                <li><strong>Sayfa Seviyesi:</strong> Kenar boşluğu, sayfa yönü, üst/alt bilgi ve <strong>Filigran (Arkaplan)</strong> ekleme işlemleridir.</li>
+            </ul>
+
+            <h2><i class="fa-solid fa-photo-film"></i> 3. Belgeye Eklenebilir Ögeler ve Dosya Gizliliği</h2>
+            <p>Bir belgeye tablo, grafik, resim, denklem (formül) ve video eklenebilir. <strong>Önemli: Sözcük işlemci içerisinde 'Video' doğrudan DÜZENLENEMEZ (Kesilemez, montajlanamaz), sadece dışarıdan belgeye eklenebilir.</strong></p>
+            <p>Belgeyi korumak için; parola ile şifreleme, salt okunur yapma, erişim olanaklarını kısıtlama ve dijital imza kullanılabilir. Ancak <em>yazı rengini sayfa rengiyle aynı yapmak</em> amatörce bir gizleme hilesidir, güvenlik önlemi sayılamaz.</p>
+
+            <div class="highlight-box">
+                <h4><i class="fa-solid fa-triangle-exclamation"></i> Sınavlarda Çıkma Mantığı ve Önemli Tuzaklar</h4>
+                <p><strong>Tuzak 1 (BackSpace ve Delete Farkı):</strong> İmlecin <strong>SOLUNDAKİ</strong> karakteri silmek için <code>BackSpace</code> tuşu; imlecin <strong>SAĞINDAKİ</strong> (önündeki) karakteri silmek için ise <code>Delete</code> tuşu kullanılır.</p>
+                <p><strong>Tuzak 2 (Paragraf vs Sayfa):</strong> Sınavlarda genellikle "Filigran" (arkaplan yazısı/resmi) paragraf işlemiymiş gibi şıklara konur. Filigran tüm sayfayı etkilediği için <strong>Sayfa Düzenleme</strong> işlemidir, paragraf işlemi DEĞİLDİR.</p>
+                <p><strong>Tuzak 3 (NotePad vs WordPad):</strong> Windows'ta 'sadece düz metin' (biçimsiz, renksiz) için kullanılan uygulama <strong>NotePad (Not Defteri)</strong>'dir. WordPad ise basit biçimlendirme yapabilen daha gelişmiş bir araçtır.</p>
+            </div>
+
+            <div class="mind-map">
+                <h4><i class="fa-solid fa-brain"></i> Zihin Haritası & Kodlamalar</h4>
+                <p><strong>Microsoft Word Belge (Nesne) Ekleme:</strong> Başka bir programı açmadan, mevcut belgenin içine yeni boş bir Word, Excel veya PowerPoint dosyası gömmek (eklemek) için <strong>EKLE -> NESNE</strong> komutu kullanılır.</p>
+                <p style="margin-top: 10px;"><strong>Şablonlar (Templates):</strong> Tıpkı bir broşür, CV veya "Tez" yazarken sıfırdan tasarım yapmakla uğraşmamak için programın bize sunduğu önceden tasarlanmış hazır yapılardır.</p>
+            </div>
+        </section>
+
+        <section class="quiz-section">
+            <div class="quiz-header">
+                <h2 style="color: var(--secondary); font-size: 1.8rem;"><i class="fa-solid fa-star"></i> Ünite 6 Final Provası (25 Özgün Soru)</h2>
+                <p style="color: var(--text-light);">AÖF standartlarına uygun 4 yanlış 1 doğruyu götürür. Takıldığınız sorularda ✨ Gemini'ye danışın.</p>
+            </div>
+            
+            <div class="controls">
+                <div class="memory-badge" id="memory-badge">
+                    <i class="fa-solid fa-floppy-disk"></i> Sistem Devrede: İşaretlenen sorular kaydediliyor...
+                </div>
+            </div>
+            
+            <div id="questions-container">
+                </div>
+
+            <div class="finish-container" id="finish-container">
+                <button class="btn-finish" onclick="finishExam()"><i class="fa-solid fa-flag-checkered"></i> Denemeyi Bitir ve Değerlendir</button>
+                <button class="btn-reset" onclick="resetExam()"><i class="fa-solid fa-rotate-right"></i> Çözümleri Sıfırla</button>
+            </div>
+
+            <div id="results-panel">
+                <h2 style="color: var(--secondary); margin-bottom: 10px;">Final Simülasyonu Sonucu</h2>
+                <div class="score-display"><span id="score-text">0</span> Puan</div>
+                <div class="stats-row">
+                    <div class="stat-item s-correct">Doğru: <span id="count-correct">0</span></div>
+                    <div class="stat-item s-wrong">Yanlış: <span id="count-wrong">0</span></div>
+                    <div class="stat-item">Boş: <span id="count-empty">0</span></div>
+                    <div class="stat-item s-net">Net: <span id="count-net">0</span></div>
+                </div>
+                <button class="back-btn" style="margin-top: 25px; display: inline-block; background: var(--primary); color: white;" onclick="window.print()">
+                    <i class="fa-solid fa-file-pdf"></i> Arşiv İçin Sıkışık PDF Al
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>Anadolu Üniversitesi Açıköğretim (AÖF) Hazırlık Sistemi &copy; 2026 | Tasarım ve İçerik: Sıraç Aksan</p>
+    </footer>
+
+    <script>
+        // API KEY MUST BE EMPTY
+        const apiKey = ""; 
+
+        /* --- 25 ÖZGÜN, ZOR VE ANALİTİK SORU VERİTABANI --- */
+        const examData = [
+            // KİTAPTAN ALINAN 10 ORİJİNAL SORU
+            {q: "Aşağıdaki kavramlardan hangisi sözcük işlemcilerin tarihçesinde yer almaz?", o: ["Cümle işlemciler", "Satır düzenleyiciler", "Metin düzenleyiciler", "Sözcük işlemciler", "Masaüstü yayıncılık sistemleri"], a: 0, s: "Tarihsel gelişimde elektrikli daktilolar, metin/satır düzenleyiciler, sözcük işlemciler ve masaüstü yayıncılık sistemleri vardır. 'Cümle işlemciler' diye bir kavram bilişim literatüründe yoktur."},
+            {q: "Windows işletim sisteminde sadece 'düz metin' (biçimsiz) dosyalarını düzenlemek için kullanılan, önceden yüklenmiş basit uygulama aşağıdakilerden hangisidir?", o: ["TextPad", "NotePad (Not Defteri)", "Text", "OneNote", "WordPad"], a: 1, s: "Hiçbir renk, kalınlık veya tablo özelliği barındırmayan, sadece salt metin (TXT) yazmak için kullanılan Windows programı NotePad'dir. WordPad ise biraz daha gelişmiştir."},
+            {q: "Sözcük işlemcilerde imlecin SOLUNDAKİ karakteri silmek amacıyla kullanılan klavye tuşu aşağıdakilerden hangisidir?", o: ["BackSpace (Geri Silme)", "Delete", "Shift+Delete", "Ctrl+X", "CapsLock"], a: 0, s: "Klavyede imlecin (yanıp sönen çizgi) gerisindeki (solundaki) harfleri silmek için BackSpace kullanılır. Sağındaki/önündeki harfleri silmek için ise Delete kullanılır."},
+            {q: "Bir sözcük işlemcide 'Kalın, İtalik, Üstü Çizili, Zemin Rengi ve Kenarlık' uygulanan bir kelimenin, özellikleri aşağıdakilerden hangisinde eksiksiz olarak sayılmıştır?", o: ["İtalik, üst simge, kenarlık, üstü çizili", "Normal, üstü çizili, zemin rengi, kenarlık", "İtalik, altı çizili, kenarlık, kalın", "Kalın, italik, üstü çizili, kenarlık, zemin rengi", "Kalın, alt simge, üstü çizili, zemin rengi, kenarlık"], a: 3, s: "Orijinal soruda biçimlendirmelerin doğru sıralanması istenmiştir. (Sorunun kitap cevabı D şıkkıdır, kalın, yatık/italik, üzeri çizili, arkası boyalı/zemin rengi ve kenarları çizili özellikleri içerir)."},
+            {q: "Aşağıdakilerden hangisi bir Sözcük İşlemcide 'paragraf' biçimlendirme işlemi DEĞİLDİR?", o: ["Hizalama", "Maddeleme", "Filigran", "Girintileme", "Satır aralığı"], a: 2, s: "Filigran (arkaplana silik logo/yazı ekleme) bir paragrafa değil, tüm sayfaya uygulanan bir işlemdir. Bu nedenle 'Sayfa Düzenleme' menüsünde yer alır."},
+            {q: "Belgeye eklenebilen ve ücretsiz 'Open Office Writer' uygulamasında bulunmayan, ancak Microsoft Word uygulamasında bulunan öge aşağıdakilerden hangisidir?", o: ["Akıllı şekil (SmartArt)", "Video", "Tablo", "Çizelge", "Formül"], a: 0, s: "Microsoft Word'e özgü olan, organizasyon şemaları ve hiyerarşi grafikleri çizmeyi çok pratik hale getiren araç 'SmartArt (Akıllı Şekil)'dir. Eski veya basit programlarda (OpenOffice) bu araç doğrudan bulunmaz."},
+            {q: "Aşağıdaki ögelerden hangisi Sözcük İşlemci içerisinde DÜZENLENEMEZ (Örneğin kesme, kırpma veya efekt ekleme yapılamaz)?", o: ["Video", "Çizim (Şekil)", "Tablo", "Çizelge (Grafik)", "Yazı sanatı (Sanatsal yazı)"], a: 0, s: "Sözcük işlemcilere (Word) şekil, tablo veya grafik ekleyip içini/rengini değiştirebilirsiniz. Ancak bir Video eklediğinizde sadece onu oynatabilirsiniz, video kurgu programı olmadığı için videoyu 'düzenleyemezsiniz'."},
+            {q: "Belgede tutarlı bir genel görünüm oluşturmak için benzersiz bir renk, yazı tipi ve efekt kümesini içeren hazır yapı aşağıdakilerden hangisidir?", o: ["Biçim", "Stil", "Filigran", "Şablon", "Tema"], a: 4, s: "Bir belgenin tüm renk paletini, başlık fontlarını ve genel tasarım dilini tek tıkla ve birbiriyle uyumlu (tutarlı) değiştiren geniş tasarım kümesine 'Tema (Theme)' denir."},
+            {q: "Aşağıdakilerden hangisi Word uygulamasında belgeyi korumak amacıyla gerçekleştirilebilen profesyonel işlemlerden biri DEĞİLDİR?", o: ["Yazıtipi rengi sayfa rengiyle aynı yapılarak görünmesinin engellenmesi", "Belgenin salt okunur hâle getirilmesi", "Parola ile şifrelenmesi", "Düzenleme ve erişim olanaklarının kısıtlanması", "Belgeye dijital imza eklenerek bütünlüğünün sağlanması"], a: 0, s: "Yazı rengini beyaz kağıtta beyaza boyamak metni sadece gözden saklar, metni seçen herkes yazıyı görebilir. Bu bir İSG/Bilişim güvenlik önlemi değil, amatörce bir gizleme hilesidir."},
+            {q: "Bir belge üzerinde aynı anda birden fazla kişinin eş zamanlı çalışması için (ortak düzenleme) gerekli olan teknolojik koşul nedir?", o: ["Kişilerin kendi bilgisayarlarında aynı isimli boş belge açmaları", "Kişilerin aynı bilgisayarı ve klavyeyi kullanıyor olması", "Kişilerin Office Mobile kullanıyor olması", "Belgenin Word Online ya da Google Docs gibi bulut tabanlı bir servisle düzenleniyor olması", "Belgenin salt okunur (read-only) olması"], a: 3, s: "Eşzamanlı ortak çalışma, dosyanın internet ortamında (bulutta) tutulması ve kişilerin aynı anda o bulut dosyasına tarayıcıdan (Örn: Google Docs) bağlanmasıyla mümkündür."},
+            
+            // YENİ EKLENEN 15 ÖZGÜN, ANALİTİK VE ÖSYM TARZI SORU
+            {q: "Bir üniversite öğrencisi, bitirme tezini (yaklaşık 100 sayfa) yazacaktır. Sayfa kenar boşluklarının, başlık boyutlarının ve içindekiler tablosu tasarımının üniversite kurallarına uygun olarak otomatik gelmesini istemektedir. Bu öğrencinin sıfırdan belge açmak yerine sözcük işlemcide kullanması gereken özellik aşağıdakilerden hangisidir?", o: ["Veri tabanı sihirbazı", "Makro ataması", "Şablonlar (Templates)", "Akıllı nesne yerleştirme", "Filigran arkaplanı"], a: 2, s: "Önceden tasarlanmış, başlık boyutları ve kenar boşlukları ayarlanmış hazır dosya taslaklarına 'Şablon (Template)' denir. (AÖF kitabı Araştır-6'da belirtildiği gibi 'Tez' şablonları mevcuttur)."},
+            {q: "AÖF kitabındaki 'Araştır 3' bölümünde bir belgenin Google veya Word çeviri (Translate) performansı ölçülmüştür. Makine çevirisi yapılırken, Türkçeden İngilizceye çevrilen bir metnin tekrar İngilizceden Türkçeye geri çevrilmesi (Geri Çeviri/Back Translation) eyleminin temel amacı nedir?", o: ["Bilgisayara yeni bir dil kütüphanesi yüklemek", "Çeviri motorunun algoritmasının 'anlamı bozup bozmadığını' ve çeviri başarımını (kalitesini) test etmek", "Belgenin şifrelenmesini sağlamak", "Yazım denetimi sözlüğünü kapatmak", "Metnin kelime sayısını artırmak"], a: 1, s: "Makine çevirilerinin mantıksal performansını ölçmek için metin önce hedef dile, sonra tekrar ana dile çevrilir. Çıkan metin saçma sapan ise yazılımın 'çeviri başarımı (kalitesi)' düşük demektir."},
+            {q: "Aşağıdakilerden hangisi bir belgenin 'Belge Düzeyinde' (Karakter, Paragraf veya Sayfa değil, doğrudan tüm kitabın bütünlüğü) yapılan profesyonel işlemlerden biri olarak kabul edilir?", o: ["Kelimeyi kırmızı ve kalın yapmak", "Satır aralığını 1.5 olarak ayarlamak", "Sayfaya kenarlık eklemek", "İçindekiler tablosu ve Kaynakça (Kaynakça/Atıf) listesi oluşturmak", "Sadece ilk harfi büyük yazmak"], a: 3, s: "İçindekiler listesi, Kaynakça ve Dizin oluşturma gibi işlemler, metnin neresinde ne olduğunu takip eden ve tüm kitabı bir bütün olarak organize eden 'Belge Düzeyinde' işlemlerdir."},
+            {q: "Bir Microsoft Word belgesi içinde çalışırken, başka bir programı (Örn: Excel) ayrı bir pencere olarak açmadan, doğrudan Word sayfasının içine canlı bir 'Microsoft Excel Çalışma Kitabı' gömmek için izlenmesi gereken doğru menü yolu hangisidir?", o: ["EKLE -> Nesne", "GİRİŞ -> Yapıştır -> Özel Yapıştır", "TASARIM -> Sayfa Arka Planı", "GÖZDEN GEÇİR -> Karşılaştır", "GÖRÜNÜM -> Yeni Pencere"], a: 0, s: "Araştır 4'te geçer. Word'ün içine başka bir programı veya dosyayı canlı bir parça olarak entegre etmek için 'Ekle' sekmesindeki 'Nesne (Object)' düğmesi kullanılır."},
+            {q: "İş hayatında sıklıkla kullanılan Word (Sözcük İşlemci) uygulamasında, sekmeleri (Giriş, Ekle, Tasarım vb.) barındıran üst şeridi kendi ihtiyaçlarımıza göre kişiselleştirmek (yeni düğmeler eklemek) için yapılması gereken işlem nedir?", o: ["Bilgisayara yeni bir ekran kartı takmak", "Şeridin boş alanında farenin sağ tuşuna tıklayıp 'Şeridi Özelleştir' seçeneğini kullanmak", "Ctrl+Alt+Delete tuşlarına aynı anda basmak", "Görünüm menüsünden 'Makrolar'ı seçmek", "Belgeyi salt okunur olarak kaydetmek"], a: 1, s: "Araştır 1 bölümünde anlatılır. Word'deki üst menü bandına (şerit) sağ tıklayarak 'Şeridi Özelleştir' derseniz, gizli komutları veya kendi özel menünüzü ekleyebilirsiniz."},
+            {q: "Bir kullanıcı klavyede metin yazarken, imlecin bulunduğu yerdeki metni sağa doğru iterek (araya girerek) yazmak yerine, yazdığı her yeni harfin sağındaki mevcut harfi sildiğini (üzerine yazdığını) fark etmiştir. Bu duruma yanlışlıkla basılan hangi klavye tuşu neden olmuştur?", o: ["CapsLock", "NumLock", "Insert", "ScrollLock", "Home"], a: 2, s: "Çok yaygın bir hatadır. Klavyedeki 'Insert' (Araya Ekleme / Üzerine Yazma) tuşuna basıldığında (OVR modu), yazılan harf bir sonrakini itmez, onu yutarak (silerek) üstüne yazar."},
+            {q: "Bir belgede yer alan bir kelimenin, cümlenin veya şeklin, tıklandığında kullanıcıyı internetteki bir web sitesine, belgedeki başka bir başlığa veya bir e-posta adresine yönlendirmesini sağlayan sözcük işlemci özelliğine ne ad verilir?", o: ["Yer İmi (Bookmark)", "Dipnot (Footnote)", "Köprü (Hyperlink / Bağlantı)", "Metin Kutusu", "Açıklama (Comment)"], a: 2, s: "Belge içindeki bir nesneyi dış dünya veya başka bir dosya ile tıklandığında açılacak şekilde bağlamaya 'Köprü (Bağlantı / Hyperlink)' denir."},
+            {q: "Bir kitabın sayfaları hazırlanırken, her sayfanın en altında o sayfadaki kelimelerin anlamlarını açıklayan numaralandırılmış küçük metinlere .........., tüm belge bittikten sonra en son sayfada (veya bölüm sonunda) toplu olarak verilen kaynak ve açıklamalara ise .......... denir. Boşluklara sırasıyla ne gelmelidir?", o: ["Alt bilgi - Üst bilgi", "Dipnot - Sonnot", "Yer İmi - Dizin", "Açıklama - Atıf", "Giriş - Kaynakça"], a: 1, s: "Sözcük işlemci literatüründe; sayfanın hemen dibindeki küçük açıklama rakamlarına 'Dipnot (Footnote)', kitabın veya bölümün en sonuna topluca atılan açıklamalara ise 'Sonnot (Endnote)' denir."},
+            {q: "Klavye kullanımı ve kısayollar göz önüne alındığında, bir paragrafta imlecin bulunduğu yerden hızla belgenin (veya satırın) en başına (soluna) ve en sonuna (sağına) atlamak için sırasıyla hangi iki tuş kullanılır?", o: ["Page Up ve Page Down", "BackSpace ve Delete", "Home ve End", "Shift ve Ctrl", "Tab ve Enter"], a: 2, s: "'Home' (Ev/Başlangıç) tuşu imleci satırın en başına atar. 'End' (Son) tuşu ise imleci satırın en sonuna fırlatır. Page up/down ise sayfa sayfa kaydırır."},
+            {q: "Tarihsel sürece bakıldığında, 1960'larda mekanik sistemlerden çıkılarak 'Sözcük İşlemci' (Word Processor) teriminin ilk kez ortaya atılmasını sağlayan ve belgelerin silinip yeniden yazılmasını kolaylaştıran icat hangisidir?", o: ["Tablet bilgisayarlar", "Bulut bilişim sunucuları", "Elektrikli daktilolar", "Delikli kart sistemleri", "Grafik kullanıcı arayüzleri"], a: 2, s: "AÖF kitabında vurgulanır. Sözcük işlemci terimi PC'lerle değil, ilk kez 1960'larda şerit kasetiyle düzeltme yapabilen 'Elektrikli Daktilolar' sayesinde literatüre girmiştir."},
+            {q: "Bir yazar, belgesini 2 sütun (kolon) halinde dergi formatında yazmak istemektedir. Sütun sayısını ayarlamak, sözcük işlemcideki hangi temel düzenleme düzeyine aittir?", o: ["Karakter Düzeyi", "Sözcük Düzeyi", "Paragraf Düzeyi", "Sayfa Düzeyi", "Belge Düzeyi"], a: 3, s: "Sütun (kolon) eklemek, kenar boşluklarını değiştirmek veya sayfa yönünü yatay/dikey yapmak, kağıdın fiziksel alanını etkilediği için 'Sayfa Düzeni (Page Layout)' işlemlerindendir."},
+            {q: "Aşağıdakilerden hangisi bir belgede sayfanın arka planına (metnin arkasına silik bir şekilde) eklenen, genellikle şirket logosu veya 'GİZLİDİR', 'KOPYA' gibi uyarılar barındıran ögenin adıdır?", o: ["Antet", "Filigran (Watermark)", "Yer İmi", "Üst Bilgi", "Vurgu Rengi"], a: 1, s: "Belgenin arka planında, metinlerin arkasından silik bir şekilde görünen güvenlik veya marka imajlarına 'Filigran (Watermark / Su damgası)' denir."},
+            {q: "Bir kullanıcının, tamamen büyük harflerle (Örn: ANADOLU ÜNİVERSİTESİ) yazılmış uzun bir cümleyi silmeden, tek tıkla 'Anadolu Üniversitesi' (Sadece baş harfleri büyük) formuna çevirmesini sağlayan sözcük işlemci aracı aşağıdakilerden hangisiyle ilgilidir?", o: ["Büyük/Küçük Harf Değiştir (Change Case)", "Metni Vurgula", "Stil Kopyalayıcı (Biçim Boyacısı)", "Otomatik Düzelt", "Bul ve Değiştir"], a: 0, s: "Yazılmış bir metni silmeden karakter boyutunu dönüştüren (Tümü büyük, tümü küçük, her sözcüğün ilk harfi büyük) araca 'Büyük/Küçük Harf Değiştir' denir. Karakter düzeyinde bir işlemdir."},
+            {q: "AÖF kitabı 'Araştır 5' bölümünde bahsedildiği üzere; bir Sözcük İşlemci (Word) uygulamasında hazır bir 'Broşür' şablonu indirilip incelendiğinde, broşürün teknik yapısı hakkında genellikle hangi tespitte bulunulur?", o: ["Belgenin dikey (portre) olarak konumlandırıldığı", "Sayfanın yatay konumlandırılıp 3 sütuna (kolona) bölündüğü ve metin kutuları kullanıldığı", "İçinde hiçbir şekilde resim kullanılmadığı", "Sadece Excel verilerinden oluştuğu", "Siyah beyaz dışında renk kullanımının yasak olduğu"], a: 1, s: "Standart bir el broşürü 3'e katlanan (Tri-fold) A4 kağıdıdır. Bu yüzden şablonlar her zaman sayfanın yatay (Landscape) çevrilip 3 eşit sütuna bölünmesiyle oluşturulur."},
+            {q: "Bir şirket raporunun her sayfasının en üst (tepe) kısmında şirket logosunun ve sayfa numarasının otomatik olarak tekrarlanarak çıkmasını sağlamak için hangi özellik kullanılır?", o: ["Üst Bilgi (Header)", "Alt Bilgi (Footer)", "Filigran", "Satır Aralığı", "Başlık Stili"], a: 0, s: "Sayfanın en tepe boşluğuna eklenen ve her yeni sayfada kendini otomatik kopyalayarak devam eden alana 'Üst Bilgi (Header)' denir. Sayfa no ve logo buraya konur."}
+        ];
+
+        let quizState = {}; // { qIndex: { selected: oIndex, correct: cIndex } }
+        let isExamFinished = false;
+
+        function initApp() {
+            try {
+                const saved = localStorage.getItem('isg_bilisim_u6_sozcuk');
+                if(saved) {
+                    const parsed = JSON.parse(saved);
+                    quizState = parsed.quizState || {};
+                    isExamFinished = parsed.isExamFinished || false;
+                    if(Object.keys(quizState).length > 0) {
+                        document.getElementById("memory-badge").innerHTML = `<i class="fa-solid fa-cloud-arrow-down"></i> Önceki çözümleriniz yüklendi.`;
+                        document.getElementById("memory-badge").style.backgroundColor = "#dcfce7";
+                        document.getElementById("memory-badge").style.color = "#166534";
+                        document.getElementById("memory-badge").style.borderColor = "#bbf7d0";
+                    }
+                }
+            } catch(e) {}
+            
+            renderQuestions();
+            if(isExamFinished) showResults();
+        }
+
+        function stateKaydet() {
+            localStorage.setItem('isg_bilisim_u6_sozcuk', JSON.stringify({
+                quizState: quizState,
+                isExamFinished: isExamFinished
+            }));
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById("questions-container");
+            container.innerHTML = "";
+
+            examData.forEach((q, index) => {
+                const state = quizState[index];
+                let questionHTML = `
+                    <div class="question-card" id="q-card-${index}">
+                        <div class="question-text">
+                            <div class="q-number">${index + 1}</div>
+                            <div>${q.q}</div>
+                        </div>
+                        <div class="options-list">
+                `;
+
+                q.o.forEach((opt, optIndex) => {
+                    let classes = "option-btn";
+                    let icon = "";
+                    
+                    if (isExamFinished) {
+                        classes += " locked";
+                        if (optIndex === q.a) {
+                            classes += " correct";
+                            icon = ' <i class="fa-solid fa-check" style="margin-left:auto;"></i>';
+                        }
+                        if (state && state.selected === optIndex && optIndex !== q.a) {
+                            classes += " wrong";
+                            icon = ' <i class="fa-solid fa-xmark" style="margin-left:auto;"></i>';
+                        }
+                    } else {
+                        if (state && state.selected === optIndex) {
+                            classes += " selected";
+                        }
+                    }
+
+                    questionHTML += `
+                        <div class="${classes}" id="opt-${index}-${optIndex}" onclick="selectOption(${index}, ${optIndex}, ${q.a})">
+                            ${String.fromCharCode(65 + optIndex)}) ${opt} ${icon}
+                        </div>
+                    `;
+                });
+
+                let solClass = isExamFinished ? "solution-box visible" : "solution-box";
+                questionHTML += `
+                        </div>
+                        <div id="sol-${index}" class="${solClass}">
+                            <h4><i class="fa-solid fa-lightbulb"></i> Çözüm ve Püf Noktası:</h4>
+                            <p>${q.s}</p>
+                            <button class="ai-explain-btn" onclick="askGemini(${index})">✨ Gemini ile Detaylı Analiz İste</button>
+                            <div id="ai-response-${index}" class="ai-response-box" style="display:none;"></div>
+                        </div>
+                    </div>`;
+                    
+                container.innerHTML += questionHTML;
+            });
+        }
+
+        function selectOption(qIndex, selectedOptIndex, correctOptIndex) {
+            if (isExamFinished) return; // Locked
+
+            quizState[qIndex] = { selected: selectedOptIndex, correct: correctOptIndex };
+            
+            // Visual Update
+            const options = document.querySelectorAll(`[id^="opt-${qIndex}-"]`);
+            options.forEach(opt => opt.classList.remove('selected'));
+            document.getElementById(`opt-${qIndex}-${selectedOptIndex}`).classList.add('selected');
+            
+            stateKaydet();
+        }
+
+        function finishExam() {
+            if (isExamFinished) return;
+            
+            const answeredCount = Object.keys(quizState).length;
+            if (answeredCount < 25) {
+                if (!confirm(`Dikkat: Henüz ${25 - answeredCount} soruyu boş bıraktınız. Boşlar yanlış SAYILMAZ ancak netinizi etkilemez. Yine de denemeyi bitirmek istiyor musunuz?`)) {
+                    return;
+                }
+            }
+
+            isExamFinished = true;
+            stateKaydet();
+            showResults();
+        }
+        
+        function showResults() {
+            let correctCount = 0;
+            let wrongCount = 0;
+
+            for (let i = 0; i < 25; i++) {
+                if (quizState[i]) {
+                    if (quizState[i].selected === quizState[i].correct) correctCount++;
+                    else wrongCount++;
+                }
+            }
+
+            let emptyCount = 25 - (correctCount + wrongCount);
+            
+            // 4 Yanlış 1 Doğruyu Götürür Kuralı (AÖF standardı)
+            let net = correctCount - (wrongCount / 4);
+            if (net < 0) net = 0;
+            
+            // 25 Soru, Net başına 4 Puan = 100 Puan
+            let score = Math.round(net * 4);
+
+            document.getElementById('count-correct').innerText = correctCount;
+            document.getElementById('count-wrong').innerText = wrongCount;
+            document.getElementById('count-empty').innerText = emptyCount;
+            document.getElementById('count-net').innerText = net.toFixed(2);
+            document.getElementById('score-text').innerText = score;
+
+            document.getElementById('finish-container').style.display = 'none';
+            document.getElementById('results-panel').style.display = 'block';
+
+            renderQuestions(); // Re-render to show colors and solutions
+            document.getElementById('results-panel').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetExam() {
+            if(confirm("Tüm cevaplarınız silinecek ve teste baştan başlayacaksınız. Emin misiniz?")) {
+                localStorage.removeItem('isg_bilisim_u6_sozcuk');
+                window.location.reload();
+            }
+        }
+
+        /* --- YAPAY ZEKA (GEMINI API) BAĞLANTISI --- */
+        async function askGemini(qIndex) {
+            const qData = examData[qIndex];
+            const responseBox = document.getElementById(`ai-response-${qIndex}`);
+            const btn = document.querySelector(`#sol-${qIndex} .ai-explain-btn`);
+
+            if(!apiKey) {
+                responseBox.style.display = "block";
+                responseBox.innerHTML = "<em>⚠️ API anahtarı ayarlanmamış. Sistem ortamı bu özelliği şu an desteklemiyor.</em>";
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ✨ Yapay Zeka Analiz Ediyor...';
+            responseBox.style.display = "block";
+            responseBox.innerHTML = "<em>✨ Gemini soruyu, şıkları ve Bilişim Kavramlarını tarıyor... Lütfen bekleyin.</em>";
+
+            const optionsText = qData.o.map((opt, i) => String.fromCharCode(65 + i) + ") " + opt).join(', ');
+            const correctAnswerText = String.fromCharCode(65 + qData.a) + ") " + qData.o[qData.a];
+
+            const prompt = `Aşağıdaki "Çalışma Hayatında Bilişim - Sözcük İşlemciler" sorusunu, şıklarını ve doğru cevabını incele. Öğrenci bu sorunun çözümünü tam anlayamadı. 
+            Doğru cevabın neden doğru olduğunu ve diğer şıkların neden yanlış olduğunu İSG/Bilişim (Word, Belge Düzeni vb.) mantığına uygun, akılda kalıcı ve eğitici bir dille Türkçe olarak açıkla.
+
+Soru: ${qData.q}
+Şıklar: ${optionsText}
+Doğru Cevap: ${correctAnswerText}
+
+Lütfen sadece açıklama kısmını ver, soruyu tekrar yazma. Gerekirse akılda kalıcı teknik kodlamalar ekleyebilirsin.`;
+
+            let retries = 3;
+            let success = false;
+            let resultText = "";
+
+            while (retries > 0 && !success) {
+                try {
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                    });
+
+                    if (!response.ok) throw new Error("HTTP Error");
+                    const data = await response.json();
+                    resultText = data.candidates[0].content.parts[0].text;
+                    success = true;
+                } catch (error) {
+                    retries--;
+                    await new Promise(r => setTimeout(r, 2000));
+                }
+            }
+
+            if (success) {
+                const formattedText = resultText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+                responseBox.innerHTML = `<strong><i class="fa-solid fa-robot"></i> ✨ Gemini AI Asistanı:</strong><br><br>${formattedText}`;
+                btn.style.display = 'none'; 
+            } else {
+                responseBox.innerHTML = "<em>⚠️ Gemini ağına şu an ulaşılamıyor. Lütfen daha sonra tekrar deneyin.</em>";
+                btn.disabled = false;
+                btn.innerHTML = '✨ Tekrar Gemini Analizi İste';
+            }
+        }
+
+        // Uygulamayı Başlat
+        window.onload = initApp;
+
+    </script>
+</body>
+</html>

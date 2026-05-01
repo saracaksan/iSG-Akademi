@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ünite 1 - Konu Anlatımı ve Test | İSG Akademi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4c1d95; 
+            --primary-light: #7c3aed; 
+            --secondary: #1e1b4b; 
+            --bg-color: #f3f4f6;
+            --text-dark: #1f2937;
+            --success: #10b981;
+            --danger: #ef4444;
+            --card-bg: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-dark); line-height: 1.6; }
+
+        /* Navbar */
+        nav { background: var(--card-bg); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
+        .logo { font-size: 1.2rem; font-weight: 700; color: var(--primary); }
+        .back-btn { text-decoration: none; color: var(--primary); font-weight: 500; font-size: 0.9rem; border: 1px solid var(--primary); padding: 5px 15px; border-radius: 5px; }
+        .back-btn:hover { background: var(--primary); color: white; }
+
+        .container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
+        
+        /* Konu Anlatımı Bölümü */
+        .content-section { background: var(--card-bg); padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); margin-bottom: 2rem; }
+        .content-section h1 { color: var(--secondary); margin-bottom: 1rem; font-size: 1.8rem; text-align: center; border-bottom: 2px solid var(--primary-light); padding-bottom: 10px;}
+        .content-section h2 { color: var(--primary); margin-top: 1.5rem; margin-bottom: 1rem; font-size: 1.3rem; }
+        .content-section p, .content-section li { font-size: 0.95rem; margin-bottom: 0.8rem; }
+        .highlight-box { background: #fef3c7; border-left: 5px solid #f59e0b; padding: 1rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .mind-map { background: #eff6ff; border: 1px dashed #3b82f6; padding: 1.5rem; border-radius: 8px; margin: 1rem 0; }
+
+        /* Test Bölümü */
+        .quiz-section { background: var(--card-bg); padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); }
+        .quiz-title { text-align: center; color: var(--secondary); margin-bottom: 2rem; }
+        
+        .question-card { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e7eb; }
+        .question-text { font-weight: 600; font-size: 1.05rem; margin-bottom: 1rem; }
+        
+        .options-list { display: flex; flex-direction: column; gap: 8px; }
+        .option-btn { 
+            background: #f8fafc; border: 2px solid #e2e8f0; padding: 12px 15px; 
+            border-radius: 8px; text-align: left; font-size: 0.95rem; cursor: pointer; 
+            transition: all 0.2s; display: flex; align-items: center; width: 100%;
+        }
+        .option-btn:hover:not(.disabled) { border-color: var(--primary-light); background: #f5f3ff; }
+        
+        /* Şık Durumları */
+        .option-btn.disabled { pointer-events: none; opacity: 0.7; }
+        .option-btn.correct { background: #ecfdf5 !important; border-color: var(--success) !important; color: #065f46; font-weight: 600; }
+        .option-btn.wrong { background: #fef2f2 !important; border-color: var(--danger) !important; color: #991b1b; text-decoration: line-through; }
+        
+        .btn-finish { background: var(--primary); color: white; border: none; padding: 15px 30px; font-size: 1.1rem; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 1rem; transition: background 0.3s;}
+        .btn-finish:hover { background: var(--secondary); }
+
+        /* Sonuç ve Çözümler Bölümü */
+        #results-section { display: none; margin-top: 2rem; background: #f0fdf4; padding: 2rem; border-radius: 15px; border: 2px solid var(--success); }
+        .score-display { text-align: center; font-size: 2.5rem; font-weight: bold; color: var(--success); margin-bottom: 1rem; }
+        
+        .solution-box { background: white; padding: 15px; border-left: 4px solid var(--primary-light); margin-bottom: 15px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .solution-box h4 { margin-bottom: 5px; color: var(--secondary); }
+
+        .btn-pdf { background: #dc2626; color: white; border: none; padding: 12px 25px; font-size: 1rem; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 20px; display: inline-flex; align-items: center; gap: 10px; }
+        .btn-pdf:hover { background: #991b1b; }
+
+        footer { text-align: center; padding: 2rem; color: var(--text-light); font-size: 0.9rem; }
+
+        /* PDF Çıktı Ayarları (Sıkışık PDF) */
+        @media print {
+            body { background: white; color: black; font-size: 10pt; line-height: 1.3; }
+            nav, .btn-finish, .btn-pdf, .back-btn { display: none !important; }
+            .container { max-width: 100%; margin: 0; padding: 0; }
+            .content-section, .quiz-section { box-shadow: none; border: none; padding: 0; margin-bottom: 10px; }
+            h1 { font-size: 14pt; } h2 { font-size: 12pt; }
+            .question-card { margin-bottom: 10px; padding-bottom: 10px; page-break-inside: avoid; }
+            .option-btn { padding: 4px 8px; border: 1px solid #ccc; margin-bottom: 2px; font-size: 9pt; }
+            /* Kağıt tasarrufu için iki kolon */
+            .quiz-container-print { column-count: 2; column-gap: 20px; }
+            #results-section { display: block !important; border: none; padding: 0; }
+            .solution-box { border: 1px solid #ddd; padding: 8px; margin-bottom: 5px; page-break-inside: avoid; font-size: 9pt;}
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo"><i class="fa-solid fa-book-open"></i> Ünite 1: Afet ve Acil Durum Yönetimi</div>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-light);">Hazırlayan: Sıraç Aksan</span>
+            <a href="../../index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Ana Sayfaya Dön</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section class="content-section">
+            <h1>Afet ve Acil Durum Yönetim Sistemi ve Risk Azaltma</h1>
+            
+            <h2>1. Kavramsal Çerçeve</h2>
+            <p>Afet ve acil durumlar, sadece günlük yaşamı değil, çalışma hayatını ve ülke ekonomisini derinden sarsan olaylardır. Teknolojinin gelişmesiyle birlikte barajlar, nükleer santraller ve devasa tesisler hayatımızı kolaylaştırsa da doğal veya teknolojik bir kaza anında büyük yıkımlara yol açabilir.</p>
+            <ul>
+                <li><strong>Birincil ve İkincil Afetler:</strong> Bir deprem (birincil afet), sanayi bölgesinde büyük bir yangına veya kimyasal sızıntıya (ikincil afet) yol açabilir. İSG profesyonellerinin temel amacı, doğru risk analizi ile bu ikincil felaketlerin önüne geçmektir.</li>
+                <li><strong>İş Sürekliliği Yönetimi:</strong> Bir kurumun, afet anında dahi hayati faaliyetlerini önceden belirlenen asgari seviyede yürütebilme becerisidir.</li>
+                <li><strong>Acil Durum Planlaması:</strong> Olay anında "Kim, neyi, nasıl yapacak?" sorusunun önceden cevaplanmasıdır. Mevcut durum analizi, risk değerlendirmesi, standart operasyon prosedürleri (SOP), masa başı ve saha tatbikatlarını kapsar.</li>
+            </ul>
+
+            <div class="highlight-box">
+                <h3 style="color: #b45309; margin-bottom: 5px;"><i class="fa-solid fa-triangle-exclamation"></i> Sınavlarda Çıkma Mantığı ve Önemli Tuzaklar</h3>
+                <p><strong>Tuzak 1 (Olay, Acil Durum ve Afet Ayrımı):</strong><br>
+                - <em>Olay:</em> Günlük, rutin müdahale ile çözülebilen durumlardır.<br>
+                - <em>Acil Durum:</em> Yerel, bölgesel ve sınırlı etkiye sahip, yerel imkanlarla baş edilebilen krizlerdir.<br>
+                - <em>Afet:</em> Olayın kendisi değil, doğurduğu "sonuçtur". Dışarıdan olağanüstü yardım gerektirir. (DSÖ tanımına dikkat!)</p>
+                <p><strong>Tuzak 2 (Tehlike ve Risk Farkı):</strong><br>
+                Tehlike "Ne olabilir?" sorusunun cevabıdır (potansiyeldir). Risk ise "Olursa ne kadar zarar verir?" (ihtimal x sonuç) sorusunun cevabıdır.</p>
+                <p><strong>Tuzak 3:</strong> Acil durum planı hazırlamak İş Kanunu veya Anayasa ile değil doğrudan <em>İş Yerlerinde Acil Durumlar Hakkında Yönetmelik</em> ile zorunludur.</p>
+            </div>
+
+            <div class="mind-map">
+                <h3 style="color: #1d4ed8; margin-bottom: 10px;"><i class="fa-solid fa-brain"></i> Zihin Haritası & Kodlamalar</h3>
+                <p><strong>Afet Yönetiminin Evreleri Kodu: "Z-H-M-İ"</strong></p>
+                <ul>
+                    <li><strong>Z</strong>arar Azaltma (Olay olmadan önce alınan yapısal önlemler)</li>
+                    <li><strong>H</strong>azırlık (Plan yapma, tatbikat, arama-kurtarma ekibi kurma)</li>
+                    <li><strong>M</strong>üdahale (Olay anında can ve mal kurtarma eylemleri)</li>
+                    <li><strong>İ</strong>yileştirme (Olay sonrası hayatı normale döndürme)</li>
+                </ul>
+                <p style="margin-top: 10px;"><strong>Kritik Formül Kodlaması:</strong> Direncin (kapasiten) artarsa riskin düşer! Zarar görebilirliğin artarsa riskin artar!</p>
+            </div>
+        </section>
+
+        <section class="quiz-section">
+            <h2 class="quiz-title"><i class="fa-solid fa-list-check"></i> Ünite 1 Final Provası (20 Soru)</h2>
+            <p style="text-align: center; color: var(--text-light); margin-bottom: 2rem; font-size: 0.9rem;">Soruları dikkatlice okuyup şıkları işaretleyiniz. İşaretlenen şık kilitlenir ve anında doğru/yanlış durumu gösterilir.</p>
+            
+            <div id="quiz-container" class="quiz-container-print">
+                </div>
+
+            <button class="btn-finish" id="finish-btn" onclick="testiBitir()">
+                <i class="fa-solid fa-flag-checkered"></i> Testi Bitir ve Değerlendir
+            </button>
+
+            <div id="results-section">
+                <h2 style="text-align: center; color: var(--secondary);">Sınav Sonucunuz</h2>
+                <div class="score-display">Puan: <span id="score-text">0</span> / 100</div>
+                <p style="text-align: center; margin-bottom: 2rem; font-weight: 500;" id="score-message"></p>
+
+                <h3 style="margin-bottom: 15px; border-bottom: 2px solid #ccc; padding-bottom: 5px;">Detaylı Soru Analizi ve Çözümler</h3>
+                <div id="solutions-container">
+                    </div>
+
+                <div style="text-align: center;">
+                    <button class="btn-pdf" onclick="window.print()">
+                        <i class="fa-solid fa-file-pdf"></i> Konuyu ve Çözümleri Sıkışık PDF Olarak Kaydet
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>Anadolu Üniversitesi İş Sağlığı ve Güvenliği Hazırlık Sistemi &copy; 2026 | Tasarım: Sıraç Aksan</p>
+    </footer>
+
+    <script>
+        // Soru Veritabanı
+        const questions = [
+            { q: "Yerel, bölgesel ve sınırlı bir etkiye sahip olan olaylara ne ad verilir?", options: ["A) Olay", "B) Kaza", "C) Acil durum", "D) Afet", "E) Olağanüstü hâl"], answer: 2, solution: "Yerel ve sınırlı etkiye sahip durumlar yerel imkanlarla çözülebildiği için 'Acil Durum' olarak tanımlanır." },
+            { q: "Arama kurtarma ekibinin kurulması ve gerekli donanımlarının sağlanması afet yönetimi bakımından hangi dönemi kapsar?", options: ["A) Zarar azaltma", "B) İyileştirme", "C) Müdahale", "D) Risk", "E) Hazırlık"], answer: 4, solution: "Arama kurtarma ekibi kurma ve tatbikat yapma işlemleri afet olmadan önce yapılan 'Hazırlık' evresidir." },
+            { q: "Toplumun belli kesimlerinin normal hayatını durduran ve acil müdahaleyi gerektiren kriz hâline ne ad verilir?", options: ["A) Acil durum", "B) Risk analizi", "C) Arama kurtarma planlaması", "D) İSG planlaması", "E) Afet planlaması"], answer: 0, solution: "Normal hayatı kesintiye uğratan ve kriz yaratan bu durum Acil Durum'un spesifik bir tanımıdır." },
+            { q: "DSÖ'ye göre dışarıdan olağanüstü yardım gerektirecek kadar kötüleşmeye neden olan oluşum nedir?", options: ["A) Afet", "B) Olay", "C) Kaza", "D) Acil durum", "E) Risk"], answer: 0, solution: "Dışarıdan olağanüstü yardım gerektirme ifadesi, olayın yerel imkanları aştığını ve 'Afet' boyutuna ulaştığını kanıtlar." },
+            { q: "Afet yönetiminde 'Ne olabilir?' sorusuna verilen cevabın karşılığı nedir?", options: ["A) Tehlike", "B) Risk", "C) Savunmasızlık", "D) Direnç", "E) Dayanıklılık"], answer: 0, solution: "Ne olabilir sorusu doğrudan potansiyel durumu, yani 'Tehlikeyi' sorgular." },
+            { q: "Topluluğun, tehlikelerin etkilerine karşı duyarlılığını artıran koşullara ne ad verilir?", options: ["A) Zarar görebilirlik", "B) Ramak kala", "C) Tehlike", "D) Direnç", "E) Felaket"], answer: 0, solution: "Duyarlılığı (hassasiyeti) artıran negatif koşullar bütünü 'Zarar görebilirlik (Savunmasızlık)' olarak ifade edilir." },
+            { q: "Bir toplumun kabul ettiği ve başa çıkabileceği potansiyel kayıpların seviyesine ne ad verilir?", options: ["A) Kabul edilebilir risk", "B) Tehlike", "C) Dayanıklılık", "D) Direnç", "E) Hassasiyet"], answer: 0, solution: "Toplumun mevcut koşullarda katlanmayı göze aldığı kayıp seviyesi 'Kabul edilebilir risk'tir." },
+            { q: "Aşağıdakilerden hangisi etkin bir afet planlaması basamaklarından biri değildir?", options: ["A) Kalite kontrol sistemini yerleştirmek", "B) Planlama takımı oluşturmak", "C) Mevcut durumu analiz etmek", "D) Afet planı geliştirmek", "E) Planı güncellemek"], answer: 0, solution: "Kalite kontrol sistemleri genel işletme üretimiyle ilgilidir, afet acil durum planlaması adımlarından biri değildir." },
+            { q: "Her iş yerinin acil durum planı hazırlaması hangi mevzuatla zorunlu hâle getirilmiştir?", options: ["A) Acil Durumlar Hakkında Yönetmelik", "B) Anayasa", "C) Borçlar Kanunu", "D) Cumhurbaşkanlığı Kararnamesi", "E) Devlet Memurları Kanunu"], answer: 0, solution: "Türkiye'de iş yerlerindeki acil durum planlarının yasal dayanağı 'İş Yerlerinde Acil Durumlar Hakkında Yönetmelik'tir." },
+            { q: "Aşağıdakilerden hangisi insan kaynaklı afetlerden biri değildir?", options: ["A) Deprem", "B) Patlamalar", "C) Yangın", "D) Savaş", "E) Kazalar"], answer: 0, solution: "Deprem yer kabuğu hareketleriyle oluşan tamamen doğa kaynaklı bir afettir." },
+            { q: "Deprem sonrası sanayi tesisinde yaşanan gaz sızıntısı ve patlama nasıl adlandırılır?", options: ["A) Doğal kaynaklı asıl tehlike", "B) İkincil afet ve acil durum", "C) Kabul edilebilir risk", "D) Sosyolojik tahribat", "E) Toplumsal zarar görebilirlik"], answer: 1, solution: "Ana afetin (deprem) tetiklediği diğer teknolojik veya endüstriyel felaketler 'İkincil Afet' olarak kodlanır." },
+            { q: "Faaliyetleri, afet anında asgari ve kritik seviyede yürütebilme becerisine ne denir?", options: ["A) İSG kültürü", "B) Kaza önleme prensibi", "C) İyileştirme politikası", "D) İş sürekliliği yönetimi", "E) Tahliye standardizasyonu"], answer: 3, solution: "Sistemin durmadan asgari düzeyde devam edebilmesine 'İş Sürekliliği Yönetimi' denir." },
+            { q: "Üniversitelerin afet yönetimindeki misyonuyla hangisi tam örtüşmez?", options: ["A) Akademik araştırma yapmak", "B) Farkındalık projeleri üretmek", "C) Yeniden yapılanmaya dâhil olmak", "D) Sadece fiziksel arama kurtarma eğitimi vermek", "E) Politika önerileri sunmak"], answer: 3, solution: "Üniversitelerin rolü sadece sahada bedensel eğitim vermek kadar daraltılamaz; politikalar üretmek temel görevdir." },
+            { q: "Acil durum planlarının sürdürülebilir ve yaşayan bir belge olması için ne yapılmalıdır?", options: ["A) Gizli kasada saklanması", "B) Yalnızca yöneticilerle toplantı", "C) Masa başı ve saha tatbikatları yapılması", "D) Her yıl yeni takım kurulması", "E) Sadece denetim öncesi güncellenmesi"], answer: 2, solution: "Bir planın rafta tozlanmaması ve işe yaraması ancak personelle 'Masa başı ve saha tatbikatları' yapılmasıyla mümkündür." },
+            { q: "Sakınım kültürünün (korunma kültürünün) temel amacı nedir?", options: ["A) Afet sonrası maliyet hesaplamak", "B) Olayları önceden bilerek zararları en aza indirmek", "C) Uluslararası fon temin etmek", "D) Ekip sayısını sabit tutmak", "E) Müfredatı tamamen değiştirmek"], answer: 1, solution: "Sakınım kültürünün felsefesi reaktif değil proaktiftir; yani olay olmadan bilinci artırıp zararı minimize etmektir." },
+            { q: "Tehlikeler için hazırlanan adım adım uygulama yönergelerine ne ad verilir?", options: ["A) Vizyon bildirgesi", "B) İzin kullanım çizelgesi", "C) Standart operasyon prosedürleri (SOP)", "D) Kalite kontrol raporu", "E) Maliyet analiz tablosu"], answer: 2, solution: "Kimin, neyi, adım adım nasıl yapacağını gösteren eylem adımlarına 'Standart Operasyon Prosedürleri (SOP)' denir." },
+            { q: "Topluluğun zararları absorbe edebilme ve çabuk toparlanabilme kapasitesine ne denir?", options: ["A) Direnç (Dayanıklılık)", "B) Zarar Görebilirlik", "C) Kabul Edilebilir Risk", "D) Ramak Kala", "E) Tehlike Kaynağı"], answer: 0, solution: "Afet karşısında yıkılmama ve çabuk toparlanma gücüne 'Direnç' denir. Zarar görebilirliğin tam zıttıdır." },
+            { q: "Ali Bey'in şalteri kapatıp B kapısından çıkması planlamanın hangi ilkesini yansıtır?", options: ["A) Uluslararası normlara uygunluk", "B) Kritik görevlerin ve görevlilerin belirlenmesi", "C) Karşılıklı yardımlaşma", "D) İyileştirmenin bütçelendirilmesi", "E) Dış müdahale yönlendirmesi"], answer: 1, solution: "Kişinin ve eyleminin spesifik olarak yazılması 'Kritik görevlerin ve görevlilerin önceden belirlenmesi' ilkesidir." },
+            { q: "Hangisi 'Zarar Azaltma' evresinde yapılması gerekenlerden değildir?", options: ["A) Deprem yönetmeliğine uygun inşaat", "B) Kimyasal tankların sabitlenmesi", "C) Sahil bandında yapılaşmanın önlenmesi", "D) Enkaz altından vatandaş çıkarılması", "E) Erken uyarı sistemleri kurulması"], answer: 3, solution: "Enkaz altından insan çıkarma eylemi olay öncesi alınan önlem (Zarar Azaltma) değil, olay anı 'Müdahale' evresidir." },
+            { q: "Başarılı acil durum planlamasının özellikleri arasında hangisi yer almaz?", options: ["A) Statik (değişmez) kurallara sahip olması", "B) Proaktif (önleyici) yaklaşım", "C) Herkes tarafından bilinmesi", "D) Dış kaynakları önceden belirlemesi", "E) Formlarla desteklenmesi"], answer: 0, solution: "Planlar statik (değişmez) olamaz. Değişen risk ve personellere göre sürekli dinamik ve güncellenebilir olmalıdır." }
+        ];
+
+        let score = 0;
+        let answeredQuestions = 0;
+
+        // Soruları Ekrana Çizdirme
+        function renderQuestions() {
+            const container = document.getElementById("quiz-container");
+            const solutionsContainer = document.getElementById("solutions-container");
+
+            questions.forEach((q, index) => {
+                // Soru Kartı Oluştur
+                const questionHTML = `
+                    <div class="question-card" id="q-card-${index}">
+                        <div class="question-text">${index + 1}. ${q.q}</div>
+                        <div class="options-list">
+                            ${q.options.map((opt, optIndex) => `
+                                <div class="option-btn" id="opt-${index}-${optIndex}" onclick="selectOption(${index}, ${optIndex}, ${q.answer})">
+                                    ${opt}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += questionHTML;
+
+                // Çözüm Kartı Oluştur (Başlangıçta gizli)
+                const solutionHTML = `
+                    <div class="solution-box">
+                        <h4>Soru ${index + 1}: ${q.q}</h4>
+                        <p><strong>Doğru Cevap:</strong> ${q.options[q.answer]}</p>
+                        <p style="color: var(--text-light); font-size: 0.9rem; margin-top: 5px;"><i class="fa-solid fa-lightbulb" style="color: var(--primary-light);"></i> ${q.solution}</p>
+                    </div>
+                `;
+                solutionsContainer.innerHTML += solutionHTML;
+            });
+        }
+
+        // Şık Tıklama Mantığı (Kilitlenme ve Renkler)
+        function selectOption(qIndex, selectedOptIndex, correctOptIndex) {
+            // Şıkları kilitle
+            for(let i=0; i<5; i++) {
+                const optElement = document.getElementById(`opt-${qIndex}-${i}`);
+                optElement.classList.add("disabled");
+                
+                // Doğru cevabı yeşil yap
+                if(i === correctOptIndex) {
+                    optElement.classList.add("correct");
+                    optElement.innerHTML += ' <i class="fa-solid fa-check" style="margin-left:auto;"></i>';
+                }
+            }
+
+            // Yanlış seçildiyse kırmız yap
+            if(selectedOptIndex !== correctOptIndex) {
+                const selectedElement = document.getElementById(`opt-${qIndex}-${selectedOptIndex}`);
+                selectedElement.classList.add("wrong");
+                selectedElement.innerHTML += ' <i class="fa-solid fa-xmark" style="margin-left:auto;"></i>';
+            } else {
+                score += 5; // Her doğru 5 puan (20 soru x 5 = 100)
+            }
+
+            answeredQuestions++;
+        }
+
+        // Testi Bitir ve Değerlendir
+        function testiBitir() {
+            if(answeredQuestions < questions.length) {
+                if(!confirm("Cevaplamadığınız sorular var. Yine de testi bitirmek istiyor musunuz? (Boşlar yanlış sayılacaktır)")) {
+                    return;
+                }
+            }
+
+            // Test butonunu gizle, sonuçları göster
+            document.getElementById("finish-btn").style.display = "none";
+            document.getElementById("results-section").style.display = "block";
+            
+            // Puanı yazdır
+            document.getElementById("score-text").innerText = score;
+            let message = "";
+            if(score >= 90) message = "Tebrikler! Mükemmel bir sonuç. Final için hazırsınız.";
+            else if(score >= 70) message = "Güzel bir sonuç ancak eksiklerinizi çözümlerden tekrar inceleyin.";
+            else message = "Bu üniteyi tekrar çalışmanızda fayda var. Zihin haritalarına odaklanın.";
+            document.getElementById("score-message").innerText = message;
+
+            // Öğrenci ilerlemesini LocalStorage'a kaydet (Ana Sayfa ile entegrasyon)
+            try {
+                let progress = JSON.parse(localStorage.getItem("isg_progress") || "[]");
+                // "afet_unite_1" ana sayfadaki id ile eşleşmelidir
+                if(!progress.includes("afet_unite_1")) {
+                    progress.push("afet_unite_1");
+                    localStorage.setItem("isg_progress", JSON.stringify(progress));
+                }
+            } catch(e) { console.log("Lokal hafıza kaydı yapılamadı."); }
+
+            // Sayfayı sonuçlara kaydır
+            document.getElementById("results-section").scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Sayfa yüklendiğinde soruları bas
+        window.onload = renderQuestions;
+
+    </script>
+</body>
+</html>
