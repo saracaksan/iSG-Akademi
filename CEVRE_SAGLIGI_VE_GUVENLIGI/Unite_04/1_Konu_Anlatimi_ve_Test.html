@@ -3,20 +3,459 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ünite 4 - Konu Anlatımı ve Test</title>
+    <title>Çevre Sağlığı ve Güvenliği | Hava Kirliliği - İSG Akademi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; background-color: #f9f9f9; }
-        .container { max-width: 900px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h1, h2, h3 { color: #333; }
-        .note { background: #e7f3fe; border-left: 6px solid #2196F3; padding: 10px; margin-bottom: 15px; }
+        :root {
+            --primary: #047857; 
+            --primary-light: #10b981; 
+            --secondary: #064e3b; 
+            --accent: #f59e0b;
+            --bg-color: #f0fdf4;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --success: #059669;
+            --danger: #ef4444;
+            --card-bg: #ffffff;
+            --gemini-gradient: linear-gradient(135deg, #047857, #3b82f6);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-dark); line-height: 1.6; overflow-x: hidden; }
+
+        /* Navbar */
+        nav { background: var(--card-bg); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; border-bottom: 3px solid var(--accent);}
+        .logo { font-size: 1.3rem; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+        .back-btn { text-decoration: none; color: var(--primary); font-weight: 600; font-size: 0.9rem; border: 2px solid var(--primary); padding: 6px 15px; border-radius: 8px; transition: all 0.3s;}
+        .back-btn:hover { background: var(--primary); color: white; }
+
+        .container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
+        
+        /* Konu Anlatımı Bölümü */
+        .content-section { background: var(--card-bg); padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); margin-bottom: 2rem; border-top: 5px solid var(--primary-light); }
+        .content-section h1 { color: var(--secondary); margin-bottom: 1rem; font-size: 1.8rem; text-align: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;}
+        .content-section h2 { color: var(--primary); margin-top: 1.5rem; margin-bottom: 1rem; font-size: 1.3rem; display: flex; align-items: center; gap: 10px;}
+        .content-section p, .content-section li { font-size: 0.95rem; margin-bottom: 0.8rem; text-align: justify; }
+        
+        .highlight-box { background: #fffbeb; border-left: 5px solid #f59e0b; padding: 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .highlight-box h4 { color: #b45309; margin-bottom: 10px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+        
+        .mind-map { background: #f0fdfa; border: 1px dashed #10b981; padding: 1.5rem; border-radius: 8px; margin: 1rem 0; }
+        .mind-map h4 { color: #047857; margin-bottom: 10px;}
+
+        /* Test Bölümü */
+        .quiz-section { background: var(--card-bg); padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); }
+        .quiz-header { text-align: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid #e2e8f0; }
+        
+        .controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 10px; }
+        .memory-badge { background: #dcfce7; color: #166534; padding: 6px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; border: 1px solid #bbf7d0; display: inline-flex; align-items: center; gap: 5px;}
+        
+        .question-card { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px dashed #cbd5e1; transition: opacity 0.3s;}
+        .question-meta { font-size: 0.8rem; color: var(--primary-light); font-weight: 700; margin-bottom: 5px; text-transform: uppercase;}
+        .question-text { font-weight: 600; font-size: 1.05rem; margin-bottom: 1.5rem; color: var(--secondary); display: flex; gap: 12px; text-align: justify;}
+        .q-number { background: var(--primary); color: white; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 0.95rem; flex-shrink: 0;}
+        
+        .options-list { display: flex; flex-direction: column; gap: 8px; padding-left: 44px;}
+        .option-btn { background: var(--bg-color); border: 2px solid #e2e8f0; padding: 12px 18px; border-radius: 8px; text-align: left; font-size: 0.95rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 10px; font-weight: 500; color: var(--text-dark);}
+        .option-btn:hover:not(.locked) { border-color: var(--primary-light); background: #ecfdf5; transform: translateX(5px); }
+        .option-btn.selected { background: #d1fae5; border-color: var(--primary-light); }
+        
+        /* Değerlendirme Sonrası Renkler */
+        .option-btn.locked { pointer-events: none; }
+        .option-btn.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #065f46; font-weight: 700; }
+        .option-btn.wrong { background: #fee2e2 !important; border-color: var(--danger) !important; color: #991b1b; text-decoration: line-through; }
+        
+        .solution-box { display: none; background: #fffbeb; padding: 1.2rem; border-left: 4px solid var(--accent); margin-top: 15px; margin-left: 44px; border-radius: 0 8px 8px 0; font-size: 0.9rem; color: #78350f; text-align: justify;}
+        .solution-box.visible { display: block; animation: fadeIn 0.5s; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Gemini AI Button */
+        .ai-explain-btn { background: var(--gemini-gradient); color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer; margin-top: 15px; transition: opacity 0.3s, transform 0.2s; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 6px rgba(4, 120, 87, 0.25); }
+        .ai-explain-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+        .ai-explain-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .ai-response-box { margin-top: 15px; padding: 15px; background: #fdf4ff; border-left: 4px solid #c026d3; border-radius: 8px; font-size: 0.9rem; color: #4a044e; line-height: 1.6; animation: fadeIn 0.5s; }
+
+        .finish-container { text-align: center; margin: 3rem 0; display: flex; gap: 15px; justify-content: center;}
+        .btn-finish { background: var(--success); color: white; border: none; padding: 15px 40px; font-size: 1.1rem; border-radius: 10px; cursor: pointer; font-weight: 700; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3); transition: background 0.3s; }
+        .btn-finish:hover { background: #047857; }
+        .btn-reset { background: var(--text-light); color: white; border: none; padding: 15px 30px; font-size: 1.1rem; border-radius: 10px; cursor: pointer; font-weight: 700; transition: background 0.3s; }
+        .btn-reset:hover { background: #475569; }
+
+        /* Sonuç Paneli */
+        #results-panel { display: none; background: #f0fdf4; padding: 2.5rem; border-radius: 15px; border: 2px solid var(--success); text-align: center; margin-bottom: 2rem;}
+        .score-display { font-size: 3.5rem; font-weight: 800; color: var(--success); line-height: 1; margin-bottom: 0.5rem;}
+        .stats-row { display: flex; justify-content: center; gap: 2rem; margin-top: 1.5rem; font-size: 1.1rem; font-weight: 600; flex-wrap: wrap;}
+        .stat-item { padding: 10px 20px; border-radius: 8px; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.05);}
+        .s-correct { color: var(--success); } .s-wrong { color: var(--danger); } .s-net { color: var(--primary); }
+
+        footer { text-align: center; padding: 2rem; color: var(--text-light); font-size: 0.9rem; background: var(--card-bg); border-top: 1px solid #e2e8f0; margin-top: 2rem;}
+
+        /* --- PDF PRINT AYARLARI --- */
+        @media print {
+            @page { margin: 1cm; }
+            body { background: white; color: black; font-size: 9pt; }
+            nav, .finish-container, #results-panel, .ai-explain-btn, .memory-badge { display: none !important; }
+            .container { max-width: 100%; margin: 0; padding: 0; }
+            .content-section { padding: 10px; margin-bottom: 10px; box-shadow: none; border-top: 2px solid black; border-radius: 0; }
+            .quiz-section { box-shadow: none; border: none; padding: 0; }
+            .question-card { padding: 5px 0; margin-bottom: 10px; box-shadow: none; border-bottom: 1px solid #ccc; page-break-inside: avoid; border-radius: 0; }
+            .question-text { font-size: 10pt; margin-bottom: 5px; color: black;}
+            .q-number { width: 20px; height: 20px; font-size: 8pt; background: #ddd; color: black; }
+            .options-list { padding-left: 25px; gap: 2px; }
+            .option-btn { padding: 4px 8px; border: none; font-size: 9pt; color: black; background: none; border: 1px solid #ccc;}
+            .option-btn.correct { font-weight: bold; background: none !important; border: 1px solid black !important; color: black;}
+            .option-btn.wrong { text-decoration: none; color: black; }
+            .solution-box { display: block !important; padding: 5px; margin-top: 5px; margin-left: 25px; border: 1px solid #999; font-size: 8pt; background: #f9f9f9; color: black; page-break-inside: avoid;}
+            .ai-response-box { display: none !important; }
+            #questions-container { column-count: 2; column-gap: 20px; }
+        }
     </style>
 </head>
 <body>
+
+    <nav>
+        <div class="logo"><i class="fa-solid fa-smog"></i> Hava Kirliliği ve Etkileri</div>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-light);">Hazırlayan: Sıraç Aksan</span>
+            <a href="../../index.html" class="back-btn"><i class="fa-solid fa-house"></i> Ana Sayfa</a>
+        </div>
+    </nav>
+
     <div class="container">
-        <h1>Ünite 4 - Konu Anlatımı ve Test</h1>
-        <div class="note">
-            <p><strong>İçerik Planı:</strong> Zihin haritaları, tablolar, kodlamalar ile detaylı konu anlatımı. Altında en az 10-20 soruluk, bitirildiğinde doğruları ve yanlışları gösteren test bölümü.</p>
-        </div>
-        </div>
+        
+        <section class="content-section">
+            <h1>Ünite 4: Çevre Sağlığı ve Güvenliği Açısından Hava Kirliliğinin Etkileri</h1>
+            
+            <h2><i class="fa-solid fa-industry"></i> 1. Hava Kirliliği ve Temel Kirleticiler</h2>
+            <p>Hava kalitesini olumsuz yönde etkileyen parametreler iki grupta incelenir: Partikül maddeler (katı/sıvı parçacıklar) ve Gaz fazı kirleticiler.</p>
+            <ul>
+                <li><strong>Doğal ve Antropojenik Kaynaklar:</strong> Volkanik patlamalar, orman yangınları ve deniz tuzu doğal kaynaklardır. Ülkemize her ilkbahar mevsiminde Afrika'dan gelen <em>Çöl Tozları</em> da büyük bir partikül kirliliği yaratır. Yanma süreçleri (egzoz, fabrika bacası) ise insan kaynaklı (antropojenik) kaynaklardır.</li>
+                <li><strong>Birincil ve İkincil Kirleticiler:</strong> Bacadan veya egzozdan doğrudan havaya salınan Karbon monoksit (CO) ve Kükürt dioksit (SO2) <em>birincil</em> kirleticidir. Ozon (O3) gibi bu gazların atmosferde güneş ışığıyla tepkimeye girmesi sonucu oluşan gazlar <em>ikincil</em> kirleticidir.</li>
+            </ul>
+
+            <h2><i class="fa-solid fa-house-chimney-crack"></i> 2. İç ve Dış Ortam Kirliliğinin Etkileri</h2>
+            <p>Hava kirliliği sadece dışarıdaki bir sorun değildir, kapalı ortamlarda (ev, ofis) da çok büyük bir tehlikedir.</p>
+            <ul>
+                <li><strong>İç Ortam Kirliliği:</strong> Sigara dumanı, temizlik malzemeleri ve boyalardan salınan uçucu organik bileşikler (Örn: Tolüen, Ksilen) iç ortamın temel zehirleridir. Kapalı ofislerde kötü havalandırma nedeniyle ortaya çıkan baş ağrısı ve halsizlik durumuna <em>"Hasta Bina Sendromu"</em> denir.</li>
+                <li><strong>Sağlık Etkileri:</strong> Partikül maddelere (özellikle silisyum gibi elementlere) uzun süre maruziyet, madencilerde ve sanayi işçilerinde akciğer dokusunda hasara yol açan <strong>Silikozis</strong> hastalığını tetikler. Hava kirliliği KOAH, astım ve akciğer kanserine yol açar.</li>
+                <li><strong>Ozon (O3) Etkisi:</strong> Troposferik (yer seviyesindeki) ozon faydalı değildir; göz/boğaz yanması, fotokimyasal sis oluşumu ve tarım ürünlerinde verim kaybına neden olan zehirli bir gazdır.</li>
+            </ul>
+
+            <div class="highlight-box">
+                <h4><i class="fa-solid fa-triangle-exclamation"></i> Sınavlarda Çıkma Mantığı ve Önemli Tuzaklar</h4>
+                <p><strong>Tuzak 1 (Temiz Havadaki Gazlar):</strong> Sınavlarda "Temiz olarak kabul edilen yaş havada hangi gaz bulunmaz?" sorusu klasiktir. Temiz havada Azot (%78), Oksijen (%21), Karbondioksit ve Su buharı bulunur. Ancak <strong>Karbon monoksit (CO)</strong> zehirli bir yanma ürünüdür ve temiz havada BULUNMAZ.</p>
+                <p><strong>Tuzak 2 (Tarihi Hava Kirliliği Felaketleri):</strong> Hava kirliliğinin önemini tüm dünyaya acı bir şekilde gösteren tarihi olaylar; 1930 Belçika-Meuse sisi, 1948 Donora (ABD) ve en bilineni <strong>1952 Londra Sisi</strong> dir. Muson yağmurları bir hava kirliliği olayı DEĞİLDİR.</p>
+                <p><strong>Tuzak 3 (Doğalgazın Yanması):</strong> Doğalgazın ana bileşeni Metan (CH4)'tır. Yandığında havaya Karbondioksit, Su buharı ve Azot oksitler salar. Ancak temiz yandığı için (içinde kükürt yoktur) <strong>Kükürt oksit (SOx)</strong> salınımı yapmaz.</p>
+            </div>
+
+            <div class="mind-map">
+                <h4><i class="fa-solid fa-brain"></i> Zihin Haritası & Kodlamalar</h4>
+                <p><strong>Birincil vs İkincil Kirlilik:</strong> <br>
+                Doğrudan Çıkanlar: CO, SO2, NOx, Partikül Madde (Birincil).<br>
+                Havada Sonradan Oluşanlar: Ozon (O3), Asit Yağmurları (İkincil).</p>
+                <p style="margin-top: 10px;"><strong>Bakanlık Stratejisi:</strong> Ülkemizde dış ortam hava kirliliğinin güvenli seviyelere indirilmesi için Çevre Şehircilik Bakanlığı tarafından illerde <strong>"Temiz Hava Eylem Planları"</strong> hazırlanmaktadır.</p>
+            </div>
+        </section>
+
+        <section class="quiz-section">
+            <div class="quiz-header">
+                <h2 style="color: var(--secondary); font-size: 1.8rem;"><i class="fa-solid fa-star"></i> Ünite 4 Final Provası (25 Özgün Soru)</h2>
+                <p style="color: var(--text-light);">AÖF standartlarına uygun 4 yanlış 1 doğruyu götürür. Takıldığınız sorularda ✨ Gemini'ye danışın.</p>
+            </div>
+            
+            <div class="controls">
+                <div class="memory-badge" id="memory-badge">
+                    <i class="fa-solid fa-floppy-disk"></i> Sistem Devrede: İşaretlenen sorular kaydediliyor...
+                </div>
+            </div>
+            
+            <div id="questions-container">
+                </div>
+
+            <div class="finish-container" id="finish-container">
+                <button class="btn-finish" onclick="finishExam()"><i class="fa-solid fa-flag-checkered"></i> Sınavı Bitir ve Değerlendir</button>
+                <button class="btn-reset" onclick="resetExam()"><i class="fa-solid fa-rotate-right"></i> Çözümleri Sıfırla</button>
+            </div>
+
+            <div id="results-panel">
+                <h2 style="color: var(--secondary); margin-bottom: 10px;">Final Simülasyonu Sonucu</h2>
+                <div class="score-display"><span id="score-text">0</span> Puan</div>
+                <div class="stats-row">
+                    <div class="stat-item s-correct">Doğru: <span id="count-correct">0</span></div>
+                    <div class="stat-item s-wrong">Yanlış: <span id="count-wrong">0</span></div>
+                    <div class="stat-item">Boş: <span id="count-empty">0</span></div>
+                    <div class="stat-item s-net">Net: <span id="count-net">0</span></div>
+                </div>
+                <button class="back-btn" style="margin-top: 25px; display: inline-block; background: var(--primary); color: white;" onclick="window.print()">
+                    <i class="fa-solid fa-file-pdf"></i> Arşiv İçin Sıkışık PDF Al
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>Anadolu Üniversitesi Açıköğretim (AÖF) Hazırlık Sistemi &copy; 2026 | Tasarım ve İçerik: Sıraç Aksan</p>
+    </footer>
+
+    <script>
+        // API KEY MUST BE EMPTY
+        const apiKey = ""; 
+
+        /* --- 25 ÖZGÜN, ZOR VE ANALİTİK SORU VERİTABANI --- */
+        const examData = [
+            // KİTAPTAN ALINAN 10 ORİJİNAL SORU (Düzenlenerek şıklar eşitlendi)
+            {q: "Hava kirliliğine bağlı sağlık risklerinin tarihin en eski dönemlerinden beri mevcut olduğu bilinmektedir. Buna göre aşağıdakilerden hangisi, insanların hava kirliliğinin ne denli ölümcül bir tehdit olduğunun farkına vardığı 'tarihi kirlilik felaketlerinden' biri DEĞİLDİR?", o: ["1873 yılında gerçekleşen Londra sisi", "1952 yılında gerçekleşen Büyük Londra sisi", "1930 yılında gerçekleşen Belçika-Meuse sisi", "Muson yağmurlarının yol açtığı seller", "Pekin-Çin’de rutin olarak görülen kapalı ve kirli hava"], a: 3, s: "Muson yağmurları Güney Asya'da görülen mevsimsel ve doğal (meteorolojik) bir yağış olayıdır. Endüstriyel bir 'hava kirliliği (smog)' felaketi değildir."},
+            {q: "Aşağıdakilerden hangisi atmosferi doğrudan kirleten büyük 'Hava Kirletici Kaynaklardan' biri olarak KABUL EDİLEMEZ?", o: ["Doğalgaz çevrim santralleri", "Büyük Limanlar (Gemi emisyonları)", "Yeraltı Metro hatları", "Organize sanayi bölgeleri", "Termik santraller (Kömür vb.)"], a: 2, s: "Termik santraller, gemiler ve fabrikalar devasa emisyon yayarlar. Ancak yer altında elektrikle çalışan Metro hatları egzoz dumanı veya baca gazı üretmedikleri için doğrudan bir hava kirletici kaynak değildirler."},
+            {q: "İçinde yaşadığımız ve soluduğumuz 'temiz olarak kabul edilen yaş havada' aşağıdaki bileşenlerden hangisi KESİNLİKLE BULUNMAZ?", o: ["Oksijen (O2)", "Hidrojen", "Karbon dioksit (CO2)", "Karbon monoksit (CO)", "Su buharı"], a: 3, s: "Temiz havada Azot (%78), Oksijen (%21), Su buharı ve az miktarda Karbondioksit (CO2) bulunur. Ancak Karbonmonoksit (CO) zehirli bir yanma atığıdır (soba zehirlenmesi) ve doğal temiz havada asla bulunmaz."},
+            {q: "Hava kalitesi ölçüm birimlerinde dönüşüm yaparken, 5 ppm oksijen (O2) derişimi kaç μg/m3’tür? (Standart koşullarda ve 1 mol O atomunun molekül ağırlığı: O = 16 gram’dır)", o: ["7.4 x10-3", "3.8 x10-3", "1.8 x10-6", "0.5", "5.5"], a: 1, s: "Orijinal AÖF matematiksel/çevrim sorusudur. Molekül ağırlığı (O2=32) ile yapılan standart derişim hesabı sonucunda cevap 3.8x10^-3 çıkmaktadır."},
+            {q: "Güneş ışınlarıyla tepkime sonucu oluşan Troposferik (yer seviyesindeki) ozon gazının insan, çevre ve malzemeler üzerindeki olumsuz etkilerinden biri aşağıdakilerden hangisi DEĞİLDİR?", o: ["İnsanlarda gözlerde ve boğazda yanma hissi yaratması", "Heykel, kauçuk ve betonarme binalarda (korozyon/hasar) aşınma yapması", "Bitkilerin fotosentezini bozarak tarım ürünlerinde verim kaybı yaratması", "Büyükşehirlerde 'Fotokimyasal Sis' oluşumuna neden olması", "Atmosferdeki kükürt ile birleşip doğrudan 'Asit Yağmuru' oluşturması"], a: 4, s: "Yer seviyesindeki ozon zehirlidir; göz yakar, heykelleri aşındırır ve fotokimyasal sis (Los Angeles tipi sis) yapar. Ancak 'Asit Yağmuru' ozonun değil, Kükürtdioksit (SO2) ve Azot oksitlerin (NOx) suyla birleşmesinin sonucudur."},
+            {q: "Bileşimi büyük oranda metan (CH4) olan doğalgazın yakılması (evlerde veya santrallerde) neticesinde, bacadan salınan kirleticiler arasında aşağıdakilerden hangisi KESİNLİKLE YER ALMAZ?", o: ["Azot oksitler (NOx)", "Kükürt oksitler (SOx)", "Karbon dioksit (CO2)", "Karbon monoksit (CO)", "Su buharı"], a: 1, s: "Kömür ve petrolde bolca kükürt vardır ve yanınca Kükürt Oksit (SOx) çıkar. Ancak doğalgazın (metanın) yapısında kükürt yoktur, bu nedenle yandığında havaya Kükürt Oksit salgılanmaz (Bu yüzden kömüre göre temiz yakıttır)."},
+            {q: "Aşağıdakilerden hangisi gerek iç ortamda (ev/ofis), gerekse dış ortam havasında bulunan ve sağlık açısından son derece tehlikeli olan 'Uçucu Organik Bileşiklerin (VOC)' önemli kaynaklarından biri DEĞİLDİR?", o: ["Sigara dumanı", "Boya ve vernik incelticileri (Tiner vb.)", "Evsel temizlik malzemeleri", "Ofis fotokopi makineleri ve yazıcılar", "Evcil hayvanlar"], a: 4, s: "Evcil hayvanlardan kopan kepek veya tüyler 'Biyolojik' kirleticilerdir (Alerjen). Boya, tiner, temizlik malzemesi ve sigara ise kimyasal 'Uçucu Organik Bileşik (VOC)' kaynaklarıdır."},
+            {q: "Aşağıdakilerden hangisi ofis veya fabrika gibi kapalı (İç ortam) hava kirliliğine uzun süre maruz kalınması sonucunda ortaya çıkması beklenen mesleki veya çevresel sağlık sorunlarından biri DEĞİLDİR?", o: ["KOAH (Kronik Obstrüktif Akciğer Hastalığı)", "Akciğer kanseri", "Kaşıntı, alerji ve cilt döküntüleri", "Cilt (Deri) kanseri", "Kronik bronşit ve astım krizleri"], a: 3, s: "İç ortamdaki zehirli gazlar, asbest ve tozlar doğrudan 'Solunum Yolu' hastalıklarına (Astım, KOAH, Akciğer kanseri) ve alerjiye yol açar. Cilt kanseri ise iç ortam havasından değil, daha çok güneşteki UV (Ultraviyole) radyasyonundan kaynaklanır."},
+            {q: "Aşağıdakilerden hangisi hava kalite indekslerinde ve mevzuatta belirlenen, insan ve çevre sağlığı üzerinde olumsuz etkileri sınırlandırılmış 'Kriter Hava Kirleticilerden' biri DEĞİLDİR?", o: ["Kükürt dioksit (SO2)", "Partikül madde (PM10 / PM2.5)", "Azot oksitler (NOx)", "Karbon monoksit (CO)", "Amonyak (NH3)"], a: 4, s: "Dünya Sağlık Örgütü ve EPA standartlarına göre Kriter Hava Kirleticiler 6 tanedir: Karbonmonoksit, Kurşun, Azot dioksit, Ozon, Partikül Madde ve Kükürt dioksit. Amonyak bu dar listede (Kriter kirletici) sayılmaz."},
+            {q: "Aşağıdakilerden hangisi Türkiye’de, fabrikalar veya ofislerdeki iç/dış ortam hava kirletici kimyasallara bağlı mesleki sağlık sorunlarının önlenmesi amacıyla Çalışma Bakanlığınca yayımlanan yürürlükteki İSG yönetmeliklerinden biri DEĞİLDİR?", o: ["Asbestle Çalışmalarda Sağlık ve Güvenlik Önlemleri Hakkında Yönetmelik", "Kanserojen veya Mutajen Maddelerle Çalışmalarda Sağlık ve Güvenlik Önlemleri Yönetmeliği", "Büyük Endüstriyel Kazaların Önlenmesi ve Etkilerinin Azaltılması (BEKRA) Yönetmeliği", "Tozla Mücadele Yönetmeliği", "Kimyasal Maddelerle Çalışmalarda Sağlık ve Güvenlik Önlemleri Yönetmeliği"], a: 2, s: "BEKRA (Seveso) yönetmeliği tesislerdeki kirliliği değil, büyük 'patlama, yangın ve büyük gaz sızıntısı (kaza)' risklerini önlemeyi amaçlayan Çevre Bakanlığı mevzuatıdır. Diğerleri çalışan sağlığını (havadaki toz/asbest) koruyan doğrudan İSG yönetmelikleridir."},
+            
+            // YENİ EKLENEN 15 ÖZGÜN, ANALİTİK VE ÖSYM TARZI SORU
+            {q: "Hava kirliliğini oluşturan kirleticiler 'Partikül Maddeler (Katı/Sıvı tozlar)' ve 'Gaz Fazı Kirleticiler' olarak ikiye ayrılır. Buna göre, her ilkbahar mevsiminde Afrika kıtasından rüzgarlarla havalanarak Türkiye'nin ve Avrupa'nın hava kalitesini ciddi şekilde bozan 'Çöl Tozları', hava kirliliği sınıflandırmasında hangi kategoriye girer?", o: ["Antropojenik (İnsan Kaynaklı) Gaz Fazı Kirleticiler", "Doğal Kaynaklı Partikül Maddeler", "İkincil Hava Kirleticileri", "Fotokimyasal Sis", "Uçucu Organik Bileşikler (VOC)"], a: 1, s: "Araştır 1 bölümünde geçer. Çöl tozları (Sahra çölünden gelen), volkan külleri ve orman yangını külleri insan eliyle olmayan (Doğal) ve havada asılı kalan katı tozlar (Partikül Madde) sınıfındadır."},
+            {q: "Büyükşehirlerin hava kalitesini korumak ve halkı kirlilikten haberdar etmek amacıyla, çeşitli kirletici parametrelerin (SO2, Partikül Madde, Ozon vb.) derişimlerini tek bir sayısal veya renkli değere dönüştürerek halka sunan sisteme ne ad verilir?", o: ["Hava Kalitesi İndeksi (HKİ)", "Sera Gazı Emisyon Haritası", "Dozimetre Veri Ağı", "Gürültü Kirliliği Skalası", "Stratofserik Ozon Tablosu"], a: 0, s: "Kirlilik oranlarını Yeşil (İyi), Sarı (Orta), Kırmızı (Tehlikeli) gibi renk kodlarıyla ve tek bir puanla (Örn: HKİ 150) halka duyuran sisteme Hava Kalitesi İndeksi (AQI) denir."},
+            {q: "Boya incelticiler (Tiner), mobilya cilaları veya yapıştırıcılardan oda sıcaklığında kolayca buharlaşarak havaya karışan ve iç ortam havasını (ev/ofis) zehirleyen kimyasal bileşik grubuna genel olarak ne ad verilir?", o: ["İnorganik asit buharları", "Asbest lifleri", "Uçucu Organik Bileşikler (VOC)", "Partikül Maddeler (PM2.5)", "Kloroflorokarbon (CFC) gazları"], a: 2, s: "Boya, tiner, cila ve formaldehit gibi maddeler oda sıcaklığında bile kolayca gaza (buhara) dönüşürler. Bu zehirli gruba Volatile Organic Compounds (VOC - Uçucu Organik Bileşikler) denir."},
+            {q: "Sanayi devriminin ardından atmosferdeki derişimi hızla artan; kömür, petrol ve benzin gibi 'fosil yakıtların' yanması sonucu açığa çıkan ve dünyadan yansıyan ısıyı bir battaniye gibi hapsederek (Sera Etkisi) 'Küresel İklim Değişikliğine' yol açan en temel (en yüksek oranlı) gaz hangisidir?", o: ["Kükürtdioksit (SO2)", "Karbonmonoksit (CO)", "Ozon (O3)", "Karbondioksit (CO2)", "Amonyak (NH3)"], a: 3, s: "Sera etkisinin ve küresel ısınmanın %60'ından fazlasından tek başına Karbondioksit (CO2) gazı sorumludur. Bu gaz fosil yakıtların (kömür/petrol) yanmasıyla oluşur."},
+            {q: "Bir maden ocağında veya mermer fabrikasında çalışan işçilerin, uzun yıllar boyunca havada uçuşan ince partikül maddeleri (özellikle kristalize silisyum tozlarını) koruyucu maske olmadan solumaları sonucunda, akciğer dokusunda kalıcı hasar bırakan ve tedavisi olmayan meslek hastalığına tıp dilinde ne ad verilir?", o: ["Silikozis (Pnömokonyoz)", "Kronik Hepatit", "Hasta Bina Sendromu", "Lösemi (Kan Kanseri)", "Akut Radyasyon Sendromu"], a: 0, s: "Araştır 1'de vurgulanır. Silisyum (kuvars, kum, mermer) tozlarının akciğerlere birikip dokuyu taşlaştırmasına Silikozis (mesleki akciğer hastalığı) denir."},
+            {q: "Büyükşehirlerde hava kirliliğinin güvenli seviyelere çekilmesi amacıyla Çevre Şehircilik Bakanlığı İl Müdürlükleri, Valilik ve Belediyelerin ortaklaşa hazırladıkları; kent içi trafik düzenlemeleri ve kömür kalitesinin denetlenmesi gibi yerel hedefleri içeren belgeye ne ad verilir?", o: ["Ulusal İklim Değişikliği Eylem Planı", "Çevresel Etki Değerlendirmesi (ÇED) Raporu", "Temiz Hava Eylem Planları", "Sıfır Atık Yönetmeliği Bildirgesi", "Büyük Endüstriyel Kaza Senaryosu"], a: 2, s: "Araştır 2'de detaylıca açıklanır. Her şehrin kendi kirlilik karakterine göre aldığı önlemler paketine (trafik, yakıt cinsi kısıtlaması) 'Temiz Hava Eylem Planı' denir."},
+            {q: "Amerika İş Güvenliği ve Sağlığı İdaresi (OSHA) standartlarına göre; renksiz, kokusuz ve son derece sinsi/zehirli bir gaz olan Karbon monoksit (CO) için, bir işçinin 8 saatlik mesaisi boyunca maruz kalabileceği İzin Verilebilir Maruziyet Sınır (PEL) değeri ne kadardır?", o: ["2 ppm", "10 ppm", "50 ppm", "200 ppm", "500 ppm"], a: 2, s: "Çıkmış vize sorusu adaptasyonudur. Karbonmonoksit için güvenli sınır oldukça düşüktür; OSHA standartlarına göre 8 saatlik çalışma için sınır 50 ppm'dir."},
+            {q: "Modern plazalarda ve akıllı ofislerde çalışan personelin, mesai saatleri içinde baş ağrısı, göz/boğaz yanması, uyku hâli ve odaklanma sorunu yaşaması; ancak mesai bitip binadan çıkıp 'açık havaya' kavuşunca tüm bu şikayetlerin kendiliğinden ortadan kaybolması durumuna İSG literatüründe ne ad verilir?", o: ["Kronik Yorgunluk Sendromu", "Hasta Bina Sendromu (Sick Building Syndrome)", "Kapalı Alan Fobisi (Klostrofobi)", "Tükenmişlik Sendromu (Burnout)", "Mesleki Astım Krizi"], a: 1, s: "Camları açılmayan, eski/kirli havalandırma (klima) sistemleriyle sürekli aynı kalitesiz havanın ofis içinde döndürüldüğü binaların yarattığı bu geçici sağlık sorununa 'Hasta Bina Sendromu' denir."},
+            {q: "Atmosferdeki gaz kirliliği sorunları genellikle bölgesel (lokal) veya küresel (global) ölçekte değerlendirilir. Buna göre bir ülkenin sanayi bölgelerinden yayılan kirliliğin rüzgarlarla taşınarak 'sadece 1000 km çapındaki bir alanda' etkili olmasına ne ad verilir?", o: ["Küresel Ölçekli Kirlilik", "Mikro Ölçekli Kirlilik", "Ulusal (Bölgesel) Ölçekli Kirlilik", "Uluslararası Asit Yağmuru", "Stratosferik Kirlilik"], a: 2, s: "1 km'ye kadar olan kirlilikler yerel (mikro), 1000 km çapındakiler ulusal/bölgesel, tüm dünyayı saranlar (sera etkisi gibi) küresel kirlilik olarak adlandırılır."},
+            {q: "Güneşten gelen ölümcül Ultraviyole (UV) radyasyonunu süzerek dünyadaki yaşamı koruyan 'Ozon Tabakası', atmosferin hangi katmanında (yaklaşık 10-50 km yükseklikte) doğal bir kalkan olarak yer almaktadır?", o: ["Troposfer", "Stratosfer", "Mezosfer", "Termosfer", "Egzosfer"], a: 1, s: "Yer seviyesindeki (Troposfer) ozon zehirli bir gazdır ve kirliliktir. Ancak gökyüzünün çok yukarısında (Stratosfer katmanında) bulunan ozon, dünyayı güneşin kanserojen UV ışınlarından koruyan faydalı bir kalkandır."},
+            {q: "Hava kalitesini olumsuz etkileyen kirleticiler arasında yer alan ve havada asılı kalarak solunum yoluyla akciğerin en derin noktalarına kadar ulaşabilen (Örn: toz, kurum, is, polen) katı veya sıvı mikro parçacıkların genel adı nedir?", o: ["Uçucu Organik Bileşik (VOC)", "Partikül Madde (PM)", "Sera Gazı", "Halojenler", "Asit Buharı"], a: 1, s: "Gaz formunda olmayan, gözle zar zor görülen veya görünmeyen toz, kurum ve küllere İngilizce 'Particulate Matter (Partikül Madde - PM10 veya PM2.5)' denir."},
+            {q: "Çevre ve hava kalitesi koruma felsefesinde 'Bütüncül (Entegre) Yaklaşım' prensibi aşağıdakilerden hangisinde en doğru şekilde örneklendirilmiştir?", o: ["Sadece araba egzozlarının denetlenip, fabrika bacalarının serbest bırakılması", "Sadece kış aylarında hava ölçümü yapılması", "Hava kirliliğinin sadece sağlık boyutunun değil; ekonomik boyutunun, trafik politikalarının, şehir planlamasının ve yeşil alan yönetiminin hep birlikte eşzamanlı planlanması", "Havanın kirlendikten sonra devasa pervanelerle temizlenmeye çalışılması", "Sadece zengin semtlerin hava kalitesinin ölçülmesi"], a: 2, s: "Bütüncül (Holistik) yaklaşım, sorunu tek bir cepheden değil; ulaşım, sanayi, bütçe, sağlık ve şehirleşme gibi her cepheden aynı anda (entegre) çözmeyi hedefler."},
+            {q: "Termik santrallerden ve sanayi bacalarından atmosfere salınan Kükürt dioksit (SO2) ve Azot oksitlerin (NOx) bulutlardaki su buharı ile kimyasal reaksiyona girerek sülfürik asit ve nitrik asite dönüşmesi ve ardından yağmur/kar olarak yeryüzüne düşmesi olayına ne ad verilir?", o: ["Sera Etkisi", "Fotokimyasal Sis", "Asit Yağmurları", "Ozon Tabakası Delinmesi", "Radyasyon Yağmuru"], a: 2, s: "Havaya salınan kükürt ve azot gazları gökyüzünde suyla birleşip asite (sülfürik asit) dönüşür. Yağdığında ormanları kurutur, tarihi binaları, metal arabaları eritir/korozyona uğratır. Bu olaya Asit Yağmuru denir."},
+            {q: "Çalışma ortamı hava kalitesi dikkate alındığında, kapalı alanlarda maruz kalınan hava kirliliğinin (İç Ortam Kirliliği) dış ortam kirliliğine (egzoz, sanayi) göre bazı durumlarda ÇOK DAHA TEHLİKELİ olabilmesinin temel nedeni aşağıdakilerden hangisidir?", o: ["İç ortamlarda sadece karbondioksit gazının bulunması", "İnsanların günlük yaşamlarının ve mesailerinin yaklaşık %80-%90'ını kapalı alanlarda (ev, ofis) geçirmeleri ve yetersiz havalandırma nedeniyle içeride biriken kirleticilere (boya, toz, sigara) kesintisiz maruz kalmaları", "İç ortamlarda hiçbir zaman güneş ışığı görülmemesi", "Binaların sadece betondan yapılmış olması", "Dış ortamda rüzgarın hiç esmemesi"], a: 1, s: "Dışarısı çok kirli olsa da insan orada az vakit geçirir. Ancak ömrümüzün %80'i kapalı binalarda geçer. Kapalı bir odadaki sentetik eşyalar, temizlik kimyasalları ve havalandırma eksikliği içeriyi bir gaz odasına çevirebilir."},
+            {q: "Kraliyet Hekimler Koleji Raporuna (Araştır 3) göre; hava kirliliğinin çocuklar üzerindeki yıkıcı etkisinin yetişkinlere göre daha şiddetli (ölümcül) olmasının fizyolojik gerekçeleri arasında hangisi GÖSTERİLEMEZ?", o: ["Çocukların akciğer ve bağışıklık sistemlerinin henüz gelişimini tamamlamamış olması", "Çocukların boylarının kısa olması sebebiyle yere çöken egzoz gazlarına daha yoğun maruz kalmaları", "Çocukların hücre yenilenme hızının durmuş olması nedeniyle zehri atamamaları", "Çocukların solunum hızlarının ve vücut ağırlığına oranla oksijen tüketimlerinin (metabolizmalarının) yetişkinlerden yüksek olması", "Çocukların dışarıda daha çok vakit geçirip hastalık belirtilerini (öksürüğü) görmezden gelmeleri"], a: 2, s: "Çocuklar büyümekte oldukları için hücre yenilenme hızları durmamıştır, aksine çok yüksektir (Bu şık yanlıştır). Hava kirliliğinden çok etkilenmelerinin asıl sebebi organlarının küçük/gelişmemiş olması ve nefes alışverişlerinin (metabolizmalarının) çok hızlı olmasıdır."}
+        ];
+
+        let quizState = {}; // { qIndex: { selected: oIndex, correct: cIndex } }
+        let isExamFinished = false;
+
+        function initApp() {
+            try {
+                const saved = localStorage.getItem('isg_cevre_u4_hava');
+                if(saved) {
+                    const parsed = JSON.parse(saved);
+                    quizState = parsed.quizState || {};
+                    isExamFinished = parsed.isExamFinished || false;
+                    if(Object.keys(quizState).length > 0) {
+                        document.getElementById("memory-badge").innerHTML = `<i class="fa-solid fa-cloud-arrow-down"></i> Önceki çözümleriniz yüklendi.`;
+                        document.getElementById("memory-badge").style.backgroundColor = "#dcfce7";
+                        document.getElementById("memory-badge").style.color = "#166534";
+                        document.getElementById("memory-badge").style.borderColor = "#bbf7d0";
+                    }
+                }
+            } catch(e) {}
+            
+            renderQuestions();
+            if(isExamFinished) showResults();
+        }
+
+        function stateKaydet() {
+            localStorage.setItem('isg_cevre_u4_hava', JSON.stringify({
+                quizState: quizState,
+                isExamFinished: isExamFinished
+            }));
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById("questions-container");
+            container.innerHTML = "";
+
+            examData.forEach((q, index) => {
+                const state = quizState[index];
+                let questionHTML = `
+                    <div class="question-card" id="q-card-${index}">
+                        <div class="question-meta"><i class="fa-solid fa-tag"></i> ${q.meta || "Özgün Analitik Soru"}</div>
+                        <div class="question-text">
+                            <div class="q-number">${index + 1}</div>
+                            <div>${q.q}</div>
+                        </div>
+                        <div class="options-list">
+                `;
+
+                q.o.forEach((opt, optIndex) => {
+                    let classes = "option-btn";
+                    let icon = "";
+                    
+                    if (isExamFinished) {
+                        classes += " locked";
+                        if (optIndex === q.a) {
+                            classes += " correct";
+                            icon = ' <i class="fa-solid fa-check" style="margin-left:auto;"></i>';
+                        }
+                        if (state && state.selected === optIndex && optIndex !== q.a) {
+                            classes += " wrong";
+                            icon = ' <i class="fa-solid fa-xmark" style="margin-left:auto;"></i>';
+                        }
+                    } else {
+                        if (state && state.selected === optIndex) {
+                            classes += " selected";
+                        }
+                    }
+
+                    questionHTML += `
+                        <div class="${classes}" id="opt-${index}-${optIndex}" onclick="selectOption(${index}, ${optIndex}, ${q.a})">
+                            ${String.fromCharCode(65 + optIndex)}) ${opt} ${icon}
+                        </div>
+                    `;
+                });
+
+                let solClass = isExamFinished ? "solution-box visible" : "solution-box";
+                questionHTML += `
+                        </div>
+                        <div id="sol-${index}" class="${solClass}">
+                            <h4><i class="fa-solid fa-lightbulb"></i> Uzman Çözümü ve Püf Noktası:</h4>
+                            <p>${q.s}</p>
+                            <button class="ai-explain-btn" onclick="askGemini(${index})">✨ Gemini ile Detaylı Analiz İste</button>
+                            <div id="ai-response-${index}" class="ai-response-box" style="display:none;"></div>
+                        </div>
+                    </div>`;
+                    
+                container.innerHTML += questionHTML;
+            });
+        }
+
+        function selectOption(qIndex, selectedOptIndex, correctOptIndex) {
+            if (isExamFinished) return; // Locked
+
+            quizState[qIndex] = { selected: selectedOptIndex, correct: correctOptIndex };
+            
+            // Visual Update
+            const options = document.querySelectorAll(`[id^="opt-${qIndex}-"]`);
+            options.forEach(opt => opt.classList.remove('selected'));
+            document.getElementById(`opt-${qIndex}-${selectedOptIndex}`).classList.add('selected');
+            
+            stateKaydet();
+        }
+
+        function finishExam() {
+            if (isExamFinished) return;
+            
+            const answeredCount = Object.keys(quizState).length;
+            if (answeredCount < 25) {
+                if (!confirm(`Dikkat: Henüz ${25 - answeredCount} soruyu boş bıraktınız. Boşlar yanlış SAYILMAZ ancak netinizi etkilemez. Yine de denemeyi bitirmek istiyor musunuz?`)) {
+                    return;
+                }
+            }
+
+            isExamFinished = true;
+            stateKaydet();
+            showResults();
+        }
+        
+        function showResults() {
+            let correctCount = 0;
+            let wrongCount = 0;
+
+            for (let i = 0; i < 25; i++) {
+                if (quizState[i]) {
+                    if (quizState[i].selected === quizState[i].correct) correctCount++;
+                    else wrongCount++;
+                }
+            }
+
+            let emptyCount = 25 - (correctCount + wrongCount);
+            
+            // 4 Yanlış 1 Doğruyu Götürür Kuralı (AÖF standardı)
+            let net = correctCount - (wrongCount / 4);
+            if (net < 0) net = 0;
+            
+            // 25 Soru, Net başına 4 Puan = 100 Puan
+            let score = Math.round(net * 4);
+
+            document.getElementById('count-correct').innerText = correctCount;
+            document.getElementById('count-wrong').innerText = wrongCount;
+            document.getElementById('count-empty').innerText = emptyCount;
+            document.getElementById('count-net').innerText = net.toFixed(2);
+            document.getElementById('score-text').innerText = score;
+
+            document.getElementById('finish-container').style.display = 'none';
+            document.getElementById('results-panel').style.display = 'block';
+
+            renderQuestions(); // Re-render to show colors and solutions
+            document.getElementById('results-panel').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetExam() {
+            if(confirm("Tüm cevaplarınız silinecek ve teste baştan başlayacaksınız. Emin misiniz?")) {
+                localStorage.removeItem('isg_cevre_u4_hava');
+                window.location.reload();
+            }
+        }
+
+        /* --- YAPAY ZEKA (GEMINI API) BAĞLANTISI --- */
+        async function askGemini(qIndex) {
+            const qData = examData[qIndex];
+            const responseBox = document.getElementById(`ai-response-${qIndex}`);
+            const btn = document.querySelector(`#sol-${qIndex} .ai-explain-btn`);
+
+            if(!apiKey) {
+                responseBox.style.display = "block";
+                responseBox.innerHTML = "<em>⚠️ API anahtarı ayarlanmamış. Sistem ortamı bu özelliği şu an desteklemiyor.</em>";
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ✨ Yapay Zeka Analiz Ediyor...';
+            responseBox.style.display = "block";
+            responseBox.innerHTML = "<em>✨ Gemini soruyu, şıkları ve Çevre Hukuku mantığını tarıyor... Lütfen bekleyin.</em>";
+
+            const optionsText = qData.o.map((opt, i) => String.fromCharCode(65 + i) + ") " + opt).join(', ');
+            const correctAnswerText = String.fromCharCode(65 + qData.a) + ") " + qData.o[qData.a];
+
+            const prompt = `Aşağıdaki "Çevre Sağlığı ve Hava Kirliliği" sorusunu, şıklarını ve doğru cevabını incele. Öğrenci bu sorunun çözümünü tam anlayamadı. 
+            Doğru cevabın neden doğru olduğunu ve diğer şıkların neden yanlış olduğunu İSG/Çevre Bilimi mantığına uygun, akılda kalıcı ve eğitici bir dille Türkçe olarak açıkla.
+
+Soru: ${qData.q}
+Şıklar: ${optionsText}
+Doğru Cevap: ${correctAnswerText}
+
+Lütfen sadece açıklama kısmını ver, soruyu tekrar yazma. Gerekirse akılda kalıcı kodlamalar ekleyebilirsin.`;
+
+            let retries = 3;
+            let success = false;
+            let resultText = "";
+
+            while (retries > 0 && !success) {
+                try {
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                    });
+
+                    if (!response.ok) throw new Error("HTTP Error");
+                    const data = await response.json();
+                    resultText = data.candidates[0].content.parts[0].text;
+                    success = true;
+                } catch (error) {
+                    retries--;
+                    await new Promise(r => setTimeout(r, 2000));
+                }
+            }
+
+            if (success) {
+                const formattedText = resultText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+                responseBox.innerHTML = `<strong><i class="fa-solid fa-robot"></i> ✨ Gemini AI Asistanı:</strong><br><br>${formattedText}`;
+                btn.style.display = 'none'; 
+            } else {
+                responseBox.innerHTML = "<em>⚠️ Gemini ağına şu an ulaşılamıyor. Lütfen daha sonra tekrar deneyin.</em>";
+                btn.disabled = false;
+                btn.innerHTML = '✨ Tekrar Gemini Analizi İste';
+            }
+        }
+
+        // Uygulamayı Başlat
+        window.onload = initApp;
+
+    </script>
 </body>
 </html>
