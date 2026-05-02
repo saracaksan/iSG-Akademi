@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5'li Özgün Final Simülasyonu | Çevre Sağlığı ve Güvenliği</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0f766e;
+            --primary-light: #10b981;
+            --secondary: #064e3b;
+            --accent: #f59e0b;
+            --bg: #f8fafc;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --success: #059669;
+            --danger: #ef4444;
+            --card: #ffffff;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        nav {
+            background: var(--primary);
+            color: white;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: 0.3s;
+        }
+        .nav-btn:hover {
+            background: white;
+            color: var(--primary);
+        }
+        .layout {
+            display: flex;
+            max-width: 1300px;
+            margin: 2rem auto;
+            gap: 2rem;
+            padding: 0 1rem;
+            align-items: flex-start;
+        }
+        .sidebar {
+            flex: 0 0 280px;
+            background: var(--card);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+            position: sticky;
+            top: 90px;
+        }
+        .sidebar h3 {
+            font-size: 1.1rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+            text-align: center;
+        }
+        .exam-btn {
+            width: 100%;
+            text-align: left;
+            background: var(--bg);
+            border: 1px solid #e2e8f0;
+            padding: 14px 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .exam-btn:hover {
+            background: #d1fae5;
+            color: var(--primary);
+            border-color: var(--primary-light);
+        }
+        .exam-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .tools {
+            margin-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border-top: 2px solid #e2e8f0;
+            padding-top: 15px;
+        }
+        .tool-btn {
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: 0.3s;
+            font-size: 0.95rem;
+        }
+        .btn-pdf {
+            background: var(--secondary);
+        }
+        .btn-pdf:hover {
+            background: #022c22;
+        }
+        .btn-retry {
+            background: var(--danger);
+        }
+        .btn-retry:hover {
+            background: #b91c1c;
+        }
+        .btn-study {
+            background: #2563eb;
+        }
+        .btn-study:hover {
+            background: #1d4ed8;
+        }
+        .main {
+            flex: 1;
+            min-width: 0;
+        }
+        .exam-header {
+            background: var(--card);
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+            margin-bottom: 2rem;
+            border-top: 5px solid var(--accent);
+        }
+        .exam-header h2 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        .exam-header p {
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+        .rules {
+            background: #fef3c7;
+            border-left: 4px solid var(--accent);
+            padding: 15px;
+            text-align: justify;
+            font-size: 0.95rem;
+            color: #92400e;
+            border-radius: 0 8px 8px 0;
+        }
+        .q-card {
+            background: var(--card);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+            border: 1px solid #e2e8f0;
+        }
+        .q-tag {
+            font-size: 0.8rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .q-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 15px;
+            text-align: justify;
+            line-height: 1.7;
+        }
+        .q-num {
+            background: var(--primary);
+            color: white;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .opts {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding-left: 47px;
+        }
+        .opt {
+            background: var(--bg);
+            border: 2px solid #e2e8f0;
+            padding: 14px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-weight: 500;
+            font-size: 0.95rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            line-height: 1.5;
+            color: var(--text);
+        }
+        .opt:hover:not(.locked) {
+            border-color: var(--primary-light);
+            background: #f0fdf4;
+            transform: translateX(5px);
+        }
+        .opt.selected {
+            background: #d1fae5;
+            border-color: var(--primary);
+            color: var(--primary);
+            font-weight: 600;
+        }
+        .opt.correct {
+            background: #dcfce7 !important;
+            border-color: var(--success) !important;
+            color: #065f46 !important;
+            font-weight: 700;
+        }
+        .opt.wrong {
+            background: #fee2e2 !important;
+            border-color: var(--danger) !important;
+            color: #991b1b !important;
+            text-decoration: line-through;
+            opacity: 0.8;
+        }
+        .opt.locked {
+            pointer-events: none;
+        }
+        .sol {
+            display: none;
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-left: 4px solid var(--primary-light);
+            margin-top: 20px;
+            margin-left: 47px;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.95rem;
+            color: #334155;
+            line-height: 1.6;
+        }
+        .sol.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        .sol strong {
+            color: var(--primary);
+            font-size: 1.05rem;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .sol .kodlama {
+            display: inline-block;
+            background: #fef3c7;
+            color: #b45309;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+            margin-top: 8px;
+            font-size: 0.85rem;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .finish-area {
+            text-align: center;
+            margin: 3rem 0;
+            display: block;
+        }
+        .btn-finish {
+            background: var(--success);
+            color: white;
+            font-size: 1.15rem;
+            padding: 16px 45px;
+            border-radius: 50px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+            transition: 0.3s;
+        }
+        .btn-finish:hover {
+            background: #047857;
+            transform: translateY(-2px);
+        }
+        #results {
+            display: none;
+            background: #f0fdf4;
+            padding: 2.5rem;
+            border-radius: 12px;
+            border: 2px solid var(--success);
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.1);
+        }
+        .score {
+            font-size: 4.5rem;
+            font-weight: 800;
+            color: var(--success);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+        .stat-box {
+            background: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        @media print {
+            body {
+                background: white;
+                color: black;
+                font-size: 10pt;
+            }
+            nav,
+            .sidebar,
+            .finish-area,
+            #results,
+            .exam-header p,
+            .rules {
+                display: none !important;
+            }
+            .layout {
+                display: block;
+                margin: 0;
+                padding: 0;
+            }
+            .main {
+                width: 100%;
+            }
+            .q-card {
+                padding: 5px 0;
+                border: none;
+                border-bottom: 1px solid #ccc;
+                box-shadow: none;
+                border-radius: 0;
+                margin-bottom: 15px;
+                page-break-inside: avoid;
+            }
+            .q-num {
+                background: #333;
+                width: 24px;
+                height: 24px;
+                font-size: 9pt;
+            }
+            .q-text {
+                font-size: 11pt;
+                margin-bottom: 8px;
+                color: black;
+            }
+            .opts {
+                padding-left: 35px;
+                gap: 3px;
+            }
+            .opt {
+                border: 1px solid #ddd;
+                padding: 4px 8px;
+                background: none !important;
+                font-size: 10pt;
+                color: black !important;
+                text-decoration: none !important;
+            }
+            .opt.correct {
+                font-weight: bold;
+                border: 2px solid black !important;
+            }
+            .sol {
+                display: block !important;
+                padding: 8px 12px;
+                margin-left: 35px;
+                background: #f9f9f9;
+                border-left: 3px solid #666;
+                font-size: 9pt;
+                color: black;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo"><i class="fa-solid fa-leaf"></i> Çevre Sağlığı ve Güvenliği Kampı</div>
+        
+ <a href="../../index.html" class="nav-btn"><i class="fa-solid fa-house"></i> Ana Sayfa</a>
+    </nav>
+    <div class="layout">
+        <div class="sidebar">
+            <h3><i class="fa-solid fa-layer-group"></i> Sınav Seçimi</h3>
+            <button class="exam-btn active" onclick="loadExam(1)" id="btn-e1">Özgün Deneme 1 <i class="fa-solid fa-chevron-right"></i></button>
+            <button class="exam-btn" onclick="loadExam(2)" id="btn-e2">Özgün Deneme 2 <i class="fa-solid fa-chevron-right"></i></button>
+            <button class="exam-btn" onclick="loadExam(3)" id="btn-e3">Özgün Deneme 3 <i class="fa-solid fa-chevron-right"></i></button>
+            <button class="exam-btn" onclick="loadExam(4)" id="btn-e4">Özgün Deneme 4 <i class="fa-solid fa-chevron-right"></i></button>
+            <button class="exam-btn" onclick="loadExam(5)" id="btn-e5">Özgün Deneme 5 <i class="fa-solid fa-chevron-right"></i></button>
+            <div class="tools">
+                <button class="tool-btn btn-study" id="studyBtn" onclick="toggleStudyMode()"><i class="fa-solid fa-book-open-reader"></i> Çalışma Modu (Tüm Çözümler)</button>
+                <button class="tool-btn btn-retry" onclick="resetCurrentExam()"><i class="fa-solid fa-rotate-right"></i> Mevcut Denemeyi Sıfırla</button>
+                <button class="tool-btn btn-pdf" onclick="window.print()"><i class="fa-solid fa-print"></i> Sıkışık PDF Al (Çözümlü)</button>
+            </div>
+        </div>
+        <div class="main">
+            <div class="exam-header">
+                <h2 id="e-title">Özgün Deneme 1</h2>
+                <p>İleri Düzey Analitik Final Provası</p>
+                <div class="rules">
+                    <i class="fa-solid fa-triangle-exclamation"></i> <strong>Sınav Kuralları:</strong> Bu denemedeki sorular ezber bozan, AÖF tuzaklarıyla donatılmış ve okuduğunu anlama becerisini ölçen <strong>tamamen özgün</strong> sorulardır. Şıklar kasıtlı olarak eşit uzunlukta tasarlanmış olup hiçbir görsel veya kelime ipucu barındırmaz. 4 yanlış 1 doğruyu götürür. Sınav bitiminde <strong>'Akılda Kalıcı Kodlamalar'</strong> içeren çözümler aktifleşecektir.
+                </div>
+            </div>
+            <div id="results">
+                <h2 style="color: var(--secondary); margin-bottom: 10px;">Değerlendirme Sonucu</h2>
+                <div class="score"><span id="scoreVal">0</span> Puan</div>
+                <p id="scoreMsg" style="font-size: 1.1rem; color: var(--text-muted); font-weight: 500; margin-bottom: 1rem;"></p>
+                <div class="stats">
+                    <div class="stat-box" style="color:var(--success)">Doğru: <span id="s-cor">0</span></div>
+                    <div class="stat-box" style="color:var(--danger)">Yanlış: <span id="s-wro">0</span></div>
+                    <div class="stat-box" style="color:var(--text-muted)">Boş: <span id="s-emp">0</span></div>
+                    <div class="stat-box" style="color:var(--primary)">Net: <span id="s-net">0</span></div>
+                </div>
+            </div>
+            <div id="q-list"></div>
+            <div class="finish-area" id="finishArea">
+                <button class="btn-finish" onclick="finishExam()"><i class="fa-solid fa-flag-checkered"></i> Sınavı Bitir ve Değerlendir</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        // ================= VERİTABANI (5 DENEME, TOPLAM 100 SORU) =================
+        const db = {
+            1: [
+                { q: "1962 yılında yayımladığı ve tarım ilaçlarının (özellikle DDT) ekosistemi nasıl yok ettiğini tüm dünyaya bilimsel kanıtlarla sunarak, küresel çapta modern çevre güvenliği hareketinin fitilini ateşleyen eserin adı ve yazarı aşağıdakilerden hangisinde doğru eşleştirilmiştir?", o: ["Ortak Geleceğimiz - Gro Harlem Brundtland", "Büyümenin Sınırları - Roma Kulübü Temsilcileri", "Sessiz Bahar (Silent Spring) - Rachel Carson", "Ekolojik Krizin Kökenleri - Richard Falk", "Küresel Isınma Gerçeği - Charles Darwin"], a: 2, s: "Çevre koruma bilincinin anayasası kabul edilen ve kimyasal kirliliği ifşa eden ilk popüler bilim eseri Rachel Carson'un yazdığı 'Sessiz Bahar' kitabıdır.<br><span class='kodlama'>KODLAMA: Rachel Carson (RC) -> Romanında Çevreyi savundu (Sessiz Bahar).</span>" },
+                { q: "Bir fabrikanın çevreye verdiği zararları önlemek amacıyla 'Sürdürülebilirlik' ilkesini benimsediği varsayıldığında, fabrikanın üst yönetiminin alacağı aşağıdaki kararlardan hangisi bu ilkenin felsefesine tam olarak UYGUNDUR?", o: ["Sadece bugünkü kârı maksimize edip atık suları arıtmadan nehre boşaltma kararının alınması", "Doğal kaynakların, 'gelecek kuşakların da kendi ihtiyaçlarını karşılayabilme hakkından taviz vermeden' akılcı ve ekolojik bir planlamayla tüketilmesi", "Ekonomik büyümeyi ve üretimi tamamen durdurup fabrikanın faaliyetlerine süresiz olarak son verilmesi", "Çevre kurallarının ve standartlarının sadece devlet denetiminin yapıldığı günlerde titizlikle uygulanması", "Tüm işçilerin işten çıkarılarak fabrikanın tamamen insansız ve otonom bir makine sistemine geçirilmesi"], a: 1, s: "Sürdürülebilirlik kavramı, gelişmeyi (ekonomiyi) durdurmak demek değildir; aksine bugünkü ihtiyaçları karşılarken 'gelecek nesillerin hakkını çalmamayı' hedefler." },
+                { q: "Türkiye Cumhuriyeti Anayasası Madde 56'ya göre; 'Sağlıklı ve dengeli bir çevrede yaşama hakkı' ve bu çevrenin korunması ile kirliliğin önlenmesi görevi, hukuki ve anayasal çerçevede kimin asli ödevi olarak tanımlanmıştır?", o: ["Sadece uluslararası bağımsız çevre koruma örgütlerinin ödevidir.", "Sadece Çevre, Şehircilik ve İklim Değişikliği Bakanlığının ödevidir.", "Devletin ve o ülkede yaşayan vatandaşların (herkesin) ortak ödevidir.", "Sadece ağır sanayi tesisleri ve fabrika sahiplerinin finansal ödevidir.", "Sadece yerel yönetimlerin ve büyükşehir belediyelerinin sorumluluğundadır."], a: 2, s: "Anayasa madde 56 çevreyi korumayı sadece devlete veya kurumlara yıkmaz. Çevreyi korumak hem devletin hem de o ülkede yaşayan tüm 'vatandaşların' ortak anayasal ödevidir." },
+                { q: "Entegre (Bütünleşik) Yönetim Sistemlerinin bir endüstriyel tesiste kurulmasının (Örn: ISO 9001 ile ISO 14001'in tek çatı altında uygulanmasının) işletmeye sağladığı en büyük MADDİ ve OPERASYONEL fayda aşağıdakilerden hangisidir?", o: ["Aynı işin (denetim, dokümantasyon, eğitim) tekrar tekrar yapılmasını önleyerek idari bürokrasiyi azaltması ve kurumsal sinerjiyi artırması", "İşçilerin alacakları maaşları ve primleri insan hatası olmadan otomatik olarak hesaplayabilmesi", "Fabrikanın elektrik ve su tüketimini hiçbir teknolojik yatırım yapmadan tamamen sıfırlayabilmesi", "Rakiplerin ticari ve üretim sırlarını yasal olarak kopyalamaya olanak tanıması", "Sadece devlet ihalelerinde ve uluslararası teşviklerde vergi muafiyeti getirmesi"], a: 0, s: "Ayrı ayrı sistem kurmak yerine Entegre (tek) sistem kurmak; denetçinin bir kerede her şeye bakmasını sağlar, evrak yükünü (iş tekrarını) bitirir ve ciddi bir operasyonel tasarruf sağlar." },
+                { q: "Atmosferdeki kirleticiler birincil ve ikincil olmak üzere iki gruba ayrılır. Doğrudan fabrika bacasından çıkmayan, ancak atmosfere salınan azot oksitleri ile uçucu organik bileşiklerin güneş ışığı (fotokimyasal reaksiyon) altında tepkimeye girmesiyle sonradan oluşan 'İkincil Hava Kirletici' aşağıdakilerden hangisidir?", o: ["Kükürtdioksit (SO2)", "Karbonmonoksit (CO)", "Ozon (O3) - Antropojenik Ozon", "Kurşun (Pb) Partikülleri", "Karbondioksit (CO2)"], a: 2, s: "Fabrikalar doğrudan 'ozon' gazı salmaz. Salınan gazlar gökyüzünde güneş ışığıyla pişerek alt atmosferde zehirli bir Ozon (O3) perdesi oluşturur. Bu ikincil bir kirleticidir.<br><span class='kodlama'>KODLAMA: Birincil gazlar bacadan ÇIKAR, İkincil gazlar gökyüzünde PİŞER (Ozon, Asit Yağmuru).</span>" },
+                { q: "Bir ürünün üretim zincirinde doğaya salınan ve mevcut su kalitesi standartlarını yeniden sağlamak (kirliliği zararsız hâle getirecek kadar seyreltmek) için doğadan ihtiyaç duyulan tatlı su miktarını ifade eden ekolojik ayak izi bileşeni hangisidir?", o: ["Mavi Su Ayak İzi Göstergesi", "Yeşil Su Ayak İzi Göstergesi", "Gri Su Ayak İzi Göstergesi", "Siyah Su Ayak İzi Göstergesi", "Kahverengi Su Ayak İzi Göstergesi"], a: 2, s: "Gri (Grey) renk atıksuyu ve kirliliği temsil eder. Ne kadar zehirli atık attıysanız, onu doğada zararsız seviyeye seyreltmek için gereken temiz su miktarına 'Gri Su Ayak İzi' denir." },
+                { q: "Tarımsal arazilerdeki aşırı kimyasal gübre kullanımının yeraltı sularına sızması sonucu, içme sularında bolca bulunan ve özellikle formülle beslenen bebeklerde kana karışarak oksijen taşınmasını engelleyen 'Mavi Bebek Sendromu'na neden olan toksik bileşen hangisidir?", o: ["Ağır metallerden olan Cıva (Hg) ve Kurşun (Pb)", "Suya katılan Florür (F) ve Klor (Cl) gazı kalıntıları", "İnorganik bir bileşen olan Nitrit-Nitrat sızıntıları", "Soğutma gazlarından sızan Kloroflorokarbonlar (CFC)", "Altın madenlerinden nehre karışan Siyanür bileşikleri"], a: 2, s: "Tarımsal gübrelerden sulara sızan inorganik Nitrat, bebeklerin kanında nitrite dönüşüp oksijeni bağlar ve bebeklerin morararak ölmesine (Mavi Bebek Sendromu) neden olur." },
+                { q: "Modern tarım yöntemlerinde 'Anız Yangınlarına (hasat sonrası tarlanın bilerek yakılması)' kesinlikle yer verilmemesinin ve bunun Türkiye'de yasaklanmasının asıl ekolojik (biyolojik) sebebi aşağıdakilerden hangisidir?", o: ["Toprağın üst katmanındaki sıcaklığı 75°C'ye kadar çıkararak, topraktaki organik maddeyi ve humusa dönüşecek yararlı mikroorganizmaların %70'ini öldürüp tarlayı verimsizleştirmesi", "Tarladaki büyük traktörlerin ve biçerdöverlerin manevra kabiliyetini duman yüzünden engellemesi", "Yangından çıkan dumanların sadece komşu ülkelerle diplomatik krizlere neden olması", "Tarım alanlarında zararlı böceklerin ve farelerin sayısını yangın sonrası kontrolsüzce artırması", "Yakılan tarlaların bir sonraki yıl devlete yüksek ceza vergisi olarak geri dönmesi"], a: 0, s: "Çiftçiler tarlayı kolay temizlemek için anız yakar. Oysa bu eylem toprağın can damarını kavurarak verimliliği sağlayan mikroorganizmaları ve humusu yakarak öldürür." },
+                { q: "Nükleer tesislerin sökümü sırasında veya hastanelerin radyoloji bölümlerinde kullanılan; radyasyonla temas etmiş ancak yüksek bir ısıl gücü olmayan koruyucu giysiler, eldivenler ve şırıngalar hangi radyoaktif atık kategorisinde değerlendirilir?", o: ["Çok Yüksek Seviyeli Radyoaktif Atıklar", "Yüksek Seviyeli Radyoaktif Atıklar (YSA)", "Orta Seviyeli Radyoaktif Atıklar (OSA)", "Düşük Seviyeli Radyoaktif Atıklar (DSA)", "Kalıcı Organik Nükleer Kirleticiler (KOK)"], a: 3, s: "Radyasyonla hafif düzeyde temas etmiş, günlük kullan at malzemeler (tulum, eldiven, şırınga) her zaman 'Düşük Seviyeli Atıklar (DSA)' sınıfına girer." },
+                { q: "Gürültü ölçümünde kullanılan teknolojik cihazlardan 'Dozimetre'lerin, iş sağlığı ve güvenliği denetimlerinde sabit mikrofonlara (sonometrelere) göre özellikle tercih edilmesinin en temel analitik ve ergonomik sebebi aşağıdakilerden hangisidir?", o: ["Sadece fabrikanın dış duvarlarına monte edilerek uzaktan izlenebilmesi", "Piyasada çok ucuz olması ve hiçbir şekilde kalibrasyon pili gerektirmemesi", "Doğrudan işçinin yakasına takılarak, işçinin gün boyu gezerken maruz kaldığı 'bireysel' kümülatif (toplam) gürültü dozunu mükemmel şekilde ölçmesi", "Sadece gece vardiyalarındaki düşük frekanslı sesleri algılayabilmesi", "Gürültüyü tamamen emerek çalışma ortamını anında sessizleştirmesi"], a: 2, s: "Sabit sonometreler sadece konduğu noktanın sesini ölçer. Dozimetre ise kişinin yakasına takılır ve o işçinin gün boyu her gittiği yerdeki toplam gürültü yükünü (dozunu) birebir hesaplar." },
+                { q: "Mekanik tehlikelerin önlenmesi amacıyla ağır sanayi preslerinde ve kesme tezgâhlerinde alınması gereken en temel, fiziksel ve mühendislik güvenlik önlemi aşağıdakilerden hangisi olarak kabul edilir?", o: ["Makinenin sadece belirli günlerde ve uzman personelin gözetiminde gündüz vardiyasında çalıştırılması", "İşçilerin makineye doğrudan ellemeyip her işlemi sadece uzaktan kumandalı robotik kollarla yapması", "İşçinin iki elinin de tehlike (kesme) bölgesinden uzakta kalmasını zorunlu kılan 'Çift El Kumanda' sisteminin ve 'Operasyon Koruyucusunun (Siperlik)' kullanılması", "Makinenin acil durdurma (Stop) düğmesinin çocukların ulaşamayacağı gizli bir yere yerleştirilmesi", "Dönen transmisyon kayışlarının daha iyi soğuması için üzerindeki koruyucu kapakların tamamen sökülmesi"], a: 2, s: "Mekanik risklerde (ezilme/parçalanma) altın kural: İşçinin uzvunun makineye girmesini fiziksel ve elektriksel olarak engelleyen siperlikler ve çift el buton sistemleri kullanmaktır." },
+                { q: "Küresel Uyumlaştırılmış Sistem (GHS) etiketlemesinde kullanılan ve üzerinde 'Alevlerin ve parçaların etrafa saçıldığı (Patlayan Bomba)' bir görselin bulunduğu piktogramın uluslararası standartlardaki tam karşılığı nedir?", o: ["Akut Toksik (Zehirleyici) Madde", "Aşındırıcı (Korozif) Madde", "Alev Alıcı (Parlayıcı) Madde", "Oksitleyici (Yakıcı) Madde", "Patlayıcı (Explosive) Madde"], a: 4, s: "Parçalanarak etrafa saçılan bir bomba görseli uluslararası GHS sisteminde tereddütsüz 'Patlayıcı' (Dinamit, TNT türü) maddeyi temsil eder." },
+                { q: "Malzeme Güvenlik Bilgi Formu (MSDS), bir kimyasalın işyerine girdiği andan itibaren herkesin ulaşabileceği bir yerde bulunmalıdır. AÖF standartlarına göre, MSDS formlarının içeriğinde aşağıdaki bilgilerden hangisi KESİNLİKLE YER ALMAZ?", o: ["Kimyasal maddenin insan sağlığına verebileceği zararlar ve ilkyardım bilgileri", "Kimyasalın kaynama noktası, parlama noktası gibi fiziksel ve kimyasal özellikleri", "Kimyasalın diğer markalardaki muadillerine göre ekonomik fiyat analizi ve dış ortam iklim şartlarına göre kullanım özellikleri", "Maddeyle güvenli çalışma, uygun taşıma ve depolama koşulları", "Olası bir kaza anında (yangın veya dökülme) uygulanacak acil müdahale ve yangınla mücadele yöntemleri"], a: 2, s: "MSDS formu kimyasalın teknik güvenlik anayasasıdır. Ürünün ticari maliyetini, fiyat karşılaştırmasını veya açık havadaki spesifik üretim yöntemlerini içermez." },
+                { q: "Uluslararası Kanser Araştırma Ajansı (IARC) tarafından yapılan toksikolojik sınıflandırmada, 'İnsanlar için kesinlikle kanserojen olduğu yeterli epidemiyolojik kanıtlarla ispatlanmış olan' maddeler (Örneğin; Asbest, Benzen) hangi grupta yer almaktadır?", o: ["Grup 1 (Kesin Kanserojen)", "Grup 2A (Muhtemel Kanserojen)", "Grup 2B (Şüpheli Kanserojen)", "Grup 3 (Sınıflandırılamayanlar)", "Grup 4 (Kanserojen Olmayanlar)"], a: 0, s: "IARC'ye göre Grup 1: İnsanda kanser yaptığı tartışmasız şekilde (1 numara kanıtlı) ispatlanmış olan en tehlikeli maddelerin sınıfıdır." },
+                { q: "Kimyasalların depolanması sırasında yapılan en ölümcül idari hatalardan biri, birbiriyle reaksiyona giren maddeleri aynı rafa koymaktır. Buna göre, 'Parlayıcı (Yanıcı)' kimyasalların, aşağıda verilen hangi madde grubuyla asla aynı dolapta DEPOLANMAMASI gerekir?", o: ["Sadece saf ve nötr olan tepkimesiz sıvılarla", "Oksitleyici (Yakıcı ve yoğun oksijen sağlayıcı) karaktere sahip maddelerle", "Sadece arıtılmış saf su içeren büyük bidonlarla", "Herhangi bir kimyasal tepkimeye girmeyen asal (soy) gaz tüpleriyle", "Karton, ahşap veya plastik türü boş taşıma ambalajlarıyla"], a: 1, s: "Yangın üçgeni (Yanıcı + Oksijen + Isı) mantığına göre; Parlayıcı bir madde ile Oksitleyici (Oksijen üreten) bir madde yan yana gelirse en ufak kıvılcımda devasa bir patlama oluşur." },
+                { q: "İş sağlığı ve güvenliği disiplininde, bir olay henüz kazaya dönüşmemiş olsa bile; tehlike taşıyan (Örn: Vincin halatının kopması ama altından kimsenin geçmemesi) bir potansiyele ne ad verilir?", o: ["Önleme ve Koruma Politikası", "Ramak Kala Olay (Near Miss)", "Tehlike (Hazard) Tanımlaması", "Risk Değerlendirmesi Sonucu", "Kaza Frekans Oranı"], a: 2, s: "Soruda bir kavram tuzağı vardır. Bir olayın hasar vermeden atlatılması 'Ramak Kala'dır. Ancak olay olmadan önceki o 'Zarar verme potansiyeline' bizzat 'Tehlike' denir. Soru potansiyeli sormaktadır." },
+                { q: "İş Sağlığı ve Güvenliği Risk Yönetimi sürecinde uygulanan ve işletmelerin 'Sürekli İyileştirme' felsefesinin temelini oluşturan PUKÖ döngüsünün, risk analizindeki İLK VE EN KRİTİK aşaması aşağıdakilerden hangisidir?", o: ["Risklerin karmaşık matematiksel formüllerle derecelendirilmesi", "Sistemdeki tüm donanımsal ve insani 'Tehlikelerin Belirlenmesi (Tespit Edilmesi)'", "Risk kontrol önlemlerinin fabrikada fiilen uygulanmaya başlanması", "Risklerin parasal ve hukuki maliyetinin yönetim kuruluna raporlanması", "Sistemin dış denetçiler tarafından sürekli olarak izlenmesi ve onaylanması"], a: 1, s: "Bir sorunu çözmek için önce onu 'görmeniz/tanımanız' gerekir. PUKÖ döngüsünün ve risk yönetiminin ilk adımı daima sahadaki 'Tehlikelerin Belirlenmesi (Tespit)' aşamasıdır." },
+                { q: "Risklerin derecelendirilmesinde matematiksel bir formül kullanılan ve bu formülün 'Olasılık', 'Şiddet' ve diğer yöntemlerden farklı olarak üçüncü bir bileşen olan 'FREKANS (Maruziyet Sıklığı)' çarpımından oluştuğu risk analiz yöntemi hangisidir?", o: ["İş Güvenliği Analizi (JSA) Eğrisi", "Hata Türleri ve Etkileri Analizi (FMEA)", "Fine-Kinney Risk Değerlendirme Yöntemi", "Neden-Sonuç Analizi (Fishbone) Matrisi", "L Tipi (5x5) Basit Risk Değerlendirme Matrisi"], a: 2, s: "İşin içine 3. bir çarpan olarak FREKANS (Tehlikeye o işçinin haftada/günde kaç defa maruz kaldığı) giriyorsa, bu spesifik yöntem kesinlikle 'Fine-Kinney' yöntemidir." },
+                { q: "Hata Türleri ve Etkileri Analizi (FMEA) yönteminde yer alan ve diğer standart risk matrislerinde bulunmayan 'Fark Edilebilirlik (Detectability)' parametresi risk analizinde tam olarak neyi ifade etmektedir?", o: ["Meydana gelen iş kazasının ulusal veya yerel basında ne kadar duyulacağı (Halkla İlişkiler kriz boyutu)", "Meydana gelen gizli bir arızanın veya hatanın, çalışana/sisteme zarar vermeden önce 'mevcut sensörler veya kontrol sistemleri tarafından' fark edilip yakalanabilme ihtimali", "İşçinin yaptığı mesleki hatayı amirine ne kadar sürede itiraf edip fark ettireceği", "Riskin gerçekleşmesi durumunda şirketin hisse senetlerinde hissedilecek maliyet oranı", "Yazılım hatalarının güvenlik duvarı tarafından dış dünyaya duyurulma süresi"], a: 1, s: "FMEA'yı çok özel kılan şey budur: Bir hata (Örn: zehirli gaz sızıntısı) oluştuğunda sistemdeki alarmlar bunu işçiye önceden haber veriyor mu (fark edilebilirlik yüksek), yoksa sessizce mi öldürüyor?" },
+                { q: "İş Sağlığı ve Güvenliği Risk Değerlendirmesi Yönetmeliği Madde 15'e göre; aynı fabrikada üretim yapan 'Asıl İşveren' ile o fabrikaya temizlik hizmeti veren 'Alt İşverenin (Taşeron)' bulunduğu bir senaryoda, alt işverenin risk değerlendirmesi yapma yükümlülüğü ve asıl işverenin yasal rolü nasıldır?", o: ["Asıl işveren kendi risk analizini yapar, alt işveren sadece misafir statüsünde olduğu için hiçbir analiz yapmak zorunda değildir.", "Her alt işveren kendi yürüttüğü işlerle ilgili risk değerlendirmesini BİZZAT KENDİSİ YAPAR veya YAPTIRIR; Asıl işveren ise bu çalışmaları denetler ve kendi çalışmasıyla bütünleştirerek koordine eder.", "Sadece asıl işveren tüm fabrikanın risk analizini yapar ve alt işverene bunu imzalatarak zorla uygulatır.", "Risk analizini her iki işverenin yerine doğrudan Çalışma Bakanlığı uzmanları yapar.", "Alt işveren risk analizini bağımsız olarak yapar, asıl işverenin ise alt işverenin dosyalarını denetleme yetkisi kesinlikle yoktur."], a: 1, s: "Yasa çok nettir: Alt işveren (taşeron) kendi risk analizini kendisi yapmak zorundadır. Fabrika patronu (Asıl işveren) ise bunu alır, kendi ana dosyasına ekler ve alt işverenin sahada kurallara uyup uymadığını 'denetler'." }
+            ],
+            2: [
+                { q: "Atıksuların arıtılmadan deniz ve göllere dökülmesi sonucu; organik madde ve fosfor bakımından aşırı zenginleşen sularda, yüzeyi kaplayan alglerin (yosunların) aniden ve kontrolsüzce çoğalarak suyun oksijenini tüketmesi ve göldeki tüm balıkların ölmesi olayına ekolojide ne ad verilir?", o: ["Ozonosferik Çökme", "Fotokimyasal Alg Sislenmesi", "Ötrofikasyon (Alg Patlaması)", "Biyolojik Büyütme (Biyomagnifikasyon)", "Kemosentetik Parçalanma"], a: 2, s: "Suların aşırı besinlenerek (fosfor/azot gübresiyle) yeşil bir balçık tabakasına dönüşmesi ve oksijensiz kalarak gölün adeta boğulması ekolojik olayı 'Ötrofikasyon'dur." },
+                { q: "Tarımsal arazilerde kullanılan pestisitlerin (zehirli böcek ilaçlarının), güneş ışınlarının ve ultraviyole radyasyonun etkisiyle kimyasal yapısının değişmesine veya zehirleyici etkisinin parçalanarak farklı bir forma dönüşmesine çevre kimyasında ne ad verilir?", o: ["Biyolojik Degradasyon (Bakteriyel Bozunma)", "Fotokimyasal Degradasyon (Işıkla Parçalanma)", "Fiziksel Evaporasyon (Buharlaşma)", "Hidrolojik Leaching (Süzülme ve Yıkanma)", "Kimyasal Absorpsiyon (Toprağa Emiliş)"], a: 1, s: "'Foto' kelimesi ışık demektir. Güneşin ışınları kimyasal molekülleri vurarak onları parçalar (degrade eder). Buna fotokimyasal bozunma/degradasyon denir." },
+                { q: "İç ortam (kapalı alan) hava kalitesi incelendiğinde, modern plazalarda çalışan personelin mesai saatleri içinde baş ağrısı, göz/boğaz yanması ve yoğun uyku hâli yaşaması; ancak binadan dışarı çıkıp açık havaya kavuşunca tüm bu semptomların hızla ve tamamen ortadan kaybolması durumuna İSG literatüründe ne ad verilir?", o: ["Mesleki Astım ve Kronik Bronşit Krizi", "Klostrofobi Kaynaklı Panik Atak Sendromu", "Hasta Bina Sendromu (Sick Building Syndrome)", "Kapalı Alan Karbonmonoksit Zehirlenmesi", "Tükenmişlik Sendromu (Burnout Syndrome)"], a: 2, s: "Camları açılmayan, sentetik mobilya ve kalitesiz havalandırma (klima) sistemleriyle sürekli aynı kirli havanın ofis içinde döndürüldüğü binaların yarattığı bu geçici sağlık sorununa 'Hasta Bina Sendromu' denir." },
+                { q: "İş sağlığı ve güvenliğinde 'Risk Kontrol Hiyerarşisi' uygulanırken, tehlike arz eden bir durumla (Örn: Gürültülü ve eski bir jeneratör) karşılaşıldığında, mühendislik açısından yapılması gereken İLK ve EN ETKİLİ hamle aşağıdakilerden hangisi olmalıdır?", o: ["İşçilere derhal en yüksek kaliteli kulak koruyucu manşonları (KKD) dağıtmak", "İşçilerin gürültülü ortamda kalma sürelerini yarı yarıya azaltmak (İdari bir önlem almak)", "Tehlikenin kaynağını tespit edip, o jeneratörü üretim alanından tamamen uzaklaştırmak (Eliminasyon) veya sessiz çalışan bir modelle değiştirmek (İkame)", "Jeneratörün etrafına büyük ve dikkat çekici 'Gürültü Uyarısı' levhaları asmak", "İşçilere her ay düzenli olarak gürültünün zararları hakkında teorik eğitim vermek"], a: 2, s: "İSG'nin altın kuralı: Önce tehlikeyi kaynağında yok et (Eliminasyon). Bunu yapamıyorsan zararsızıyla değiştir (İkame). Kulaklık (KKD) takmak ise en son çaredir, başka çözüm kalmadığında verilir." },
+                { q: "Psikososyal risk faktörlerinden biri olan ve çalışma ortamında bir grup çalışanın veya yöneticinin, hedefe koydukları bir mesai arkadaşını 'sistematik ve sürekli biçimde' dışlaması, dedikodusunu yapması, işini sabote etmesi ve onu psikolojik olarak çökertmeye çalışması uluslararası literatürde hangi terimle ifade edilir?", o: ["Mobbing (Psikolojik Taciz / Yıldırma)", "Burnout (Tükenmişlik Sendromu)", "Ergonomik ve Fiziksel Baskı", "Vibrasyon (Titreşim) Sendromu", "Akut Anksiyete (Kaygı Bozukluğu)"], a: 0, s: "İşyerinde sistematik, sürekli ve kasıtlı olarak yapılan psikolojik teröre, dışlamaya ve yıldırma eylemlerine 'Mobbing' denir. En ağır ve yıkıcı psikososyal tehlikedir." },
+                { q: "İşyerlerindeki fiziksel çevre koşulları 'Ergonomi' bilimi çerçevesinde incelendiğinde; iş istasyonlarının (masaların, koltukların veya üretim bantlarının) çalışanın anatomik yapısına uygun olarak tasarlanması ilkesi, aşağıdaki ana hedeflerden hangisine doğrudan hizmet eder?", o: ["Çalışanların daha uzun saatler boyunca ücretsiz mesai yapmalarını sağlamak", "İşletmenin elektrik ve aydınlatma faturalarını minimum seviyeye indirmek", "İşçilerde yanlış duruşa bağlı olarak gelişen Kas-İskelet Sistemi Hastalıklarını (bel, boyun, bilek ağrıları) önleyerek verimliliği artırmak", "Çalışanların kendi aralarındaki sosyal iletişimi ve sohbeti tamamen bitirmek", "Makine arızalarının ve yedek parça maliyetlerinin sıfırlanmasını garantilemek"], a: 2, s: "Ergonominin amacı işi insana uydurmaktır (boya göre masa ayarı vb.). Kötü ergonomi omurgaya yük bindirir; bunun sonucunda oluşan fıtık ve eklem ağrılarını önlemek ergonominin bir numaralı hedefidir." },
+                { q: "Çevre sağlığı biliminde; hastalığa neden olan mikroorganizmaları (Örn: Sıtma, Dang Humması, Tifo, Kırım Kongo virüsü) kendi vücutlarında taşıyarak insanlara sokma veya ısırma yoluyla bulaştıran canlılara (sinek, kene, fare vb.) tıbbi ve ekolojik olarak genel ne ad verilir?", o: ["Patojenik Antikorlar", "İzotopik Elementler", "Parazitik Asalaklar", "Vektörler (Taşıyıcı Canlılar)", "Bakteriyofajlar"], a: 3, s: "Kendisi hasta olmayıp, hastalığı taşıyarak insanlara nakleden (uçan veya yürüyen) aracılara tıp ve çevre sağlığında 'Vektör' denir. En bilinenleri sivrisinek ve kenedir." },
+                { q: "Titreşimli (Vibrasyonlu) el aletlerini (kırıcı delici, asfalt tabancası vb.) uzun yıllar boyunca kullanan inşaat veya yol işçilerinde, ellerdeki kılcal damarların ve sinirlerin tahrip olması sonucu parmak uçlarının kansız kalıp beyazlamasıyla ortaya çıkan meslek hastalığına tıp dilinde ne ad verilir?", o: ["Silikozis (Akciğer tozlanması) Hastalığı", "Kronik Obstrüktif Akciğer Hastalığı (KOAH)", "Raynaud Hastalığı (Beyaz Parmak Sendromu)", "Asbestozis (Zar zarı kanseri)", "Mesleki Kontakt Egzama ve Dermatit"], a: 2, s: "Ellerde sürekli titreşim, damarları büzer ve kan akışını durdurur. Parmak uçlarının kansız kalıp bembeyaz olmasına tıpta 'Raynaud (Beyaz Parmak)' sendromu denir.<br><span class='kodlama'>KODLAMA: Titreşim -> Damar büzüşür -> Kan gitmez -> Parmak BEYAZLAR (Beyaz Parmak).</span>" },
+                { q: "Bir endüstriyel tesiste veya ofiste bir personelin elektrik akımına (yüksek voltaja) kapıldığını gören bir mesai arkadaşının, kazazedeyi kurtarmak için olay yerinde yapması gereken İLK ve EN HAYATİ güvenlik (ilkyardım) hamlesi nedir?", o: ["Hiç vakit kaybetmeden şalteri (Ana Sigortayı) kapatmak veya cihazın fişini prizden çekerek elektrik akımını tamamen kesmek", "Çıplak elleriyle arkadaşını hızla elektrik kablosundan çekip koparmak", "Hemen olay yerinde suni teneffüs ve kalp masajına başlamak", "Olayı güvenlik kamerasına kaydedip delil olarak İSG uzmanına bildirmek", "Elektriği toprağa iletmesi için kurbanın üzerine bir kova yalıtkan su dökerek müdahale etmek"], a: 0, s: "Elektrik akımına kapılan kişiye asla çıplak elle dokunulmaz (siz de akıma kapılırsınız). İlk kural, kaynağı kesmektir yani 'şalteri (sigortayı) kapatmaktır'. Oksijen veya su verilmez." },
+                { q: "Sanayide kimyasallar genellikle toz, gaz veya buhar halindedir. İş sağlığı ve toksikoloji bilimine göre, endüstriyel ortamlarda (özellikle kapalı boyahanelerde) havaya karışan kimyasal buharların işçi vücuduna girerek zehirlenme yaratmasındaki EN YAYGIN (en sık karşılaşılan) ve kana en hızlı karışan yol aşağıdakilerden hangisidir?", o: ["Yutma (Sindirim sistemi) yoluyla mideden emilmesi", "Deri emilimi (Absorpsiyon) yoluyla yavaş yavaş vücuda nüfuz etmesi", "Solunum (İnhalasyon) yoluyla doğrudan akciğer alveollerine çekilip saniyeler içinde kana karışması", "Göz sıvısından emilerek optik sinirlere ulaşması", "Derideki açık yaralardan ve çiziklerden kan damarlarına sızması"], a: 2, s: "Fabrikalarda işçilerin kirli havayı veya asit buharını doğrudan soluması, kimyasalın akciğerlerden kana karışmasına neden olan en yaygın, en tehlikeli ve en hızlı vücuda giriş yoludur." },
+                { q: "Bir kimya fabrikasına yeni giren bir İSG uzmanı, fıçıların üzerindeki etiketlerde yer alan 'H300' ve 'P260' gibi uluslararası kodları incelemektedir. Küresel Uyumlaştırılmış Sisteme (GHS) göre bu kodların açılımı ve anlamı aşağıdakilerden hangisinde doğru eşleştirilmiştir?", o: ["H: Hijyen standartları kodları / P: Personel sayısı kısıtlamaları", "H: Hazard (Tehlike ve Zararlılık İfadeleri) / P: Precautionary (Güvenlik ve Önlem İfadeleri)", "H: Hastalık teşhis kodları / P: Patlayıcılık oranı yüzdeleri", "H: Halojen içerik oranları / P: Parlayıcılık (Alev alma) seviyeleri", "H: Hasar ve korozyon boyutu / P: Para cezası miktarı ve idari yaptırımlar"], a: 1, s: "H kodları İngilizce 'Hazard (Tehlike)', P kodları ise 'Precautionary (Önlem)' kelimelerinden gelir. Etiketlerin tüm dünyada anlaşılan evrensel tehlike kodlama sistemidir." },
+                { q: "Kimya laboratuvarlarında atıkların yönetimi ve bertarafıyla ilgili prosedürlere (Araştır 3) göre, kullanılmış tehlikeli kimyasal atıkların uzaklaştırılmasında uyulması gereken KESİN ve YASAL kural aşağıdakilerden hangisidir?", o: ["Tüm sıvı kimyasal atıkların kolayca seyrelmesi için laboratuvar lavabosundan doğrudan şehir kanalizasyonuna dökülmesi", "Kırık deney camlarının ve asitli süzgeç kağıtlarının belediyenin normal evsel çöp (siyah) tenekesine atılması", "Organik ve inorganik sıvı atıkların birbiriyle ASLA karıştırılmadan ayrı ayrı özel şişelerde biriktirilip, lisanslı ve belgeli bertaraf firmalarına teslim edilmesi", "Atık kimyasalların hacmini küçültmek için laboratuvarın bahçesinde ateşe verilerek yakılması", "Tıbbi atıkların (şırıngaların), tehlikeli endüstriyel kimyasal atıklarla aynı kırmızı poşete atılarak birleştirilmesi"], a: 2, s: "Organik ve inorganik sıvı kimyasallar asla birbirine karıştırılmaz (şiddetli tepkime veya patlama yapabilir). Ayrı şişelerde toplanır. Kanalizasyona kimyasal dökmek ise büyük bir çevre suçudur." },
+                { q: "Sürdürülebilir kalkınma ilkeleri doğrultusunda, Türkiye'de hammadde ve doğal kaynakların israfını önleyerek 'çöpe giden atık miktarını minimuma indirmeyi', atıkları kaynağında (evde/fabrikada) ayrı toplayıp geri dönüştürerek ekolojik döngüye katmayı hedefleyen 2019 tarihli güncel yönetmeliğin tam adı nedir?", o: ["Hafriyat Toprağı ve Yıkıntı Atıkları Yönetmeliği", "Sıfır Atık (Zero Waste) Yönetmeliği", "Tehlikeli Atıkların Kontrolü Yönetmeliği", "Tıbbi Atıkların Kontrolü Yönetmeliği", "Ambalaj Atıklarının Kontrolü Yönetmeliği"], a: 1, s: "Geri dönüşümü maksimize ederek, israfı önleyerek ve çöpü hammaddeye dönüştürerek doğaya giden katı atığı (çöpü) bitirmeyi hedefleyen devasa projenin adı 'Sıfır Atık Yönetmeliği'dir." },
+                { q: "Kaliteli su gerektiren gıda ve ilaç endüstrileri hariç olmak üzere; uygun ve temel bir ön arıtma gerçekleştirildikten sonra sanayide/endüstride soğutma, kazan besleme veya üretim amacıyla kullanılabilen sular, Su Kirliliği Kontrolü Yönetmeliği'ne göre hangi kalite sınıfında yer alır?", o: ["Sınıf I (Yüksek Kaliteli İçme Suyu)", "Sınıf II (Az Kirlenmiş Su)", "Sınıf III (Kirli Su - Endüstriyel Sanayi Suyu)", "Sınıf IV (Çok Kirlenmiş ve Toksik Su)", "Sınıf V (Radyoaktif Su)"], a: 2, s: "Sınıf I ve II içme/kullanma amaçlı kaliteli sulardır. Sınıf III ise, arıtıldıktan sonra sadece sanayide soğutma vb. işlemler için kullanılabilen kirli (endüstriyel) sulardır." },
+                { q: "Sınır aşan su kaynakları (Örneğin; Türkiye'den doğup Suriye ve Irak'a dökülen, birden fazla ülkeyi kateden nehirler), su kıtlığının ve kuraklığın yaşandığı coğrafyalarda aşağıdakilerden hangisine neden olarak doğrudan bir uluslararası 'Çevre Güvenliği ve Milli Güvenlik' sorunu oluşturur?", o: ["Bölgedeki deniz suyu seviyelerinin aniden yükselmesine", "Ülkeler arasında baraj inşası, su kotası paylaşımı ve tarımsal kullanım politikaları nedeniyle 'Su Savaşları (Çatışmalar)' ve derin diplomatik krizler yaşanmasına", "İklim değişikliğinin ve sera etkisinin o bölgede tamamen durmasına", "Petrol krizlerinin sona ermesiyle ekonomik refahın artmasına", "Sınır ötesi bölgelerde balık çeşitliliğinin aşırı derecede ve kontrolsüzce artmasına"], a: 1, s: "Su altındır ve milli güvenlik meselesidir. Suyu elinde tutan ülke devasa bir baraj yapıp suyu keserse, alt taraftaki komşu ülkeler susuzluktan kırılır ve devletler arası silahlı su savaşları (çatışmalar) başlar." },
+                { q: "Kısa adı GHS olan 'Kimyasalların Sınıflandırılması ve Etiketlenmesi Konusunda Küresel Uyumlaştırılmış Sistem'in, tüm dünyada standart (aynı piktogram görselleri ve aynı H-P kodları) olarak kullanılmasının EN TEMEL felsefi ve iş güvenliği AMACI nedir?", o: ["Sadece kimya mühendislerinin statülerini ve maaşlarını uluslararası alanda standartlaştırmak", "Kimyasal üreten çok uluslu firmaların reklam ve pazarlama bütçelerini daha kolay ve ucuza yönetebilmelerini sağlamak", "Çin'den veya Almanya'dan gelen bir kimyasalın üzerindeki uyarıları, yabancı dil bilmeyen bir Türk işçinin bile aynı evrensel sembole (Örn: Alev veya Kuru Kafa) bakarak tehlikeyi saniyeler içinde ve hatasız anlayabilmesini (Küresel dil birliğini) sağlamak", "Uluslararası ticarette kimyasalların gümrük vergilerini tamamen sıfırlayarak serbest dolaşım yaratmak", "Nakliye firmalarının taşıma hızını yavaşlatarak lojistik maliyetlerini bilinçli olarak artırmak"], a: 2, s: "GHS (Globally Harmonized System), tüm dünyanın aynı dilden konuşmasını sağlar. Böylece dil bariyeri kalkar, Japonca yazan bir etiketteki 'Kuru Kafa' sembolünü gören Türk işçi de bunun zehir olduğunu anında kavrar." },
+                { q: "Bir işletmenin kendi faaliyet sisteminin ve üretim kapasitesinin hukuki ve operasyonel sınırlarını (nerede başlayıp nerede bittiğini) belirleyen temel sistem unsuru aşağıdakilerden hangisidir?", o: ["Sisteme dışarıdan satın alınarak giren hammadde ve sarf malzeme girdileri", "Sistemin gün sonunda ürettiği nihai son ürün ve paketlenmiş çıktılar", "Sistemin yasal ve organizasyonel olarak 'yetki ve sorumluluklarının' başlangıç ve bitiş noktaları", "İşletmenin üretimde kullandığı bilgisayar ve mekanik yazılım altyapısı", "İşletmenin pazarlama departmanının sahip olduğu toplam perakende müşteri portföyü"], a: 2, s: "Bir departmanın veya sistemin sınırı fiziksel tuğla duvarlar değil, onun hukuki ve operasyonel yetkisinin/sorumluluğunun nerede başlayıp bittiği ile (Örn: Üretim nerede biter, lojistik nerede başlar) çizilir." },
+                { q: "Tehlikeli ve Çok Tehlikeli sınıfında yer alan (Örn: Maden ocakları, Kimya fabrikaları) işyerlerinde, sadece kağıt üzerinde kusursuz bir risk değerlendirmesi yapılmış olması ve İSG planlarının panolara asılması, İSG yasaları (6331 Sayılı Kanun) kapsamında işvereni yasal sorumluluktan kurtarmaya yeterli midir?", o: ["Evet, kağıt üzerinde resmi ve imzalı planın olması tüm hukuki sorumluluğu anında ortadan kaldırır.", "Evet, plan yapıldıktan sonra işverenin üretime karışmasına veya başka hiçbir şeye müdahale etmesine gerek yoktur.", "Hayır, işveren alınan tüm bu İSG tedbirlerinin, verilen KKD'lerin ve risk kontrol adımlarının sahada işçiler tarafından fiilen uygulanıp uygulanmadığını sürekli İZLEMEK, DENETLEMEK ve tespit edilen uygunsuzlukları zorla gidermekle de yükümlüdür.", "Hayır, ancak bu denetimi sadece altı ayda bir gelen Çalışma Bakanlığı iş müfettişleri yapabilir.", "Evet, çünkü profesyonelce yapılmış bir risk analizi bir kere imzalandığında ömür boyu geçerlidir ve denetim gerektirmez."], a: 2, s: "İSG yasalarının ana temeli budur: Kağıda yazmak yetmez, sahada yaşatmak gerekir. İşveren o kaskın, eldivenin takılıp takılmadığını sahada bizzat denetlemek, uymayanı cezalandırmak ve sistemi canlı tutmak zorundadır." },
+                { q: "Büyükşehirlerde hava kirliliğinin güvenli ve solunabilir seviyelere çekilmesi amacıyla; Çevre Şehircilik Bakanlığı İl Müdürlükleri, Valilik ve Belediyelerin ortaklaşa koordinasyonuyla hazırlanan; kent içi trafik düzenlemeleri, doğalgaz teşviki ve kömür kalitesinin denetlenmesi gibi tamamen o şehre özgü yerel hedefleri içeren belgeye ne ad verilir?", o: ["Ulusal İklim Değişikliği ve Sera Gazı Eylem Planı", "Kentsel Çevresel Etki Değerlendirmesi (ÇED) Raporu", "İl Bazlı Temiz Hava Eylem Planları", "Sıfır Atık Yönetmeliği Kentsel Bildirgesi", "Büyük Endüstriyel Kaza Kentsel Acil Durum Senaryosu"], a: 2, s: "Araştır 2'de detaylıca açıklanır. Her şehrin coğrafi yapısına ve kirlilik karakterine göre aldığı önlemler paketine (Örn: Kışın kömür yakım saatlerinin belirlenmesi, trafik kısıtlaması) 'Temiz Hava Eylem Planı' denir." },
+                { q: "Bilişim suçlarını gerçekleştiren, ancak bilgisayar programlama veya ağ güvenliği konusunda hiçbir derin teknik bilgiye sahip olmayan; sadece internetten indirdiği başkalarına ait hazır kötü amaçlı programları (scriptleri) bir şablon gibi kullanarak sağa sola amatörce saldıran siber korsanlara verilen isim aşağıdakilerden hangisidir?", o: ["Beyaz Şapkalı Korsanlar (White Hat Hackers)", "Organize Siber Terörist Grupları", "Script Kiddie (Senaryo Çocukları / Acemi Korsanlar)", "İleri Düzey Casus Yazılım Geliştiricileri", "Donanım ve Biyometrik Ağ Yöneticileri"], a: 2, s: "Hazır komut dosyalarını (script) çocuk (kiddie) gibi kullanarak kendi yazmadığı bir virüsü sağa sola bulaştıran, kod yazmayı bilmeyen amatör saldırganlara 'Script Kiddie' denir." }
+            ],
+            3: [
+                { q: "Avrupa Birliği tarafından yürürlüğe konulan 'Su Çerçeve Direktifi (2000/60)'nin su koruma politikalarına getirdiği en büyük yönetsel ve felsefi yenilik aşağıdakilerden hangisinde doğru ifade edilmiştir?", o: ["Sadece yer altı sularının endüstriyel kullanıma kapatılarak tarımsal faaliyetlere sınırsız tahsis edilmesini yasal bir zorunluluk haline getirmesidir.", "Su kaynaklarının yönetiminde sektörel sınırlandırmaları tamamen terk ederek, tüm havzayı kapsayan 'Bütüncül (Entegre)' bir ekosistem yönetimi modelini benimsemesidir.", "Kıyı ve göl sularının arıtım maliyetlerini doğrudan halk vergileriyle karşılayan merkezi ve ekonomik bir idari yaptırım modeli kurmasıdır.", "Endüstriyel tesislerin su kullanım kotalarını sadece Avrupa Parlamentosu'nun doğrudan onayına bağlayan katı bir bürokrasi yaratmasıdır.", "Kıta içi suların yönetimini tamamen özel şirketlerin inisiyatifine bırakarak devletin denetim yükünü ve idari masraflarını sıfırlamasıdır."], a: 1, s: "Su Çerçeve Direktifi, nehir, göl ve deniz sularını birbirinden bağımsız (sektörel) incelemeyi bitirmiş; suları birbiriyle bağlantılı dev bir havza (bütüncül ekosistem) olarak kabul etmiştir." },
+                { q: "Hava kirliliğini oluşturan kirleticiler kaynaklarına göre incelendiğinde; her ilkbahar mevsiminde Afrika kıtasından rüzgarlarla havalanarak Türkiye'nin hava kalitesini ciddi şekilde bozan 'Çöl Tozları', hangi kirlilik sınıflandırmasına girmektedir?", o: ["Antropojenik (İnsan Kaynaklı) Gaz Fazı Kirleticileri", "İkincil Dereceden Sentezlenmiş Hava Kirleticileri", "Doğal Kaynaklı Partikül Madde (PM) Kirleticileri", "Fotokimyasal Reaksiyon Kaynaklı Sis Kirleticileri", "Uçucu Organik Bileşik (VOC) Sınıfı Kirleticileri"], a: 2, s: "Çöl tozları, orman yangını külleri ve volkan külleri insan eliyle olmayan (Doğal) ve havada asılı kalan katı tozlar yani 'Partikül Madde' sınıfındadır." },
+                { q: "Ozon tabakasının incelmesi (delinmesi) olayının dünyanın diğer bölgelerine kıyasla 'Güney Kutbunda (Antarktika)' çok daha şiddetli ve büyük çaplı yaşanmasının atmosferik ve kimyasal temel nedeni aşağıdakilerden hangisidir?", o: ["Kutuplarda çok fazla fosil yakıt kullanan ağır sanayi tesisi bulunması", "Güney kutbunda sürekli karbondioksit salan volkanik patlamaların yaşanması", "Kutuplardaki 'düşük sıcaklıkların', ozonu parçalayan klor ve brom iyonlarının kimyasal tepkimesini çok daha etkili ve hızlı hâle getirmesi", "Kutuplardaki buzulların doğrudan metan gazı salgılayarak ozonu eritmesi", "Ozon gazının soğuk havada hızla katılaşıp ağırlaşarak yeryüzüne düşmesi"], a: 2, s: "Ozonun katili Kloroflorokarbon (CFC) içindeki klor ve brom iyonlarıdır. Bu iyonlar, kutuplardaki eksi derecelerdeki (-80°C) 'düşük sıcaklıklarda' ozonu parçalayan tepkimeleri çok daha şiddetli gerçekleştirirler." },
+                { q: "Kraliyet Hekimler Koleji Raporuna göre; hava kirliliğinin çocuklar üzerindeki yıkıcı etkisinin yetişkinlere oranla daha ölümcül olmasının fizyolojik nedenleri arasında aşağıdakilerden hangisi GÖSTERİLEMEZ?", o: ["Çocukların vücut ağırlığına göre metabolizma hızının ve oksijen tüketiminin çok yüksek olması nedeniyle daha çok zehir solumaları", "Çocukların hava yollarının dar olması nedeniyle kirliliğe bağlı tıkanmalara fiziksel olarak çok daha müsait olmaları", "Çocukların boylarının kısa olması sebebiyle yere çöken ağır egzoz gazlarına doğrudan ve daha yoğun maruz kalmaları", "Çocukların hücre yenilenme hızının durmuş olması nedeniyle zehri vücutlarından atamamaları ve bağışıklık çöküşü yaşamaları", "Çocukların organlarının küçük ve bağışıklık sistemlerinin henüz gelişimini tamamlamamış olması nedeniyle savunmasız kalmaları"], a: 3, s: "Çocuklar büyümekte oldukları için hücre yenilenme hızları durmamıştır, aksine çok yüksektir (Bu şık bilimsel olarak yanlıştır). Hava kirliliğinden çok etkilenmelerinin asıl sebebi organlarının küçük olması ve metabolizmalarının çok hızlı olmasıdır." },
+                { q: "Modern plazalarda ve akıllı ofislerde çalışan personelin, mesai saatleri içinde baş ağrısı, göz/boğaz yanması, uyku hâli yaşaması; ancak mesai bitip binadan çıkınca tüm bu şikayetlerin kendiliğinden kaybolması durumuna İSG literatüründe ne ad verilir?", o: ["Kronik Yorgunluk Sendromu (Chronic Fatigue Syndrome)", "Hasta Bina Sendromu (Sick Building Syndrome)", "Kapalı Alan Fobisi Kaynaklı Panik Atak (Klostrofobi)", "Tükenmişlik Sendromu (Burnout Syndrome)", "Mesleki Astım ve Solunum Yolu Krizi"], a: 1, s: "Camları açılmayan, sentetik mobilya ve temizlik kimyasalı (VOC) kokan binalarda; havalandırma (klima) sistemleriyle aynı kalitesiz havanın ofis içinde döndürüldüğü durumlara 'Hasta Bina Sendromu' denir." },
+                { q: "Amerika İş Güvenliği ve Sağlığı İdaresi (OSHA) standartlarına göre; renksiz, kokusuz ve son derece sinsi/zehirli bir gaz olan Karbon monoksit (CO) için, bir işçinin 8 saatlik mesaisi boyunca maruz kalabileceği İzin Verilebilir Maruziyet Sınır (PEL) değeri kaç ppm'dir?", o: ["Sıfır tolerans (0 ppm)", "25 ppm (Milyonda 25 partikül)", "50 ppm (Milyonda 50 partikül)", "100 ppm (Milyonda 100 partikül)", "500 ppm (Milyonda 500 partikül)"], a: 2, s: "Karbonmonoksit kanda oksijeni bağlayıp boğulmaya neden olduğu için güvenli sınırı oldukça düşüktür; OSHA standartlarına göre 8 saatlik çalışma için sınır net 50 ppm'dir." },
+                { q: "Bir ürünün üretim zincirinde doğaya salınan kirliliği temizlemek ve mevcut su kalitesi standartlarını yeniden sağlamak (zehri seyreltmek) için doğadan ihtiyaç duyulan tatlı su miktarını ifade eden su ayak izi bileşeni hangisidir?", o: ["Mavi Su Ayak İzi", "Yeşil Su Ayak İzi", "Gri Su Ayak İzi", "Siyah Su Ayak İzi", "Sanal Su Ayak İzi"], a: 2, s: "Gri (Grey) renk kirliliği temsil eder. Ne kadar zehirli atık attıysanız, onu doğada zararsız seviyeye seyreltmek için gereken devasa tatlı su miktarı 'Gri Su Ayak İzi'dir." },
+                { q: "Tarımsal üretim süreçlerinde tarlaya yağan ve bitkilerin kökleri tarafından topraktan emilerek kullanılan (yeraltı sularına karışmayan, toprakta tutulan) yağmur sularının oluşturduğu su ayak izi bileşeni aşağıdakilerden hangisidir?", o: ["Mavi Su Ayak İzi", "Yeşil Su Ayak İzi", "Gri Su Ayak İzi", "Kahverengi Su Ayak İzi", "Kızıl Su Ayak İzi"], a: 1, s: "Yağmur suyu = Yeşil Su Ayak İzi. Yeraltı veya göl suyu = Mavi Su Ayak İzi. Kirli su = Gri Su Ayak İzi." }
+            ],
+            4: [
+                { q: "Gürültülü ortamlarda (Örn: havalimanları veya dokuma fabrikaları) çalışan personelin 85 dB üzerinde gürültüye maruz kalması sonucunda ortaya çıkan ve tıp biliminde 'geri dönüşü (tedavisi) imkânsız' olarak kabul edilen en büyük mesleki zarar aşağıdakilerden hangisidir?", o: ["Denge kaybına bağlı geçici mide bulantısı ve baş dönmesi", "İç kulaktaki tüy hücrelerinin ölmesine bağlı 'Kalıcı ve Sinirsel İşitme Kaybı (Sağırlık)'", "Odaklanma eksikliğine bağlı geçici dikkat dağınıklığı sendromu", "Göz merceğinin şeffaflığını yitirmesine bağlı oluşan Katarakt hastalığı", "Kemik yoğunluğunun azalmasına bağlı olarak gelişen Kemik Erimesi"], a: 1, s: "Sürekli yüksek desibele maruziyet, iç kulaktaki tüy hücrelerini yavaş yavaş öldürür. Tüy hücreleri yenilenemediği için bu durum tıpta 'Kalıcı İşitme Kaybı' olarak bilinir ve ameliyatı yoktur." },
+                { q: "İş sağlığı ve güvenliği felsefesinde tehlikelerle mücadele ederken izlenmesi gereken 'Risk Kontrol Hiyerarşisi' kuralına göre; tehlikeyi kontrol altına almak için yapılması gereken İLK VE EN ETKİLİ hamle aşağıdakilerden hangisidir?", o: ["İşçilere hemen en son teknoloji kişisel koruyucu donanım (maske/eldiven) dağıtmak", "İşçilerin maruziyet süresini azaltmak için mola saatlerini sıklaştırmak (İdari Önlem)", "Tehlikenin kaynağını tespit edip, tehlikeli unsuru çalışma ortamından tamamen uzaklaştırmak (Yok etmek / Eliminasyon)", "Tehlikeli makinenin etrafına büyük ve dikkat çekici uyarı levhaları asmak", "İşçilere her hafta düzenli olarak iş güvenliği ve ilkyardım eğitimi vermek"], a: 2, s: "İSG'nin altın kuralı: Önce tehlikeyi kaynağında yok et (Eliminasyon). Yapamıyorsan zararsızla değiştir (İkame). Maske (KKD) ise en son çaredir, başka çözüm kalmadığında verilir." },
+                { q: "Psikososyal risk faktörlerinden biri olan ve çalışma ortamında bir veya birkaç kişinin, hedefe koydukları bir çalışanı 'sürekli olarak ve sistematik biçimde' aşağılaması, dedikodusunu yapması ve onu psikolojik olarak çökertmeye çalışmasına uluslararası literatürde ne ad verilir?", o: ["Burnout (Tükenmişlik Sendromu)", "Ergonomik ve Fiziksel Baskı", "Mobbing (Psikolojik Taciz / Yıldırma)", "Vibrasyon (Titreşim) Sendromu", "Klostrofobi (Kapalı Alan Korkusu)"], a: 2, s: "İşyerinde sistematik, sürekli ve kasıtlı olarak yapılan psikolojik teröre, dışlamaya ve yıldırma eylemlerine 'Mobbing' denir. En ağır psikososyal tehlikedir." },
+                { q: "Bir marangoz atölyesinde, saatte binlerce devirle dönen keskin bir daire testere kullanılmaktadır. Makine Emniyeti standartlarına göre, bu testerenin işçinin elini veya parmağını kesmemesi için makinenin operasyon (kesme) noktasında mutlaka bulunması gereken fiziksel donanım nedir?", o: ["Acil durum butonu (Kırmızı renkli durdurma butonu)", "Makine Koruyucusu (Fiziksel Siperlik / Muhafaza Kapağı)", "Hız ayar pedalı ve şanzıman kilidi", "Topraklama kablosu ve kaçak akım rölesi", "Titreşim emici kauçuk zemin takozu"], a: 1, s: "Dönen, kesen veya ezen (operasyon noktası) tüm makinelerde, insan uzvunun bıçakla temasını fiziksel olarak engelleyen sağlam kapaklara/siperliklere 'Makine Koruyucusu' denir." },
+                { q: "Aşağıdakilerden hangisi 'Biyolojik Risk Etmenleri' sınıfına giren ve özellikle hastane, araştırma laboratuvarı, atıksu (kanalizasyon) ve hayvancılık sektörü çalışanlarını doğrudan tehdit eden unsurlardan biridir?", o: ["Havaya sızan zehirli Karbonmonoksit gazı", "Toprağa karışan Ağır metaller (Kurşun, Cıva, Arsenik)", "Virüsler, bakteriler, mantarlar ve hastalık taşıyıcı vektörler (kene, fare)", "Yüksek frekanslı ultrasonik ses dalgaları ve titreşimler", "Deriye temas eden aşındırıcı (korozif) endüstriyel asitler"], a: 2, s: "Gaz ve asit kimyasal; ses ve sarsıntı fizikseldir. Ancak canlı yapıya sahip olan ve insanda enfeksiyon (Örn: Şarbon, Tifo, COVID) yaratan organizmalar 'Biyolojik' tehlikelerdir." },
+                { q: "Bir kimya fabrikasına yeni giren bir İSG uzmanı, fıçıların üzerindeki etiketlerde yer alan 'H300' ve 'P260' gibi uluslararası kodları incelemektedir. Küresel Uyumlaştırılmış Sisteme (GHS) göre bu kodların açılımı ve anlamı aşağıdakilerden hangisinde doğru eşleştirilmiştir?", o: ["H: Hijyen standartları kodları / P: Personel sayısı kısıtlamaları", "H: Hastalık teşhis kodları / P: Patlayıcılık oranı yüzdeleri", "H: Hazard (Tehlike ve Zararlılık İfadeleri) / P: Precautionary (Güvenlik ve Önlem İfadeleri)", "H: Halojen içerik oranları / P: Parlayıcılık (Alev alma) seviyeleri", "H: Hasar ve korozyon boyutu / P: Para cezası miktarı ve idari yaptırımlar"], a: 2, s: "H kodları İngilizce 'Hazard (Tehlike)', P kodları ise 'Precautionary (Önlem)' kelimelerinden gelir. Etiketlerin evrensel tehlike kodlama sistemidir." },
+                { q: "Sanayide kullanılan asit ve bazların tahriş edici özelliği son derece yüksektir. Kimyasalların etiketinde bulunan; bir deney tüpünden sıvı damlayarak hem metali hem de insan elini eriterek tahrip ettiğini gösteren piktogramın temsil ettiği tehlike sınıfı hangisidir?", o: ["Patlayıcı (Explosive) Madde Sınıfı", "Oksitleyici (Yakıcı) Madde Sınıfı", "Aşındırıcı (Korozif) Madde Sınıfı", "Çevreye ve Suya Zararlı Madde Sınıfı", "Radyoaktif (Işıma Yapan) Madde Sınıfı"], a: 2, s: "Hem metali eriten hem de insan derisini yakan (tahrip eden) güçlü asit ve baz gibi kimyasalların evrensel uyarı sembolü 'Aşındırıcı (Korozif)' piktogramıdır." },
+                { q: "Malzeme Güvenlik Bilgi Formu (MSDS), bir kimyasalın işyerine girdiği andan itibaren herkesin ulaşabileceği bir yerde bulunmalıdır. MSDS formlarının işyerindeki en kritik ve hayati işlevi (amacı) nedir?", o: ["Kimyasalın farklı firmalardaki fiyat karşılaştırmasını yaparak satın alma departmanına maliyet raporu sunmak", "Sadece devletin vergi dairesine fabrikanın aylık üretim kapasitesi hakkında istatistiki bilgi vermek", "Kimyasalın neden olabileceği kazalarda ilk yardımın nasıl yapılacağını, yangında hangi söndürücünün (su/köpük) kullanılacağını ve depolama krizlerinde acil eylem planını göstermek", "İşçilerin bu maddeyle çalışırken ne kadar ekstra mesai ve risk maaşı alacağını belirlemek", "Ürünün son kullanma tarihi geçince fiziksel renginin nasıl bir tona dönüşeceğini resimlerle göstermek"], a: 2, s: "MSDS, bir kimyasalın acil durum anayasasıdır. Örneğin yanan bir kimyasala su dökerseniz patlayabilir; MSDS size 'sadece köpük kullan' diyerek hayat kurtarır." },
+                { q: "İş sağlığı ve toksikoloji bilimine göre, endüstriyel ortamlarda (özellikle kapalı boyahanelerde) havaya karışan kimyasal gaz ve buharların işçi vücuduna girerek zehirlenme yaratmasındaki EN YAYGIN (en sık karşılaşılan) ve en hızlı yol aşağıdakilerden hangisidir?", o: ["Yutma yoluyla doğrudan sindirim sistemine geçmesi", "Göz sıvısından emilerek göz sinirlerine ulaşması", "Derideki açık yaralardan ve çiziklerden kan damarlarına sızması", "Solunum (İnhalasyon) yoluyla doğrudan akciğer alveollerine çekilip anında kana karışması", "Deri emilimi (Absorpsiyon) yoluyla yavaş yavaş vücuda nüfuz etmesi"], a: 3, s: "Sanayide kimyasallar genellikle toz, gaz veya buhar halindedir. İşçilerin kirli havayı soluması, kimyasalın doğrudan akciğerden kana karışmasına neden olan en yaygın ve hızlı tehlike yoludur." },
+                { q: "Uluslararası Kanser Araştırma Ajansı (IARC) tarafından yapılan sınıflandırmada 'Grup 1' kategorisinde yer alan bir kimyasal madde (Örneğin; Asbest veya Benzen) için aşağıdaki ifadelerden hangisi bilimsel ve hukuki olarak KESİNLİK taşır?", o: ["İnsanlar için kesinlikle (yeterli epidemiyolojik kanıtla) kanserojen olduğu kanıtlanmış maddelerdir.", "Sadece laboratuvar hayvanlarında kanser yapan ama insana hiçbir zararı olmayan maddelerdir.", "Kanser yapıp yapmadığı hiçbir şekilde bilinmeyen veya sır olarak saklanan maddelerdir.", "İnsanlar için muhtemel (Grup 2A) kanserojen olan ancak somut kanıtı bulunmayan maddelerdir.", "Sadece hamile kadınları ve çocukları etkileyen, yetişkin erkeklere zarar vermeyen maddelerdir."], a: 0, s: "IARC'ye göre Grup 1: İnsanda kanser yaptığı tartışmasız şekilde kanıtlanmış (Örn: Asbest, Sigara, Radyasyon) en ölümcül maddelerdir." },
+                { q: "Kimyasalların depolanması (stoklanması) sırasında yapılan en ölümcül hatalardan biri, birbiriyle reaksiyona giren maddeleri yan yana koymaktır. Buna göre, 'Parlayıcı (Yanıcı)' kimyasalların, aşağıda verilen hangi madde grubuyla asla aynı dolapta veya yan yana DEPOLANMAMASI gerekir?", o: ["Sadece saf ve nötr olan stabilize sıvılarla", "Oksitleyici (Yakıcı ve yoğun oksijen sağlayıcı) karaktere sahip maddelerle", "Sadece arıtılmış saf su bidonlarıyla", "Tepkimeye girmeyen asal (soy) gaz tüpleriyle", "Karton ve plastik türü boş ambalajlarla"], a: 1, s: "Yangın üçgeni (Yanıcı madde + Oksijen + Isı) mantığına göre; Parlayıcı bir madde ile Oksitleyici (yakıcı/oksijen üreten) bir madde yan yana gelirse en ufak kıvılcımda devasa bir patlama oluşur." },
+                { q: "Çalışma ortamında kullanılan zehirli (toksik) ve kanserojen özellikteki uçucu kimyasallarla (Örn: formaldehit, tiner) işlem yaparken, İSG 'Risk Kontrol Hiyerarşisi'ne göre işçiye gaz maskesi takmadan ÖNCE alınması gereken en etkili toplu koruma/mühendislik önlemi nedir?", o: ["Kimyasalı herhangi bir önlem almadan doğrudan açık ofis masasında kullanmak", "Kimyasalı 'Çeker Ocak (Lokal Havalandırma Kabini)' içinde kullanarak zehirli buharı işçinin yüzüne gelmeden kaynağında emip dışarı atmak", "Sadece pencereleri açık bırakarak ortamda doğal bir cereyan yaratmak", "Kimyasalın kutusunu karanlık ve soğuk bir odada fener ışığıyla açmak", "İşçinin zehirli ortamda çalışma süresini günde 10 saate çıkararak işi hızla bitirmesini sağlamak"], a: 1, s: "İSG'de KKD (Maske) en son çaredir. Önce zehirli gazı ortama yayılmadan ve işçiye ulaşmadan emen 'Lokal Havalandırma (Çeker Ocak)' sistemleri kurulmalıdır." },
+                { q: "Etiketinde '[Kuru Kafa ve Çapraz Kemik]' piktogramı bulunan bir kimyasal şişesiyle karşılaşan bir işçinin, bu uluslararası sembolden çıkarması gereken ilk ve en acil güvenlik mesajı aşağıdakilerden hangisidir?", o: ["Maddenin çok soğuk olduğu ve dokunulduğunda soğuk yanığı (donma) tehlikesi yarattığı", "Maddenin sadece balıklara ve su ekosistemine zararlı olduğu, insana zarar vermediği", "Maddenin 'Akut Toksik (Zehirli)' olduğu ve yutulması, solunması veya deriye teması halinde anında ölümcül veya ağır hasar verebileceği", "Maddenin sadece gözleri yaşarttığı ve hafif bir cilt tahrişine yol açtığı", "Maddenin radyoaktif bir sızıntı kaynağı olduğu ve nükleer tepkime yarattığı"], a: 2, s: "GHS sisteminde Kuru Kafa sembolü 'Akut Toksisite' (Anında Zehirleyici/Ölümcül) anlamına gelir. Çok düşük dozları bile insan hayatını anında tehdit eder." },
+                { q: "Bir fabrikada asit borusunun patlaması sonucu işçinin gözüne ve yüzüne yoğun miktarda kimyasal (asit) sıçramıştır. MSDS formunda aksini gerektiren özel bir durum (Örn: suyla reaksiyona giren madde) belirtilmemişse, olay yerinde yapılması gereken İLK ve EN ACİL müdahale nedir?", o: ["İşçinin yüzünü kuru bir bezle veya peçeteyle sertçe ovarak silmek", "Hiçbir şey yapmadan işçiyi yere yatırıp ambulansın gelmesini yarım saat beklemek", "İşçiyi derhal acil durum boy/göz duşuna sokarak, kimyasalı seyreltmek ve vücuttan atmak için bol ve tazyiksiz suyla en az 15 dakika aralıksız yıkamak", "Gözün içine kimyasal tepkimeyi durdursun umuduyla asidik limon suyu veya sirke damlatmak", "Yaralı bölgeye anında yanık kremi veya yoğurt sürmek"], a: 2, s: "Kimyasal yanıklarda saniyeler önemlidir. Göz veya boy duşunda bol suyla (en az 15 dk) yıkamak, asidi seyreltir ve dokunun derine kadar yanmasını (körlüğü) engeller." },
+                { q: "Uluslararası Kanser Araştırma Ajansı'nın (IARC) listesinde yer alan 'Grup 3' kategorisi (Örneğin; Çay, Kafein gibi günlük maddelerin de bulunabildiği grup) toksikolojik ve hukuki olarak hangi anlama gelmektedir?", o: ["İnsanlar için kesinlikle en tehlikeli ve ölümcül olan Grup 1 seviyesindeki kanserojendir.", "İnsanlar için 'Kanserojenliği açısından sınıflandırılamayan' (Kanser yaptığına dair yeterli kanıt veya şüphe bulunmayan, nötr kabul edilen) maddelerdir.", "Sadece akciğer kanseri yapan ve solunumla bulaşan maddelerdir.", "İnsanlar için muhtemel kanserojen olan ve kesinlikle yasaklanması gereken maddelerdir.", "Endüstriyel kullanımı tamamen yasaklanmış olan radyoaktif maddelerdir."], a: 1, s: "Grup 1 (Kesin), Grup 2A/2B (Muhtemel/Şüpheli), Grup 3 ise kanserle ilişkisi kanıtlanamayan veya bilinmeyen, yani 'sınıflandırılamayan' nötr gruptur." },
+                { q: "Kimyasal bir deponun yerleşim planı çizilirken (Ergonomik ve Kimyasal riskler göz önüne alındığında), ağır ve tehlikeli kimyasal sıvıların (Örn: Asit bidonları) raflardaki ideal yerleşimi nasıl olmalıdır?", o: ["Daha iyi ve estetik görünmesi için en üst raflara ve baş hizasının üzerine konulmalıdır.", "Yere düşme, sırta yük bindirme ve dökülme/sıçrama riskini sıfıra indirmek için, boy hizasının altına ve mümkünse yere en yakın alt raflara yerleştirilmelidir.", "Nem almaması için sadece karton kutuların ve kağıtların üzerine konulmalıdır.", "Hava alması için cam pencere kenarlarına ve doğrudan güneş ışığı alan yerlere dizilmelidir.", "Acil durumlarda hemen alınabilmesi için yangın merdiveni boşluklarına istiflenmelidir."], a: 1, s: "Ağır ve tehlikeli asitler üst rafa konursa, alınırken düşüp işçinin yüzüne ve tüm vücuduna dökülür. İSG kuralı gereği ağır ve sıvı kimyasallar daima yere en yakın (alt) raflarda depolanır." },
+                { q: "İş sağlığı ve çevre güvenliği açısından, sıvı kimyasalların 'Deri (Cilt) Emilimi' yoluyla insan vücuduna girmesini (absorpsiyonunu) hızlandıran ve zehirlenme riskini katlayarak artıran fizyolojik faktör aşağıdakilerden hangisidir?", o: ["İşçinin yüzünde N95 tipi cerrahi maske takmış olması", "Çalışma ortamının çok soğuk olması nedeniyle cilt gözeneklerinin tamamen kapanması", "İşçinin cildinde açık yaralar (çizikler/kesikler) bulunması veya ortamın aşırı sıcak/terli olması nedeniyle deri gözeneklerinin tamamen açılmış olması", "İşçinin gürültüye karşı kulaklık kullanıyor olması", "Kimyasalın sıvı veya gaz halinde değil, sadece katı blok halinde olması"], a: 2, s: "Terleyen bir işçinin deri gözenekleri genişler; eğer cildinde kesik/yara varsa, kimyasal buhar veya sıvılar cildin koruyucu bariyerini aşıp doğrudan kana çok daha hızlı karışır." },
+                { q: "Aşağıdakilerden hangisi kimyasal maddelerin insan vücudunda neden olduğu 'Sistemik (Tüm vücudu etkileyen)' bir etkinin tıbbi ve toksikolojik örneğidir?", o: ["Asidin sadece ele damladığı yeri yakarak ciltte kızarıklık yaratması (Lokal etki)", "Tiner buharının (solventin) solunması sonucu kimyasalın kana karışıp, tüm vücudu dolaşarak karaciğer ve böbreklerde zehirlenme (tahribat) yaratması", "Gözüne toz veya talaş kaçan işçinin sadece gözünün sulanması ve kızarması", "Sıcak boruya değen parmağın anında su toplaması ve acıması", "Yüksekten düşen ağır bir kutunun işçinin ayağını ezerek morartması"], a: 1, s: "Lokal etki, kimyasalın sadece temas ettiği yeri (deriyi/gözü) yakmasıdır. Sistemik etki ise zehrin solunum/yutma yoluyla kana karışıp iç organları (karaciğer/beyin) komple çökertmesidir." },
+                { q: "Kısa adı GHS olan 'Kimyasalların Sınıflandırılması ve Etiketlenmesi Konusunda Küresel Uyumlaştırılmış Sistem'in tüm dünyada standart (aynı piktogramlar ve H-P kodları) olarak kullanılmasının EN TEMEL AMACI (felsefesi) nedir?", o: ["Sadece kimya mühendislerinin maaşlarını ve statülerini uluslararası alanda artırmak", "Kimyasal üreten çok uluslu firmaların reklamını daha kolay ve ucuza yapabilmelerini sağlamak", "Çin'den veya Almanya'dan gelen bir kimyasalın üzerindeki uyarıları, dilini bilmeyen bir Türk işçinin bile aynı sembole (Örn: Kuru Kafa) bakarak tehlikeyi saniyeler içinde ve hatasız anlayabilmesini (Küresel dil birliği) sağlamak", "Kimyasalların ülkeler arası gümrük vergilerini tamamen sıfırlamak", "Nakliye firmalarının işini yavaşlatarak lojistik maliyetlerini artırmak"], a: 2, s: "GHS (Globally Harmonized System), tüm dünyanın aynı dilden konuşmasını sağlar. Böylece dil bariyeri kalkar, Japonca yazan bir etiketteki 'Alev' veya 'Kuru Kafa' sembolünü gören Türk işçi de bunun tehlikesini anında kavrar." },
+                { q: "Çevresel Etki Değerlendirmesi (ÇED) yönetmeliğinin temel amacı göz önüne alındığında, bu uygulamanın Çevre Hukukundaki 'Önleyici Yaklaşım' ilkesiyle ilişkisi nasıl açıklanabilir?", o: ["Sadece fabrikalar iflas ettikten sonra kalan arazilerin temizlenmesini sağlayarak önleyici rol üstlenir.", "Çevre felaketi oluştuktan sonra faillere çok ağır hapis cezaları vererek önleyici bir etki yaratır.", "Bir projenin (Örn: Baraj, Maden, Fabrika) daha hiç kazma vurulmadan, tasarım (kağıt) aşamasındayken doğaya ve insana verebileceği zararları bilimsel olarak hesaplayarak felaketleri 'oluşmadan önce' engellemeyi amaçlar.", "Sadece okyanuslardaki plastik atıkları toplayarak önleyici bir vizyon çizer.", "Projelerin bütçe planlamalarını maliyeye bildirerek ekonomik zararları önler."], a: 2, s: "Çevre Hukukunda altın kural 'Kirliliği oluşmadan ÖNLEMEK'tir. ÇED raporu, bir fabrikanın çevreye zarar verme potansiyelini inşaattan önce hesaplayıp, gerekirse projeyi iptal ederek tam bir 'Önleyici Yaklaşım' sergiler." }
+            ],
+            5: [
+                { q: "Hata Türleri ve Etkileri Analizi (FMEA) yönteminde yer alan ve diğer risk analizi yöntemlerinde (Örn: L Matrisi) bulunmayan 'Fark Edilebilirlik (Detectability)' bileşeni (parametresi) tam olarak hangi anlama gelmektedir?", o: ["Kazanın basında veya medyada ne kadar duyulacağı (Halkla İlişkiler boyutu)", "Meydana gelen arızanın, hatanın veya tehlikenin, çalışana veya sisteme zarar vermeden önce mevcut kontrol/sensör sistemleri tarafından fark edilip (yakalanıp) edilemeyeceğinin ihtimali", "İşçinin amirini ne kadar sürede fark edip haber vereceği", "Riskin işletme bütçesine maliyetinin hissedilme oranı", "Yazılım hatasının kodlarının bilgisayar tarafından çözülme süresi"], a: 1, s: "FMEA'yı otomotiv/havacılıkta özel yapan şey budur: Bir hata (Örn: fren boşalması) oluştuğunda sistemdeki sensörler bunu şoföre kaza yapmadan önce haber veriyor mu (fark edilebilirlik), yoksa sessizce mi kaza yaptırıyor?" },
+                { q: "İş Sağlığı ve Güvenliği Risk Yönetimi sürecindeki dördüncü adım olan 'Dokümantasyon (Kayıt Altına Alma)' aşamasının temel amaçlarından biri aşağıdakilerden hangisi olarak GÖSTERİLEMEZ?", o: ["Yapılan risk analizinin devlet denetimlerinde (müfettişlere) yasal bir kanıt olarak sunulabilmesi", "İşletmedeki eski ve yeni risk seviyelerinin karşılaştırılarak sürecin izlenebilmesi", "Alınan veya alınamayan güvenlik önlemlerinin kurumsal hafızaya işlenerek gelecekteki yöneticilere rehber olması", "İşyerinde olan kazaları ve güvenlik açıklarını basından ve işçilerden saklamak (gizlemek) için resmi ve sahte bir kılıf oluşturmak", "Sürekli iyileştirme felsefesine (PUKÖ döngüsüne) kaynak verisi ve referans sağlamak"], a: 3, s: "Dokümantasyon (Raporlama) şeffaflık, denetim, yasal kanıt ve kurumsal hafıza içindir. İş kazasını veya idari ihmalleri gizlemek için sahte dosya tutmak yasadışıdır ve dokümantasyonun amacına tamamen terstir." },
+                { q: "Risk Değerlendirmesi süreci bir kerelik bir işlem değildir. Aşağıda belirtilen durumlardan hangisinin işletmede gerçekleşmesi hâlinde, yasal süresi (Örn: 2-4-6 yıl) dolmamış olsa bile risk değerlendirmesinin 'Derhal Yenilenmesi' GEREKMEZ?", o: ["İşyerinde yeni bir makine veya yeni bir kimyasal üretim tekniği alınması durumunda", "İşyerinde ölümcül olmayan, basit atlatılmış ancak potansiyel tehlike taşıyan bir 'Ramak Kala Olay' yaşanması durumunda", "İşyerinin mevcut binadan başka bir adrese veya fabrikaya taşınması durumunda", "Çalışma ortamı sınır değerlerine ilişkin ulusal İSG mevzuatında yeni bir yasal değişiklik olması durumunda", "İşletmenin kâr oranında veya borsadaki hisse değerinde ani bir düşüş yaşanması durumunda"], a: 4, s: "Yeni makine, iş kazası, ramak kala olay, taşınma ve yasa değişimi gibi fiziki/kimyasal durumlar risk analizini sıfırlar. Ancak şirketin borsa değeri veya ekonomik kârı işçi sağlığı/İSG riski ile doğrudan bağlantılı değildir." },
+                { q: "Bir maden ocağında veya yapı şantiyesinde; hayatı tehdit eden, çok acil ve durdurulamaz bir risk (Örn: göçük, patlama veya grizu gazı sıkışması) tespit edilmesi hâlinde, İSG Kanunu ve uzman kararları doğrultusunda uygulanacak en acil yasal önlem aşağıdakilerden hangisidir?", o: ["Risk değerlendirmesinin yenilenmesini kağıt üzerinde beklemek", "Olayı görmezden gelip mesai vardiyasının bitmesini beklemek", "Şirketin tüm kârına devlet tarafından derhal el konulması", "İşletmede derhal o bölgedeki 'İşin Durdurulması' ve işçilerin sahadan acil durum tahliyesinin gerçekleştirilmesi", "İşçilerin maaşından ceza olarak kesinti yapılması"], a: 3, s: "Hayati tehlike arz eden ve acil olan (Örn: Patlama veya göçük riski) her durumda yasanın verdiği ilk ve en kesin emir, bürokrasiyi beklemeden 'İşin Durdurulması' ve işçilerin sahadan acil olarak çıkarılmasıdır." },
+                { q: "Türkiye Cumhuriyeti 1982 Anayasası Madde 56'ya göre; 'çevreyi geliştirmek, çevre sağlığını korumak ve kirlenmesini önlemek' kimin asli görevi (ödevi) olarak yasal çerçevede tanımlanmıştır?", o: ["Sadece Çevre ve Şehircilik Bakanlığının idari ve asli görevidir.", "Sadece sanayi tesisleri ve fabrika sahiplerinin finansal ödevidir.", "Devletin ve o ülkede yaşayan vatandaşların (herkesin) ortak ve asli ödevidir.", "Sadece belediyelerin ve yerel yönetimlerin sorumluluğundadır.", "Sadece uluslararası bağımsız çevre örgütlerinin ve derneklerin ödevidir."], a: 2, s: "Anayasa madde 56 çevreyi korumayı sadece devlete veya kurumlara yıkmaz. Çevreyi korumak hem devletin hem de o ülkede yaşayan tüm 'vatandaşların' ortak ve anayasal ödevidir." },
+                { q: "Türkiye'de çevre sorunlarının tespit edilmesi, politikaların belirlenmesi ve Sürdürülebilir Kalkınma ilkesi çerçevesinde ekonomik kararlara çevre boyutunun dâhil edilmesini sağlayan en üst düzey idari kurulun adı aşağıdakilerden hangisidir?", o: ["Yüksek Çevre Kurulu", "Sıfır Atık Komisyonu", "Çevre Müsteşarlığı Konseyi", "Ekolojik Denge Bakanlığı", "Küresel İklim Dairesi"], a: 0, s: "Hedef, politika ve strateji belirleyen, ekonomik kararlara çevreyi entegre eden en tepe hukuki organ 'Yüksek Çevre Kurulu'dur." },
+                { q: "Uluslararası çevre güvenliği literatüründe, su kıtlığı, iklim değişikliği veya tarım arazilerinin yok olması gibi tamamen çevresel nedenlerin, devletler veya toplumlar arasında bir savaşa, isyana veya krize dönüşmesine ne ad verilir?", o: ["Biyolojik Çeşitlilik Krizi", "Çevresel Çatışma (Güvenlik Sorunu)", "Ekolojik Sürdürülebilirlik", "Endüstriyel Kaza Yönetimi", "Karbon Ayak İzi Rekabeti"], a: 1, s: "Kaynakların (su, verimli toprak) azalması nedeniyle insanların veya devletlerin birbirine girmesi ve silahlı rekabete düşmesi olayına 'Çevresel Çatışma' denir ve bu doğrudan bir Çevre Güvenliği sorunudur." },
+                { q: "Ozon tabakasının incelmesine neden olan gazların (Kloroflorokarbon vb.) azaltılması ve sera gazı emisyonlarının ulusal ölçekte izlenerek uluslararası raporlamaların yapılması, Çevre Bakanlığı bünyesinde hangi daire başkanlığının asli görevleri arasındadır?", o: ["Afet ve Acil Durum Yönetimi (AFAD)", "Büyük Endüstriyel Kazalar Koordinasyon Kurulu", "İklim Değişikliği ve Uyum Dairesi Başkanlığı", "Halk Sağlığı Genel Müdürlüğü", "Tıbbi Atıkların Kontrolü Dairesi"], a: 2, s: "Sera gazı izleme, ozon tabakasını koruma ve karbon emisyon ticareti gibi küresel ısınma kaynaklı devasa görevleri doğrudan 'İklim Değişikliği ve Uyum Dairesi' yürütür." },
+                { q: "Çevre mevzuatı hiyerarşisinde; yasaların (kanunların) veya yönetmeliklerin nasıl uygulanacağını detaylıca açıklamak, yol göstermek ve kamu kurumlarına yol haritası (aydınlatıcı bilgi) sunmak amacıyla bakanlıklar tarafından yayımlanan hukuki metinlere ne ad verilir?", o: ["Uluslararası Sözleşme Metinleri", "Kanun Hükmünde Kararnameler", "Genelge ve Tebliğler", "Anayasa Maddeleri", "Sıfır Atık Protokolleri"], a: 2, s: "Kanun ve yönetmelikler ana kuralları koyar. Bunların sahada nasıl işletileceğini detaylandıran ve kurumlara yol gösteren alt idari metinlere ise 'Tebliğ ve Genelge' adı verilir." },
+                { q: "Endüstriyel tesislerin (Örn: Nükleer santral, altın madeni) kurulmadan önce doğaya (suya, toprağa, havaya) verebilecekleri zararların bilimsel olarak hesaplanmasını ve proje daha kağıt üzerindeyken bu zararları engelleyecek tedbirlerin alınmasını zorunlu kılan 'ÇED' kavramının açılımı nedir?", o: ["Çevresel Etki Değerlendirmesi", "Çoklu Ekolojik Denetim", "Çevre Ekonomisi Düzenlemesi", "Çağdaş Endüstriyel Dönüşüm", "Çevresel Emisyon Dengesi"], a: 0, s: "ÇED (Çevresel Etki Değerlendirmesi), bir fabrikanın veya barajın daha proje aşamasındayken doğaya vereceği hasarın ölçülüp raporlanması ve buna göre onay veya ret verilmesi sürecidir." },
+                { q: "1962 yılında yayımladığı 'Sessiz Bahar (Silent Spring)' isimli kitabıyla kimyasal tarım ilaçlarının (özellikle DDT) doğayı ve kuşları nasıl yok ettiğini tüm dünyaya anlatarak, küresel çapta ilk 'Çevre Güvenliği' hareketini başlatan öncü bilim insanı kimdir?", o: ["Albert Einstein", "Marie Curie", "Rachel Carson", "Gro Harlem Brundtland", "Charles Darwin"], a: 2, s: "Çevre Hukuku ve güvenliği denilince akla gelen ilk edebi/bilimsel eser, Rachel Carson'un yazmış olduğu Sessiz Bahar kitabıdır. Çevre hareketinin küresel fitilini bu kitap ateşlemiştir." }
+            ]
+        };
+
+        // ================= UYGULAMA MANTIĞI =================
+        let currentExam = 1;
+        let quizState = {};
+        let isExamFinished = false;
+
+        function loadExam(examId) {
+            currentExam = examId;
+            quizState = {};
+            isExamFinished = false;
+            document.querySelectorAll('.exam-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('btn-e' + examId).classList.add('active');
+            document.getElementById('e-title').innerText = `Özgün Deneme ${examId}`;
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('finishArea').style.display = 'block';
+            renderQuestions();
+            window.scrollTo(0, 0);
+        }
+
+        function resetCurrentExam() {
+            if (confirm("Bu denemedeki tüm cevaplarınız silinecek. Emin misiniz?")) {
+                quizState = {};
+                isExamFinished = false;
+                document.getElementById('results').style.display = 'none';
+                document.getElementById('finishArea').style.display = 'block';
+                renderQuestions();
+                window.scrollTo(0, 0);
+            }
+        }
+
+        function renderQuestions() {
+            const list = document.getElementById("q-list");
+            list.innerHTML = "";
+            let html = "";
+            const currentQuestions = db[currentExam];
+            currentQuestions.forEach((q, i) => {
+                const s = quizState[i];
+                html += `<div class="q-card" id="q-${i}">
+                    <div class="q-tag"><i class="fa-solid fa-thumbtack"></i> Deneme ${currentExam} | Soru ${i+1}</div>
+                    <div class="q-text"><div class="q-num">${i + 1}</div><div>${q.q}</div></div>
+                    <div class="opts">`;
+                q.o.forEach((opt, oIdx) => {
+                    let cls = "opt";
+                    let ico = "";
+                    if (isExamFinished) {
+                        cls += " locked";
+                        if (oIdx === q.a) { cls += " correct"; ico = ' <i class="fa-solid fa-check"></i>'; }
+                        else if (s && s.sel === oIdx) { cls += " wrong"; ico = ' <i class="fa-solid fa-xmark"></i>'; }
+                    } else if (s && s.sel === oIdx) { cls += " selected"; }
+                    html += `<div class="${cls}" onclick="selectOpt(${i}, ${oIdx}, ${q.a})" id="o-${i}-${oIdx}">${String.fromCharCode(65 + oIdx)}) ${opt}${ico}</div>`;
+                });
+                let solCls = isExamFinished ? "sol show" : "sol";
+                html += `</div><div class="${solCls}" id="s-${i}"><strong><i class="fa-solid fa-lightbulb"></i> Püf Noktası ve Çözüm:</strong><br>${q.s}</div></div>`;
+            });
+            list.innerHTML = html;
+        }
+
+        function selectOpt(qIdx, oIdx, cIdx) {
+            if (isExamFinished) return;
+            quizState[qIdx] = { sel: oIdx, cor: cIdx };
+            for (let i = 0; i < 5; i++) {
+                let el = document.getElementById(`o-${qIdx}-${i}`);
+                if (el) el.classList.remove('selected');
+            }
+            document.getElementById(`o-${qIdx}-${oIdx}`).classList.add('selected');
+        }
+
+        function finishExam() {
+            if (isExamFinished) return;
+            const currentQuestions = db[currentExam];
+            const ans = Object.keys(quizState).length;
+            if (ans < currentQuestions.length) {
+                if (!confirm(`Henüz ${currentQuestions.length - ans} soruyu boş bıraktınız. Boşlar yanlış sayılmaz. Bitirmek istiyor musunuz?`)) return;
+            }
+            isExamFinished = true;
+            showResults();
+        }
+
+        function showResults() {
+            let c = 0, w = 0;
+            const currentQuestions = db[currentExam];
+            for (let i = 0; i < currentQuestions.length; i++) {
+                if (quizState[i]) {
+                    if (quizState[i].sel === quizState[i].cor) c++;
+                    else w++;
+                }
+            }
+            let e = currentQuestions.length - (c + w);
+            let net = c - (w / 4);
+            if (net < 0) net = 0;
+            let score = Math.round((net / currentQuestions.length) * 100);
+            document.getElementById('s-cor').innerText = c;
+            document.getElementById('s-wro').innerText = w;
+            document.getElementById('s-emp').innerText = e;
+            document.getElementById('s-net').innerText = net.toFixed(2);
+            document.getElementById('scoreVal').innerText = score;
+            let msg = "";
+            if (score >= 90) msg = "Efsanevi Bir Başarı! AÖF sınav mantığını ve tüm çeldiricileri deşifre etmişsiniz.";
+            else if (score >= 70) msg = "Çok iyi! Konuyu kavramışsınız. Çıkan birkaç pürüzü aşağıdaki çözümlerden okuyarak halledebilirsiniz.";
+            else msg = "Tehlike çanları! Şıklar oldukça çeldirici tasarlandı. Lütfen 'Çalışma Modu'nu açarak tüm çözümleri dikkatlice okuyun.";
+            document.getElementById('scoreMsg').innerText = msg;
+            document.getElementById('finishArea').style.display = 'none';
+            document.getElementById('results').style.display = 'block';
+            renderQuestions();
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function toggleStudyMode() {
+            const btn = document.getElementById("studyBtn");
+            const isStudy = btn.innerText.includes("Modu");
+            document.querySelectorAll('.sol').forEach((el) => {
+                const qIndex = el.id.replace('s-', '');
+                if (isStudy) el.classList.add('show');
+                else if (!quizState[qIndex]) el.classList.remove('show');
+            });
+            if (isStudy) {
+                btn.innerHTML = `<i class="fa-solid fa-eye-slash"></i> Çalışma Modunu Kapat`;
+                btn.classList.replace('btn-study', 'btn-retry');
+                btn.style.background = "#ef4444";
+            } else {
+                btn.innerHTML = `<i class="fa-solid fa-book-open-reader"></i> Çalışma Modu (Tüm Çözümler)`;
+                btn.classList.replace('btn-retry', 'btn-study');
+                btn.style.background = "";
+            }
+        }
+
+        window.onload = () => loadExam(1);
+    </script>
+</body>
+</html>

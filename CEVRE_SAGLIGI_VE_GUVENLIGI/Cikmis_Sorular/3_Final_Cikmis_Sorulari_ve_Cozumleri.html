@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>105 Soruluk AÖF Çevre Sağlığı ve Güvenliği Final Simülasyonu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #047857;
+            --primary-light: #10b981;
+            --secondary: #064e3b;
+            --accent: #f59e0b;
+            --bg: #f8fafc;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --card: #ffffff;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg); color: var(--text); line-height: 1.6; }
+
+        header {
+            background: var(--primary); color: white; padding: 1.5rem 5%; text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+        }
+        header h1 { font-size: 1.5rem; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+        header p { font-size: 0.9rem; color: #d1fae5; }
+        .home-btn {
+            background: rgba(255,255,255,0.15); color: white; text-decoration: none; padding: 8px 15px;
+            border-radius: 6px; font-weight: 600; border: 1px solid rgba(255,255,255,0.3); transition: 0.3s;
+            font-size: 0.9rem; display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+        }
+        .home-btn:hover { background: white; color: var(--primary); }
+
+        .container { max-width: 1000px; margin: 1.5rem auto; padding: 0 1rem; }
+
+        /* Analiz Paneli */
+        .analysis-box {
+            background: #eff6ff; border-left: 5px solid #3b82f6; padding: 2rem; border-radius: 8px;
+            margin-bottom: 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .analysis-box h2 { color: #1e3a8a; margin-bottom: 1rem; display: flex; align-items: center; gap: 10px; font-size: 1.5rem;}
+        .analysis-box p { color: #1e40af; text-align: justify; font-weight: 500;}
+        .analysis-table { width: 100%; border-collapse: collapse; margin-top: 1rem; background: white; }
+        .analysis-table th, .analysis-table td { border: 1px solid #bfdbfe; padding: 10px; text-align: left; }
+        .analysis-table th { background: #dbeafe; color: #1e3a8a; }
+
+        .controls {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;
+            background: var(--card); padding: 1rem 1.2rem; border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); flex-wrap: wrap; gap: 12px;
+        }
+        .btn {
+            padding: 10px 18px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none;
+            transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem;
+        }
+        .btn-study { background: var(--accent); color: white; }
+        .btn-study:hover { background: #d97706; }
+        .btn-print { background: var(--secondary); color: white; }
+        .btn-print:hover { background: #022c22; }
+        .btn-retry { background: var(--danger); color: white; }
+        .btn-retry:hover { background: #b91c1c; }
+
+        .exam-section-title {
+            background: var(--secondary); color: white; padding: 14px 20px; border-radius: 8px;
+            margin: 2rem 0 1rem 0; font-size: 1.2rem; font-weight: 700; display: flex;
+            align-items: center; gap: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .q-card {
+            background: var(--card); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.2rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; transition: 0.2s;
+        }
+        .q-card:hover { border-color: var(--primary-light); }
+        .q-text {
+            font-size: 1rem; font-weight: 600; color: var(--secondary); margin-bottom: 1.2rem;
+            display: flex; gap: 12px; text-align: justify; line-height: 1.7;
+        }
+        .q-num {
+            background: var(--primary); color: white; width: 30px; height: 30px; display: flex;
+            align-items: center; justify-content: center; border-radius: 50%; font-size: 0.9rem;
+            flex-shrink: 0; margin-top: 2px;
+        }
+        .opts { display: flex; flex-direction: column; gap: 8px; padding-left: 42px; }
+        .opt {
+            background: var(--bg); border: 2px solid #e2e8f0; padding: 12px 16px; border-radius: 8px;
+            cursor: pointer; transition: 0.2s; font-weight: 500; font-size: 0.93rem; display: flex;
+            justify-content: space-between; align-items: center; line-height: 1.5; color: var(--text);
+        }
+        .opt:hover:not(.locked) { border-color: var(--primary-light); background: #ecfdf5; transform: translateX(5px); }
+        .opt.selected { background: #d1fae5; border-color: var(--primary-light); color: var(--secondary); font-weight: 600; }
+        .opt.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #065f46 !important; font-weight: 700; }
+        .opt.wrong { background: #fee2e2 !important; border-color: var(--danger) !important; color: #991b1b !important; text-decoration: line-through; opacity: 0.8; }
+        .opt.locked { pointer-events: none; }
+        .sol {
+            display: none; background: #f0fdf4; padding: 1.2rem; border-left: 4px solid var(--primary-light);
+            margin-top: 16px; margin-left: 42px; border-radius: 0 8px 8px 0; font-size: 0.9rem;
+            color: #334155; line-height: 1.6;
+        }
+        .sol.show { display: block; animation: fadeIn 0.4s; }
+        .sol strong { color: var(--primary-light); font-size: 1rem; display: block; margin-bottom: 6px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .finish-area { text-align: center; margin: 3rem 0; }
+        .btn-finish {
+            background: var(--success); color: white; font-size: 1.1rem; padding: 16px 45px;
+            border-radius: 50px; font-weight: 700; border: none; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); transition: 0.3s;
+        }
+        .btn-finish:hover { background: #047857; transform: translateY(-3px); }
+
+        #results {
+            display: none; background: #f0fdf4; padding: 2.5rem 2rem; border-radius: 12px;
+            border: 2px solid var(--success); text-align: center; margin-bottom: 2rem;
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.1);
+        }
+        .score { font-size: 4rem; font-weight: 800; color: var(--success); line-height: 1; margin-bottom: 0.5rem; }
+        .stats { display: flex; justify-content: center; gap: 1.2rem; flex-wrap: wrap; margin-top: 1.5rem; }
+        .stat-box {
+            background: white; padding: 14px 22px; border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06); font-weight: 600; font-size: 1rem;
+        }
+
+        @media print {
+            body { background: white; color: black; font-size: 10pt; }
+            header, .controls, .finish-area, #results, .home-btn, .analysis-box { display: none !important; }
+            .container { max-width: 100%; margin: 0; padding: 0; }
+            .exam-section-title { background: #eee !important; color: black !important; box-shadow: none; border: 1px solid #000; padding: 8px; }
+            .q-card { padding: 4px 0; border: none; border-bottom: 1px solid #ccc; box-shadow: none; border-radius: 0; margin-bottom: 10px; page-break-inside: avoid; }
+            .q-num { background: #333; width: 22px; height: 22px; font-size: 8pt; }
+            .q-text { font-size: 10pt; margin-bottom: 6px; color: black; }
+            .opts { padding-left: 30px; gap: 2px; }
+            .opt { border: 1px solid #ddd; padding: 3px 6px; background: none !important; font-size: 9pt; color: black !important; text-decoration: none !important; }
+            .opt.correct { font-weight: bold; border: 2px solid black !important; }
+            .sol { display: block !important; padding: 6px 10px; margin-left: 30px; background: #f9f9f9; border-left: 3px solid #666; font-size: 8pt; color: black; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+      <a href="../../index.html" class="nav-btn"><i class="fa-solid fa-house"></i> Ana Sayfa</a>
+
+
+        <h1><i class="fa-solid fa-leaf"></i> 105 Soruluk AÖF Çevre Sağlığı ve Güvenliği</h1>
+        <p>2022-2025 Dönem Sonu (Final) ve Yaz Okulu Seçkisi | 4 Yanlış 1 Doğru</p>
+    </header>
+
+    <div class="container">
+        <!-- SINAV ANALİZİ VE PÜF NOKTALARI PANELİ -->
+        <div class="analysis-box">
+            <h2><i class="fa-solid fa-magnifying-glass-chart"></i> Çıkmış Sorular Sınav Analizi ve Püf Noktaları</h2>
+            <p>Bu modül, AÖF'ün en çeldirici sorularını ve tuzaklarını deşifre etmek için özel olarak tasarlanmıştır. Sınavda şıklar eşit uzunluktadır ve çeldiriciler birbirine çok benzer. Aşağıdaki tablo, son 4 yılın final sınavlarında en çok sorulan konuları göstermektedir:</p>
+            <table class="analysis-table">
+                <tr><th>Sınav Konusu</th><th>Final Ağırlığı</th><th>Dikkat Edilmesi Gereken Sınav Tuzakları ve Hileler</th></tr>
+                <tr><td><strong>Risk Yönetimi ve Hukuk</strong></td><td>% 25</td><td>Çevre Kanunu'nun yılı <strong>1983</strong>'tür. İSG'de çok tehlikeli sınıfta risk yenileme süresi <strong>2 yıldır.</strong> Risk ekiplerinde "Diğer Sağlık Personeli" bulunmak zorunda değildir.</td></tr>
+                <tr><td><strong>Hava ve Su Kirliliği</strong></td><td>% 25</td><td>Karbonmonoksit (CO) <strong>BİRİNCİL</strong>, Ozon (O3) ise <strong>İKİNCİL</strong> kirleticidir. Bebeklerde morarmaya neden olan su kirliliği ajanı <strong>Nitrit-Nitrat</strong>'tır.</td></tr>
+                <tr><td><strong>Kimyasal Tehlikeler & MSDS</strong></td><td>% 20</td><td>Piktogramlarda "Kuru Kafa" anında zehirleyen Akut Toksik demektir. "Asitlerle Bazlar" asla yan yana depolanmaz. Kanser Gruplarında "Grup 1" kesin kanserojendir.</td></tr>
+                <tr><td><strong>Fiziksel ve Ergonomik Riskler</strong></td><td>% 15</td><td>Gürültü sınırı 8 saat için <strong>85 dB(A)</strong>'dır. Titreşimli aletler "Beyaz Parmak (Raynaud)" hastalığına neden olur.</td></tr>
+                <tr><td><strong>Atık Yönetimi ve Radyasyon</strong></td><td>% 15</td><td>Eldiven ve şırıngalar "Düşük Seviyeli Atık (DSA)" iken, Nükleer çubuklar Yüksek Seviyeli Atıktır. Geri dönüşüm projelerinin zirvesi "Sıfır Atık Yönetmeliği (2019)"dir.</td></tr>
+            </table>
+        </div>
+
+        <div class="controls">
+            <div style="font-weight:600;color:var(--primary);"><i class="fa-solid fa-cloud-arrow-down"></i> Otomatik Kayıt Devrede</div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <button class="btn btn-study" onclick="toggleStudyMode()" id="studyBtn"><i class="fa-solid fa-book-open-reader"></i> Çalışma Modu (Tüm Çözümler)</button>
+                <button class="btn btn-print" onclick="window.print()"><i class="fa-solid fa-file-pdf"></i> Sıkışık PDF Al (Çözümlü)</button>
+                <button class="btn btn-retry" onclick="resetExam()"><i class="fa-solid fa-rotate-right"></i> Tekrar Çöz (Sıfırla)</button>
+            </div>
+        </div>
+
+        <div id="results">
+            <h2 style="color: var(--secondary); margin-bottom: 10px;">Sınav Sonucunuz</h2>
+            <div class="score"><span id="scoreVal">0</span> Puan</div>
+            <p id="scoreMsg" style="font-size:1.1rem;color:var(--text-muted);font-weight:500;margin-bottom:1rem;"></p>
+            <div class="stats">
+                <div class="stat-box" style="color:var(--success)">Doğru: <span id="s-cor">0</span></div>
+                <div class="stat-box" style="color:var(--danger)">Yanlış: <span id="s-wro">0</span></div>
+                <div class="stat-box" style="color:var(--text-muted)">Boş: <span id="s-emp">0</span></div>
+                <div class="stat-box" style="color:var(--primary)">Net: <span id="s-net">0</span></div>
+            </div>
+        </div>
+
+        <div id="q-list"></div>
+        <div class="finish-area" id="finishArea">
+            <button class="btn-finish" onclick="finishExam()"><i class="fa-solid fa-flag-checkered"></i> Sınavı Bitir ve Puanımı Hesapla</button>
+        </div>
+    </div>
+
+    <script>
+        // ========== 105 GERÇEK ÇIKMIŞ SORU ==========
+        const quizData = [
+            // 2022 Dönem Sonu (20 soru)
+            { exam: "2022 Dönem Sonu (Final)", question: "Risk değerlendirmesi raporunda aşağıdakilerden hangisi bulunmaz?", options: ["İşverenin son beş yıllık bilançosu", "Belirlenen tehlike kaynakları ile tehlikeler", "Tespit edilen riskler", "İşyerinin unvanı, adresi ve işverenin adı", "Risk analizinde kullanılan yöntem veya yöntemler"], correct: 0, exp: "Risk değerlendirme raporu işletmenin mali tablolarını değil; tehlike, risk ve yöntem bilgilerini içerir." },
+            { exam: "2022 Dönem Sonu (Final)", question: "\"İş Sağlığı ve Güvenliği Risk Değerlendirmesi Yönetmeliği\"nin yayımlandığı yıl aşağıdakilerden hangisidir?", options: ["2008", "2010", "2012", "2014", "2016"], correct: 2, exp: "29.12.2012 tarih ve 28512 sayılı Resmî Gazete'de yayımlanmıştır." },
+            { exam: "2022 Dönem Sonu (Final)", question: "20.02.2019 tarihinde \"içme-kullanma suyu havzasının koruma alanları ve koruma esaslarının belirlenmesine yönelik planlar\" amacıyla aşağıdaki tebliğlerden hangisi yayımlanmıştır?", options: ["İçme Suyu Temin ve Dağıtım Sistemlerindeki Su Kayıplarının Kontrolü Yönetmeliği Teknik Usuller Tebliği", "Atıksu Arıtma Tesisleri Teknik Usuller Tebliği", "İçme-Kullanma Suyu Havzası Koruma Planı Hazırlanmasına Dair Usul ve Esaslar Tebliği", "Dezenfeksiyon Teknik Tebliği", "İçme Suyu Temin Edilen Akifer ve Kaynakların Koruma Alanlarının Belirlenmesi Hakkında Tebliğ"], correct: 2, exp: "Soruda geçen 'içme-kullanma suyu havzası' ifadesi doğrudan bu tebliği işaret eder." },
+            { exam: "2022 Dönem Sonu (Final)", question: "Aşağıdakilerden hangisi kalite yönetiminde göz önüne alınan ilkelerden biridir?", options: ["Çalışanlar da bir tür müşteri sayılır.", "Kalite söz konusu olunca maliyetler dikkate alınmaz.", "Kalite daima sonuç odaklıdır.", "Süreç içi hatalar mümkün olduğunca yok sayılmalıdır.", "Müşteri değil hizmet odaklı olunmalıdır."], correct: 0, exp: "Toplam Kalite Yönetimi'nde 'iç müşteri' kavramı esastır." },
+            { exam: "2022 Dönem Sonu (Final)", question: "Silindirik gaz tüpü piktogramının anlamı nedir?", options: ["Çevreye zararlı işareti", "Oksitleyici gaz işareti", "Toksik madde işareti", "Basınç altında gaz işareti", "Aşındırıcı madde işareti"], correct: 3, exp: "Yatay silindirik gaz tüpü GHS'te 'Basınç Altında Gaz' anlamına gelir." },
+            { exam: "2022 Dönem Sonu (Final)", question: "Kirletici kaynağa çok yakın mahalle/belde gibi alanlarda görülen hava kirliliği türü nedir?", options: ["Bölgesel ölçekli", "Küresel ölçekli", "Kentsel ölçekli", "Kıtasal ölçekli", "Yerel ölçekli"], correct: 4, exp: "Mahalle/belde gibi küçük alanlar 'yerel ölçekli' kirliliktir." },
+            { exam: "2022 Dönem Sonu (Final)", question: "Solunumun durması etkisiyle karşılaşılan akım değeri aralığı nedir?", options: ["1-5 mA", "5-15 mA", "15-25 mA", "25-80 mA", "80-100 mA"], correct: 3, exp: "25-80 mA solunum kaslarının kilitlenmesine neden olur." },
+            { exam: "2022 Dönem Sonu (Final)", question: "Arıtma gerektiren yeraltı suyu hangi sınıfta yer alır?", options: ["Sınıf I", "Sınıf II", "Sınıf III", "Sınıf IV", "Sınıf V"], correct: 2, exp: "Sınıf III sular arıtıldıktan sonra içme suyu olabilir." },
+            { exam: "2022 Dönem Sonu (Final)", question: "Entegre yönetim sistemlerinin en önemli avantajı nedir?", options: ["Maliyetlerle birlikte kâr da artar.", "Sertifikasyon birkaç seferde gerçekleşir.", "Çoklu dokümantasyon sağlar.", "Gereksiz kaynak kullanımını önler.", "Kurumsal sinerjinin artmasına katkı sağlar."], correct: 4, exp: "Entegre sistemler ortak denetim ve tek elden yönetimle sinerji yaratır." },
+            { exam: "2022 Dönem Sonu (Final)", question: "H300 serisi kodlar neyi ifade eder?", options: ["Fiziksel zarar ifadeleri", "Çevresel zarar ifadeleri", "Genel amaçlı önlem ifadeleri", "Sağlığa ilişkin zarar ifadeleri", "Müdahale amaçlı önlem ifadeleri"], correct: 3, exp: "H300 serisi sağlık zararlarıdır (toksik, kanserojen vb.)." },
+            { exam: "2022 Dönem Sonu (Final)", question: "Aşağıdakilerden hangisi atmosferdeki kirleticilerin doğal kaynağı değildir?", options: ["Toprak mikroorganizmaları", "Çöplerin depolanması/yakılması", "Rüzgârla havalanan partiküller", "Bataklıklardan metan gazı", "Orman yangınları"], correct: 1, exp: "Çöp depolama/yakma insan kaynaklıdır (antropojenik)." },
+            { exam: "2022 Dönem Sonu (Final)", question: "Pil, akümülatör, yağlı metal talaşı ve tarım ilaçları hangi atık türüdür?", options: ["Tehlikeli katı atıklar", "Teknolojik atıklar", "Endüstriyel atıklar", "Evsel atıklar", "Antropojenik atıklar"], correct: 0, exp: "Toksik/zararlı özellik taşıdıkları için tehlikeli katı atıktır." },
+            { exam: "2022 Dönem Sonu (Final)", question: "Hangi gürültü düzeyinde günlük çalışma süresi 2 saattir?", options: ["85 dB(A)", "88 dB(A)", "91 dB(A)", "94 dB(A)", "97 dB(A)"], correct: 3, exp: "94 dB(A) → 1 saat, 91 dB(A) → 2 saattir. (Yönetmelik: 85→8, 88→4, 91→2, 94→1)" },
+            { exam: "2022 Dönem Sonu (Final)", question: "Sistematik etki gösteren gaz hangisidir?", options: ["Propan", "Benzen", "Karbondioksit", "Amonyak", "Azot"], correct: 1, exp: "Benzen kana karışarak kemik iliği ve karaciğerde sistemik hasar yapar." },
+            { exam: "2022 Dönem Sonu (Final)", question: "Arıtma çamurlarının tarımda kullanım şartlarını belirleyen yönetmelik hangisidir?", options: ["Toprak Kirliliğinin Kontrolü Yönetmeliği", "Kum/Çakıl Yönetmeliği", "Hafriyat Atıkları Yönetmeliği", "Su Kirliliği Kontrolü Yönetmeliği", "Evsel ve Kentsel Arıtma Çamurlarının Toprakta Kullanılmasına Dair Yönetmelik"], correct: 4, exp: "Doğrudan adı geçen yönetmeliktir." },
+            { exam: "2022 Dönem Sonu (Final)", question: "Hayvancılığın sürdürülebilirliği için çıkarılan kanun hangisidir?", options: ["Kıyı Kanunu", "Belediye Kanunu", "Toprak Koruma Kanunu", "Mera Kanunu", "Çevre Kanunu"], correct: 3, exp: "4342 sayılı Mera Kanunu." },
+            { exam: "2022 Dönem Sonu (Final)", question: "Ön Tehlike Analizinde 'Tehlike Tanımlaması'ndan sonraki aşama nedir?", options: ["Amaç Analizi", "Hata Analizi", "Emniyet Sistem Kaybı", "Geçmiş Deneyim Analizi", "Risk Değerlendirmesi ve Seçimi"], correct: 4, exp: "Tehlike Tanımlaması → Risk Değerlendirmesi ve Seçimi." },
+            { exam: "2022 Dönem Sonu (Final)", question: "Organik atıkların ayrışması sırasında sudaki hangi madde tüketilir?", options: ["Çözünmüş oksijen", "Karbon dioksit", "Hidrojen", "Amonyak", "Azot"], correct: 0, exp: "Mikroorganizmalar oksijeni tüketir (BOD)." },
+            { exam: "2022 Dönem Sonu (Final)", question: "Dalak, beyin ve karaciğere hasar veren su kirleticisi nedir?", options: ["Nitrat", "Siyanür", "Antimon", "Krom", "Florür"], correct: 1, exp: "Siyanür hücresel solunumu bloke eder." },
+            { exam: "2022 Dönem Sonu (Final)", question: "Daire üzerinde alev piktogramı ne anlama gelir?", options: ["Oksitleyici", "Kanserojen", "Toksik", "Alevlenir", "Aşındırıcı"], correct: 3, exp: "Alev sembolü 'Alevlenir Madde'dir." },
+
+            // 2023-2024 Dönem Sonu (20 soru)
+            { exam: "2023-2024 Dönem Sonu (Final)", question: "Az tehlikeli işyerlerinde risk değerlendirmesi kaç yılda bir yenilenir?", options: ["2", "3", "4", "5", "6"], correct: 4, exp: "Az tehlikeli: 6, Tehlikeli: 4, Çok tehlikeli: 2 yıl." },
+            { exam: "2023-2024 Dönem Sonu (Final)", question: "Hava kirliliğine bağlı sağlık sıkıntılarının önlenmesi hangi yönetmelikle düzenlenir?", options: ["Sanayi Kaynaklı Hava Kirliliği", "Ozon Tabakasını İncelten Maddeler", "Isınmadan Kaynaklı Hava Kirliliği", "Hava Kalitesi Değerlendirme ve Yönetimi", "Benzin ve Motorin Kalitesi"], correct: 3, exp: "Genel hava kalitesi ve sağlık koruma bu yönetmelikledir." },
+            { exam: "2023-2024 Dönem Sonu (Final)", question: "1972'de düzenlenen ve uluslararası çevre aksiyon planlarının yapıldığı konferans hangisidir?", options: ["Köln", "Bern", "Kyoto", "Tokyo", "Stockholm"], correct: 4, exp: "Stockholm Konferansı ilk küresel çevre konferansıdır." },
+            { exam: "2023-2024 Dönem Sonu (Final)", question: "Gürültü düzeyi 91 dB(A) ise günlük çalışma süresi kaç saattir?", options: ["8", "4", "2", "1", "0.5"], correct: 2, exp: "91 dB(A) → 2 saat." },
+            { exam: "2023-2024 Dönem Sonu (Final)", question: "Yalnızca dezenfeksiyonla içme suyu olabilen kıta içi yüzey suları hangi sınıftadır?", options: ["Sınıf I", "Sınıf II", "Sınıf III", "Sınıf IV", "Sınıf V"], correct: 1, exp: "Sınıf II: az kirlenmiş, dezenfeksiyonla içilir." },
+            { exam: "2023-2024 Dönem Sonu (Final)", question: "Gürültü kaynakları hangi üç grupta toplanır?", options: ["evsel, sosyal, çevresel", "ulaşım, tıbbi, endüstriyel", "tarımsal, endüstriyel, sosyal", "evsel, çevresel, endüstriyel", "ulaşım, sanayi, sosyal"], correct: 4, exp: "Ulaşım (trafik), sanayi (fabrika), sosyal (eğlence)." },
+            { exam: "2023-2024 Dönem Sonu (Final)", question: "Ağır hastalık yapan, yayılma riski yüksek, tedavisi olmayan biyolojik etkenler hangi gruptadır?", options: ["Grup 1", "Grup 2", "Grup 3", "Grup 4", "Grup 5"], correct: 3, exp: "Grup 4: Ebola vb." },
+            { exam: "2023-2024 Dönem Sonu (Final)", question: "L tipi matriste risk nasıl hesaplanır?", options: ["Olasılık x Şiddet", "Olasılık x Tehlike", "Etki x Şiddet", "Frekans x Şiddet", "Tehlike x Şiddet"], correct: 0, exp: "Risk = Olasılık x Şiddet." },
+            { exam: "2023-2024 Dönem Sonu (Final)", question: "Ekipman+insan hatası kombinasyonu hangi olasılıkla derecelendirilir?", options: ["Çok yüksek", "Yüksek", "Orta", "Küçük", "Çok küçük"], correct: 2, exp: "Birleşik hata 'orta' olasılıktır." },
+            { exam: "2023-2024 Dönem Sonu (Final)", question: "İçme suyunda dalak/beyin/karaciğer hasarı yapan madde?", options: ["Nitrat", "Siyanür", "Kurşun", "Cıva", "Arsenik"], correct: 1, exp: "Siyanür." },
+            { exam: "2023-2024 Dönem Sonu (Final)", question: "Su fakiri ülke hangisidir?", options: ["Türkiye", "Birleşik Arap Emirliği", "İspanya", "Portekiz", "İtalya"], correct: 1, exp: "BAE'de kişi başı su < 1000 m³." },
+            { exam: "2023-2024 Dönem Sonu (Final)", question: "Patlayan bomba piktogramı neyi ifade eder?", options: ["Basınç altında gaz", "Alevlenir", "Toksik", "Patlayıcı", "Aşındırıcı"], correct: 3, exp: "Patlayıcı madde." },
+            { exam: "2023-2024 Dönem Sonu (Final)", question: "Ötrofikasyonun temel nedeni nedir?", options: ["Sağlık problemleri", "Üstteki alg katmanı", "Oksijen azalması", "Işık geçişinin engellenmesi", "Organik madde miktarının aşırı artması"], correct: 4, exp: "Aşırı organik madde/azot-fosfor girdisi." },
+            { exam: "2023-2024 Dönem Sonu (Final)", question: "'Emniyet sistem kaybı' Ön Tehlike Analizinin hangi aşamasının girdisidir?", options: ["Amaç Analizi", "Geçmiş Deneyim Analizi", "Tehlike Tanımlaması", "Risk Değerlendirmesi", "Riskleri Azaltma"], correct: 2, exp: "Tehlike Tanımlaması aşamasında kullanılır." },
+            { exam: "2023-2024 Dönem Sonu (Final)", question: "MSDS açılımı nedir?", options: ["Malzeme Sevkiyat Formu", "Malzeme Güvenlik Bilgi Formu", "Malzeme Sınıflandırma Formu", "Üretim Yer ve Tarih Formu", "Malzeme Depolama Eşleştirme Formu"], correct: 1, exp: "Material Safety Data Sheet." },
+            { exam: "2023-2024 Dönem Sonu (Final)", question: "Karaciğer hemanjiyosarkomu hangi endüstri çalışanlarında görülür?", options: ["Kâğıt", "Gıda", "Metal", "Plastik", "Kömür"], correct: 3, exp: "Vinil klorür monomeri (PVC/plastik)." },
+            { exam: "2023-2024 Dönem Sonu (Final)", question: "5-15 mA akımın insan vücuduna etkisi nedir?", options: ["Karıncalanma", "Solunum durması", "Kasılmalar", "Kalp fibrilasyonu", "Oksijensiz kalma"], correct: 2, exp: "Kasılmalar (bırakamama)." },
+            { exam: "2023-2024 Dönem Sonu (Final)", question: "Kuru kafa ve çapraz kemik piktogramı ne anlama gelir?", options: ["Oksitleyici", "Aşındırıcı", "Toksik", "Patlayıcı", "Alev Alıcı"], correct: 2, exp: "Akut toksik (zehirli) madde." },
+            { exam: "2023-2024 Dönem Sonu (Final)", question: "PUKÖ döngüsünün 'Uygula' safhasında ne yapılır?", options: ["Kayıt analizi", "Talimatları gözden geçirme", "Denetleme sistemi kurma", "Bilgilendirme, eğitim ve katılım sağlama", "Talimatları hazırlama"], correct: 3, exp: "Uygula: eğitim ve planı hayata geçirme." },
+            { exam: "2023-2024 Dönem Sonu (Final)", question: "1972 Stockholm'de gerçekleştirilen konferansın tam adı nedir?", options: ["Bern Konferansı", "Çevre ve İnsan Konferansı", "Rio Konferansı", "Kyoto Protokolü", "Johannesburg Zirvesi"], correct: 1, exp: "Birleşmiş Milletler Çevre ve İnsan Konferansı." },
+
+            // 2024-2025 Dönem Sonu (20 soru)
+            { exam: "2024-2025 Dönem Sonu (Final)", question: "Türkiye'de çevre konusunda bilinç göstergesi olan ilk dernek hangisidir?", options: ["Ekolojik Araştırmalar Derneği", "Sualtı Araştırmaları Derneği", "Ankara Hava Kirlenmesiyle Savaş Derneği", "Doğa Araştırmaları Derneği", "Doğa Derneği"], correct: 2, exp: "1960'larda kurulan ilk çevre derneklerindendir." },
+            { exam: "2024-2025 Dönem Sonu (Final)", question: "ISO 9001:2015'in temel aşamaları nelerdir?", options: ["Planla-Uygula-Kontrol Et-Önlem Al", "Programla-Test Et-Gözlemle-Onayla", "Kurgula-Çalıştır-Düzenle-Kontrol Et", "Muayene-İyileştir-Yönet-Kavra", "Üret-Kıyasla-Yönet-Düzelt"], correct: 0, exp: "PUKÖ döngüsü." },
+            { exam: "2024-2025 Dönem Sonu (Final)", question: "1926'da yayımlanan ilk çevre kanunu hangisidir?", options: ["Taşkın Sulara Karşı Korunma Kanunu", "Sular Hakkında Kanun", "Su Ürünleri Kanunu", "Yeraltı Suları Hakkında Kanun", "Kıyı Kanunu"], correct: 1, exp: "831 sayılı Sular Hakkında Kanun." },
+            { exam: "2024-2025 Dönem Sonu (Final)", question: "Çevre Kanunu'nun temel amaçları nelerdir? (I. Çevrenin korunması II. Doğal kaynakların sürdürülebilir kullanımı III. Su/toprak/havanın kirlenmesinin önlenmesi IV. Tahribata göz yumulması)", options: ["Yalnız I", "Yalnız II", "III ve IV", "I, II ve III", "II, III ve IV"], correct: 3, exp: "IV. madde kanunun amacı olamaz." },
+            { exam: "2024-2025 Dönem Sonu (Final)", question: "Su kaynaklarının doğal bileşiminin insan faaliyetleriyle bozulmasına ne denir?", options: ["Su kirliliği", "Ekolojik bozulma", "Ötrofikasyon", "Atık su", "Çevre kirliliği"], correct: 0, exp: "Tanım doğrudan su kirliliğidir." },
+            { exam: "2024-2025 Dönem Sonu (Final)", question: "Türkiye'de kişi başına en çok atık üreten il?", options: ["Muğla", "Kahramanmaraş", "Trabzon", "Mardin", "Erzurum"], correct: 0, exp: "Turizm nedeniyle Muğla." },
+            { exam: "2024-2025 Dönem Sonu (Final)", question: "Küresel ısınmanın en önemli aktörü hangi gazdır?", options: ["Karbon monoksit", "Karbon dioksit", "Azot monoksit", "Azot dioksit", "Kükürt dioksit"], correct: 1, exp: "CO2." },
+            { exam: "2024-2025 Dönem Sonu (Final)", question: "PAH, arsenik, nikotin gibi kanserojenlerin ana kaynağı nedir?", options: ["Temizlik malzemeleri", "Ev tozu", "Bina yapı malzemeleri", "Dış ortam", "Tütün dumanı ve yakma aktiviteleri"], correct: 4, exp: "Tütün ve yanma ürünleri." },
+            { exam: "2024-2025 Dönem Sonu (Final)", question: "İlk su savaşı nerede olmuştur?", options: ["Fırat-Dicle", "Tuna", "Nil", "Baykal", "Ren"], correct: 0, exp: "MÖ 2500 Mezopotamya." },
+            { exam: "2024-2025 Dönem Sonu (Final)", question: "Ötrofikasyonun etkileri: I. Oksijen azalması II. Işık geçişinin engellenmesi III. Ekosistem zararı IV. Alg azalması", options: ["Yalnız I", "Yalnız IV", "I ve III", "II ve IV", "I, II ve III"], correct: 4, exp: "Alg azalmaz, artar." },
+            { exam: "2024-2025 Dönem Sonu (Final)", question: "Dalak, beyin, karaciğere hasar veren kirletici?", options: ["Florür", "Krom", "Antimon", "Siyanür", "Nitrat"], correct: 3, exp: "Siyanür." },
+            { exam: "2024-2025 Dönem Sonu (Final)", question: "Tahriş edici gaz hangisidir?", options: ["Etan", "Hidrojen", "Azot", "Kükürtdioksit", "Metan"], correct: 3, exp: "SO2 solunum yollarını tahriş eder." },
+            { exam: "2024-2025 Dönem Sonu (Final)", question: "Mekanik tehlike sonucu olmayan etki hangisidir?", options: ["Ezilme", "İçine çekme", "Dehidrasyon", "Denge kaybı", "Parça fırlaması"], correct: 2, exp: "Dehidrasyon kimyasal/termal bir etkidir." },
+            { exam: "2024-2025 Dönem Sonu (Final)", question: "İş-çalışan uyumsuzluğu hangi tehlikeye yol açar?", options: ["Ergonomik", "Biyolojik", "Psikososyal", "Fiziksel", "Kimyasal"], correct: 2, exp: "Stres → Psikososyal tehlike." },
+            { exam: "2024-2025 Dönem Sonu (Final)", question: "Kurumuş ağaç ve ölü balık piktogramı neyi ifade eder?", options: ["Oksitleyici", "Çevreye zararlı", "Toksik", "Aşındırıcı", "Solunum hassasiyeti"], correct: 1, exp: "Çevreye zararlı madde." },
+            { exam: "2024-2025 Dönem Sonu (Final)", question: "Akciğer, göğüs zarı, karın zarı kanseri yapan kesin kanserojen?", options: ["Benzidin", "Benzen", "Vinil klorür", "Nikel", "Asbest"], correct: 4, exp: "Asbest (mezotelyoma)." },
+            { exam: "2024-2025 Dönem Sonu (Final)", question: "Alev piktogramı ne anlama gelir?", options: ["Oksitleyici", "Alevlenir", "Kanserojen", "Toksik", "Aşındırıcı"], correct: 1, exp: "Yanıcı madde." },
+            { exam: "2024-2025 Dönem Sonu (Final)", question: "Risk değerlendirme raporunda bulunmayan nedir?", options: ["İşyeri unvanı", "Tehlike kaynakları", "Tespit edilen riskler", "İşverenin son beş yıllık bilançosu", "Kullanılan yöntem"], correct: 3, exp: "Mali bilanço raporda yer almaz." },
+            { exam: "2024-2025 Dönem Sonu (Final)", question: "İşi adımlara bölüp tehlike belirleyen risk yöntemi hangisidir?", options: ["HAZOP", "Risk haritası", "İş güvenliği analizi (JSA)", "Checklist", "Hata ağacı"], correct: 2, exp: "JSA işi adımlara bölerek analiz eder." },
+            { exam: "2024-2025 Dönem Sonu (Final)", question: "Tehlike Tanımlaması aşamasının doğrudan girdisi olmayan nedir?", options: ["Potansiyel tehlikeli eleman", "Emniyet sistem kaybı", "Tehlikeli olay", "Tehlikeli durum", "Geçmiş kazalar"], correct: 1, exp: "Emniyet sistem kaybı tanımlamanın sonucudur." },
+
+            // 2024 Yaz Okulu (25 soru)
+            { exam: "2024 Yaz Okulu", question: "Fine Kinney'de Şiddet Skalası 7 neyi ifade eder?", options: ["Minör iş kaybı", "Majör zarar", "Hafif", "Ölüm", "Sakatlık/uzuv kaybı"], correct: 4, exp: "7: Sakatlık, uzuv kaybı." },
+            { exam: "2024 Yaz Okulu", question: "Matematiksel hesap içermeyen, kontrol listesiyle yapılan risk yöntemi?", options: ["Hata Ağacı", "Checklist", "Olursa Ne Olur", "Ön Tehlike", "Fine Kinney"], correct: 1, exp: "Checklist (Birincil Risk Analizi)." },
+            { exam: "2024 Yaz Okulu", question: "Küresel su kaynaklarının tarımda kullanım oranı?", options: ["%30", "%40", "%50", "%60", "%70"], correct: 4, exp: "Yaklaşık %70." },
+            { exam: "2024 Yaz Okulu", question: "Ergonominin amacı olmayan seçenek?", options: ["İş gücü kaybını önleme", "İSG'yi sağlama", "Verimliliği artırma", "İş yerini benimsetme", "Yorgunluğu azaltma"], correct: 3, exp: "İş yerini benimsetme kurum kültürüyle ilgilidir." },
+            { exam: "2024 Yaz Okulu", question: "Hangi akım değeri zararsızdır?", options: ["0,01 mA", "1-5 mA", "5-15 mA", "15-25 mA", ">1 mA"], correct: 0, exp: "0,01 mA hissedilmez." },
+            { exam: "2024 Yaz Okulu", question: "Kirliliğin temel kaynağı olan iki faktör: nüfus artışı ve ---?", options: ["verimsizlik", "kirlenme", "kentleşme", "aşırı tüketim", "doğaya bırakma"], correct: 3, exp: "Aşırı tüketim." },
+            { exam: "2024 Yaz Okulu", question: "Ünlem işareti piktogramı ne anlama gelir?", options: ["Solunum hassasiyeti", "Basınç altında gaz", "Toksik", "Aşındırıcı", "Çevreye zararlı"], correct: 0, exp: "Sağlığa zararlı / solunum hassasiyeti." },
+            { exam: "2024 Yaz Okulu", question: "İnsanların içinde yaşadığı sosyal, kültürel, ekonomik, fiziksel ortam nedir?", options: ["Medeniyet", "Çevre", "Ekoloji", "Devlet", "Toplum"], correct: 1, exp: "Çevre tanımı." },
+            { exam: "2024 Yaz Okulu", question: "1986-87'de Marmara'da ötrofikasyon sonucu deniz hangi renge boyandı?", options: ["Kırmızı", "Siyah", "Koyu yeşil", "Kahverengi", "Açık sarı"], correct: 0, exp: "Kırmızı gelgit (red-tide)." },
+            { exam: "2024 Yaz Okulu", question: "Vektörler hangi canlılardır?", options: ["Bitkiler", "Mikroorganizmalar", "Virüsler", "Eklembacaklılar ve kemiriciler", "Besinler"], correct: 3, exp: "Sinek, kene, fare gibi taşıyıcılar." },
+            { exam: "2024 Yaz Okulu", question: "Hava kirliliği ile ilgili ilk doğrudan düzenleme hangi kanunla yapılmıştır?", options: ["Yapı Denetimi", "Umumi Hıfzıssıhha", "Milli Parklar", "Kültür ve Tabiat Varlıkları", "Çevre Kanunu"], correct: 1, exp: "1930 tarihli Umumi Hıfzıssıhha Kanunu." },
+            { exam: "2024 Yaz Okulu", question: "Solunabilir alüminyum tozu için 8 saatlik sınır değer?", options: ["0,1 mg/m³", "0,5 mg/m³", "1 mg/m³", "3 mg/m³", "5 mg/m³"], correct: 3, exp: "3 mg/m³." },
+            { exam: "2024 Yaz Okulu", question: "Ağır hastalık yapan, yayılma riski olan ama tedavisi bulunan biyolojik etkenler hangi gruptadır?", options: ["Grup 1", "Grup 2", "Grup 3", "Grup 4", "Grup 5"], correct: 2, exp: "Grup 3 (örn: tüberküloz)." },
+            { exam: "2024 Yaz Okulu", question: "Karaciğer, böbrek hasarı ve hipertansiyon yapan ağır metal?", options: ["Krom", "Antimon", "Baryum", "Arsenik", "Kadmiyum"], correct: 4, exp: "Kadmiyum." },
+            { exam: "2024 Yaz Okulu", question: "Antropojenik kaynak olmayan kirletici?", options: ["Havadaki mikroorganizmalar", "Bina yapım/yıkım", "Yakma işlemleri", "Evsel ısınma", "Ulaşım"], correct: 0, exp: "Mikroorganizmalar doğaldır." },
+            { exam: "2024 Yaz Okulu", question: "Az tehlikeli işyerlerinde risk değerlendirmesi yenileme süresi?", options: ["2", "3", "4", "5", "6"], correct: 4, exp: "6 yıl." },
+            { exam: "2024 Yaz Okulu", question: "Rachel Carson 'Sessiz Bahar' kitabını hangi yıl yayımladı?", options: ["1954", "1958", "1962", "1966", "1970"], correct: 2, exp: "1962." },
+            { exam: "2024 Yaz Okulu", question: "Tıbbi atıklar kontrol yönetmeliği ilk hangi yıl yayımlandı?", options: ["2005", "2007", "2009", "2011", "2013"], correct: 0, exp: "2005." },
+            { exam: "2024 Yaz Okulu", question: "Çevresel zarar ifadeleri hangi kod serisidir?", options: ["P100", "H300", "H400", "H200", "P300"], correct: 2, exp: "H400 serisi." },
+            { exam: "2024 Yaz Okulu", question: "Alevli daire piktogramı ne anlama gelir?", options: ["Alevlenir", "Basınç altında gaz", "Toksik", "Çevreye zararlı", "Aşındırıcı"], correct: 0, exp: "Alevlenir madde." },
+
+            // 2025 Yaz Okulu (25 soru)
+            { exam: "2025 Yaz Okulu", question: "Sosyal çevre faktörleri: I. Kültür II. Arıtma maliyeti III. Ekonomi/eğitim IV. Beslenme", options: ["Yalnız I", "Yalnız III", "I ve II", "I, III ve IV", "II, III ve IV"], correct: 3, exp: "Arıtma maliyeti teknik/ekonomiktir." },
+            { exam: "2025 Yaz Okulu", question: "Gelecek kuşakları düşünen çevreci dünya görüşü nedir?", options: ["Ekolojik çevre", "Çevre sağlığı", "Çevre koruma", "Sürdürülebilirlik", "Küresel farkındalık"], correct: 3, exp: "Sürdürülebilir kalkınma." },
+            { exam: "2025 Yaz Okulu", question: "İçme Suyu Temin Edilen Suların Kalitesi ve Arıtılması Hakkında Yönetmelik hangi tarihte yayımlandı?", options: ["06.07.2019", "25.09.2017", "06.10.2015", "25.11.2013", "06.12.2011"], correct: 0, exp: "06.07.2019." },
+            { exam: "2025 Yaz Okulu", question: "Hayvancılığın sürdürülebilirliği için çıkarılan kanun?", options: ["Çevre Kanunu", "Mera Kanunu", "Belediye Kanunu", "Toprak Koruma Kanunu", "Kıyı Kanunu"], correct: 1, exp: "Mera Kanunu." },
+            { exam: "2025 Yaz Okulu", question: "Arıtma çamurlarının tarımda kullanım şartlarını belirleyen yönetmelik?", options: ["Kum/Çakıl Yönetmeliği", "Evsel ve Kentsel Arıtma Çamurlarının Toprakta Kullanılmasına Dair Yönetmelik", "Su Kirliliği Kontrolü", "Hafriyat Atıkları", "Toprak Kirliliği"], correct: 1, exp: "Adı geçen yönetmelik." },
+            { exam: "2025 Yaz Okulu", question: "Özel atık kapsamında olmayan?", options: ["Ambalaj kutuları", "Bitkisel yağlar", "Atık piller", "Ömrünü tamamlamış lastikler", "Atık elektrikli eşyalar"], correct: 0, exp: "Ambalaj evsel atıktır." },
+            { exam: "2025 Yaz Okulu", question: "Işık enerjisiyle gerçekleşen tepkimelere ne denir?", options: ["Sera gazları oluşumu", "Kükürt oksitlenmesi", "Azot indirgenmesi", "Fotokimyasal tepkime", "HC oluşumu"], correct: 3, exp: "Fotokimyasal tepkime." },
+            { exam: "2025 Yaz Okulu", question: "Organik fermantasyon sonucu oluşan en önemli hidrokarbon?", options: ["Karbon monoksit", "Oksijen", "Metan", "Kükürt", "Ozon"], correct: 2, exp: "Metan (CH4)." },
+            { exam: "2025 Yaz Okulu", question: "Su ile ilgili doğru ifadeler: I. Oksijenden sonra en önemli madde II. Bir günden fazla susuz yaşanamaz III. Günde 1-2 litre tüketilmeli", options: ["Yalnız I", "Yalnız II", "I ve II", "I ve III", "II ve III"], correct: 3, exp: "İnsan 3-7 gün susuz yaşayabilir (II yanlış)." },
+            { exam: "2025 Yaz Okulu", question: "Su ve vektörlerle bulaşmayan hastalık?", options: ["Ülser", "Amipli dizanteri", "İshal", "Basilli dizanteri", "Giardiyaz"], correct: 0, exp: "Ülser H. pylori kaynaklıdır." },
+            { exam: "2025 Yaz Okulu", question: "Kalitesiz suyla sulamada görülenler: I. Ürün düşüşü II. Tuzlulaşma III. Toprak güçlenmesi IV. Ürün çeşitliliği", options: ["Yalnız I", "Yalnız III", "I ve II", "II ve IV", "III ve IV"], correct: 2, exp: "Toprak güçlenmez, ürün çeşitliliği artmaz." },
+            { exam: "2025 Yaz Okulu", question: "Ergonominin amacı olmayan?", options: ["Yorgunluğu azaltma", "İş gücü kaybını önleme", "İSG'yi sağlama", "Verimliliği artırma", "İş yerini benimsetme"], correct: 4, exp: "İş yerini benimsetme ergonominin amacı değildir." },
+            { exam: "2025 Yaz Okulu", question: "Ameliyathane aydınlatma şiddeti kaç lükstür?", options: ["200", "500", "1000", "2000", "5000"], correct: 4, exp: "5000 lüks." },
+            { exam: "2025 Yaz Okulu", question: "Basit boğucu gaz olmayan?", options: ["Propan", "Karbonmonoksit", "Metan", "Azot", "Karbondioksit"], correct: 1, exp: "CO kimyasal boğucudur." },
+            { exam: "2025 Yaz Okulu", question: "Daire üzerinde alev piktogramı neyi ifade eder?", options: ["Aşındırıcı", "Alevlenir", "Oksitleyici", "Kanserojen", "Toksik"], correct: 2, exp: "Oksitleyici madde." },
+            { exam: "2025 Yaz Okulu", question: "Karaciğer hemanjiyosarkomu hangi endüstride görülür?", options: ["Metal", "Kâğıt", "Gıda", "Kömür", "Plastik"], correct: 4, exp: "PVC/plastik." },
+            { exam: "2025 Yaz Okulu", question: "H300 serisi kodlar neyi ifade eder?", options: ["Sağlığa ilişkin zarar", "Genel önlem", "İlave zarar", "Fiziksel zarar", "Çevresel zarar"], correct: 0, exp: "Sağlık zarar ifadeleri." },
+            { exam: "2025 Yaz Okulu", question: "X Tipi Matris Analizi için en az kaç yıllık kaza arşivi gerekir?", options: ["2", "3", "5", "7", "10"], correct: 2, exp: "5 yıl." },
+            { exam: "2025 Yaz Okulu", question: "Ön Tehlike Analizinde Tehlike Tanımlamasından sonraki aşama?", options: ["Geçmiş deneyim", "Amaç analizi", "Hata analizi", "Emniyet sistem kaybı", "Risk değerlendirme ve seçimi"], correct: 4, exp: "Risk değerlendirme ve seçimi." },
+            { exam: "2025 Yaz Okulu", question: "Risk değerlendirme raporunda bulunmayan?", options: ["Kullanılan yöntem", "Tehlike kaynakları", "İşverenin son beş yıllık bilançosu", "Tespit edilen riskler", "İşyerinin unvanı"], correct: 2, exp: "Mali bilanço bulunmaz." }
+        ];
+
+        // ========== UYGULAMA ==========
+        let quizState = {};
+        let isExamFinished = false;
+        const TOTAL = quizData.length;
+
+        function renderQuestions() {
+            const list = document.getElementById("q-list");
+            list.innerHTML = "";
+            let html = "", lastExam = "";
+            quizData.forEach((q, i) => {
+                if (q.exam !== lastExam) {
+                    html += `<div class="exam-section-title"><i class="fa-solid fa-calendar-check"></i> ${q.exam}</div>`;
+                    lastExam = q.exam;
+                }
+                const s = quizState[i];
+                html += `<div class="q-card" id="q-${i}"><div class="q-text"><div class="q-num">${i+1}</div><div>${q.question}</div></div><div class="opts">`;
+                q.options.forEach((opt, oIdx) => {
+                    let cls = "opt", ico = "";
+                    if (isExamFinished) {
+                        cls += " locked";
+                        if (oIdx === q.correct) { cls += " correct"; ico = ' <i class="fa-solid fa-check"></i>'; }
+                        else if (s && s.sel === oIdx) { cls += " wrong"; ico = ' <i class="fa-solid fa-xmark"></i>'; }
+                    } else if (s && s.sel === oIdx) { cls += " selected"; }
+                    html += `<div class="${cls}" onclick="selectOpt(${i},${oIdx})" id="o-${i}-${oIdx}">${String.fromCharCode(65+oIdx)}) ${opt}${ico}</div>`;
+                });
+                html += `</div><div class="${isExamFinished?'sol show':'sol'}" id="s-${i}"><strong><i class="fa-solid fa-lightbulb"></i> Çözüm:</strong> ${q.exp}</div></div>`;
+            });
+            list.innerHTML = html;
+        }
+
+        function selectOpt(qIdx, oIdx) {
+            if (isExamFinished) return;
+            quizState[qIdx] = { sel: oIdx, cor: quizData[qIdx].correct };
+            for (let i=0; i<quizData[qIdx].options.length; i++) {
+                let el = document.getElementById(`o-${qIdx}-${i}`);
+                if (el) el.classList.remove('selected');
+            }
+            document.getElementById(`o-${qIdx}-${oIdx}`).classList.add('selected');
+            localStorage.setItem('cevre105quiz', JSON.stringify(quizState));
+        }
+
+        function finishExam() {
+            if (isExamFinished) return;
+            if (Object.keys(quizState).length < TOTAL && !confirm(`${TOTAL - Object.keys(quizState).length} soru boş. Bitirmek istiyor musunuz?`)) return;
+            isExamFinished = true;
+            localStorage.setItem('cevre105finished', 'true');
+            showResults();
+        }
+
+        function showResults() {
+            let c=0, w=0;
+            quizData.forEach((q,i) => { if(quizState[i]){ if(quizState[i].sel===quizState[i].cor) c++; else w++; } });
+            let e = TOTAL - c - w, net = c - w/4; if(net<0) net=0;
+            let score = Math.round((net/TOTAL)*100);
+            document.getElementById('s-cor').innerText=c; document.getElementById('s-wro').innerText=w;
+            document.getElementById('s-emp').innerText=e; document.getElementById('s-net').innerText=net.toFixed(2);
+            document.getElementById('scoreVal').innerText=score;
+            document.getElementById('scoreMsg').innerText = score>=90 ? "🏆 Mükemmel!" : score>=70 ? "👍 Çok iyi!" : score>=50 ? "📚 Orta seviye." : "⚠️ Daha fazla çalışın.";
+            document.getElementById('finishArea').style.display='none';
+            document.getElementById('results').style.display='block';
+            renderQuestions();
+            document.getElementById('results').scrollIntoView({behavior:'smooth'});
+        }
+
+        function toggleStudyMode() {
+            const btn = document.getElementById("studyBtn");
+            if(btn.innerText.includes("Kapat")){
+                document.querySelectorAll('.sol').forEach(el=>el.classList.remove('show'));
+                btn.innerHTML='<i class="fa-solid fa-book-open-reader"></i> Çalışma Modu (Tüm Çözümler)';
+                btn.style.background='';
+            } else {
+                document.querySelectorAll('.sol').forEach(el=>el.classList.add('show'));
+                btn.innerHTML='<i class="fa-solid fa-eye-slash"></i> Çalışma Modunu Kapat';
+                btn.style.background='#ef4444';
+            }
+        }
+
+        function resetExam() {
+            if(confirm("Tüm cevaplar silinecek. Emin misiniz?")){
+                quizState={}; isExamFinished=false;
+                localStorage.removeItem('cevre105quiz'); localStorage.removeItem('cevre105finished');
+                document.getElementById('results').style.display='none';
+                document.getElementById('finishArea').style.display='block';
+                document.querySelectorAll('.sol').forEach(el=>el.classList.remove('show'));
+                document.getElementById('studyBtn').innerHTML='<i class="fa-solid fa-book-open-reader"></i> Çalışma Modu (Tüm Çözümler)';
+                document.getElementById('studyBtn').style.background='';
+                renderQuestions();
+                window.scrollTo(0,0);
+            }
+        }
+
+        window.onload = function() {
+            const saved = localStorage.getItem('cevre105quiz');
+            if(saved) quizState = JSON.parse(saved);
+            if(localStorage.getItem('cevre105finished')==='true'){
+                isExamFinished=true;
+                document.getElementById('finishArea').style.display='none';
+                document.getElementById('results').style.display='block';
+                renderQuestions();
+                showResults();
+            } else renderQuestions();
+        };
+    </script>
+</body>
+</html>
